@@ -61,3 +61,5 @@ class MatchTrader_General_Functions{
         MatchTrader_Functions::init();
     }
 }
+
+MatchTrader_General_Functions::init();

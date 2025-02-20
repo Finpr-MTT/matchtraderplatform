@@ -42,7 +42,7 @@ class MatchTraderPlatform {
      * Initialize plugin functionality
      */
     public function init() {
-        MatchTrader_General_Functions();
+        MatchTrader_General_Functions::init();
     }
 
     /**
