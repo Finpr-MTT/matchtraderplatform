@@ -65,8 +65,7 @@ class MatchTraderPlatform {
      * Load public-facing classes
      */
     private function load_public() {
-        // If you plan to have frontend/public classes, include them here
-        // Example: require_once MATCHTRADERPLUGIN_PATH . 'includes/public/class-matchtrader-public.php';
+        require_once MATCHTRADERPLUGIN_PATH . 'includes/public/woocommerce/class-matchtrader-public-woocommerce.php';
     }
 
     /**
