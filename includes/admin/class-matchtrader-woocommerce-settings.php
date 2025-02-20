@@ -56,7 +56,7 @@ class MatchTrader_WooCommerce_Settings {
             echo '<input type="checkbox" name="matchtrader_enable_mtt_checkout" value="1" ' . checked(1, $value, false) . '>';
         }, 'matchtraderplatform-woo-settings', 'matchtrader_woo_section');
 
-        add_settings_field('matchtrader_enable_checkout_selection', 'Enable Checkout Product Selection', function() {
+        add_settings_field('matchtrader_enable_checkout_selection', 'Enable Product Selection at Checkout', function() {
             $value = get_option('matchtrader_enable_checkout_selection', '');
             echo '<input type="checkbox" name="matchtrader_enable_checkout_selection" value="1" ' . checked(1, $value, false) . '>';
         }, 'matchtraderplatform-woo-settings', 'matchtrader_woo_section');
