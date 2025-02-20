@@ -1,7 +1,7 @@
 <?php
 /**
  * @link              https://finpr.com
- * @since             1.2.1
+ * @since             1.0.1
  * @package           matchtraderplatform
  * GitHub Plugin URI: https://github.com/Finpr-MTT/matchtraderplatform
  * GitHub Branch: develop
@@ -9,7 +9,7 @@
  * Plugin Name:       Match Trader Connection Dashboard
  * Plugin URI:        https://finpr.com
  * Description:       This Plugin to Create User and Account to Dashboard Match Trader
- * Version:           1.2.1.4
+ * Version:           1.0.1
  * Author:            Finpr x MTT Team
  * Author URI:        https://finpr.com
  * License:           GPL-2.0+
