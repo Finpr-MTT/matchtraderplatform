@@ -33,6 +33,10 @@ class MatchTrader_Get_Account_By_UUID {
      * Handle the UUID parameter in URL and fetch account details.
      */
     public function handle_uuid_param() {
+        if (!is_checkout() || !isset($_GET['uuid'])) {
+            return;
+        }
+
         $uuid = sanitize_text_field($_GET['uuid']);
         $this->log_message("UUID detected in URL: $uuid");
 
