@@ -25,7 +25,7 @@ class MatchTrader_Get_Account_By_UUID {
         $this->log_message("Initializing MatchTrader_Get_Account_By_UUID with environment: $env");
 
         // Hook into WooCommerce Checkout process **AFTER session is initialized**
-        add_action('wp', [$this, 'handle_uuid_param'], 5);
+        add_action('init', [$this, 'handle_uuid_param'], 5);
         add_filter('woocommerce_checkout_fields', [$this, 'prefill_checkout_fields']);
     }
 
