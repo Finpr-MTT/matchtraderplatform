@@ -25,7 +25,7 @@ class MatchTrader_Api_Settings {
      * Registers API-related settings in WordPress.
      */
     public function register_settings() {
-        register_setting('matchtrader_api_options', 'matchtrader_enable_plugin');
+        register_setting('matchtrader_api_options', 'matchtrader_enable_api_connection');
         register_setting('matchtrader_api_options', 'matchtrader_env');
         register_setting('matchtrader_api_options', 'matchtrader_sandbox_url');
         register_setting('matchtrader_api_options', 'matchtrader_sandbox_key');
@@ -35,9 +35,9 @@ class MatchTrader_Api_Settings {
 
         add_settings_section('matchtrader_api_section', 'API Configuration', null, 'matchtraderplatform-api-settings');
 
-        add_settings_field('matchtrader_enable_plugin', 'Enable Plugin', function() {
-            $value = get_option('matchtrader_enable_plugin', '');
-            echo '<input type="checkbox" name="matchtrader_enable_plugin" value="1" '.checked(1, $value, false).'>';
+        add_settings_field('matchtrader_enable_api_connection', 'Enable API Connection', function() {
+            $value = get_option('matchtrader_enable_api_connection', '');
+            echo '<input type="checkbox" name="matchtrader_enable_api_connection" value="1" '.checked(1, $value, false).'>';
         }, 'matchtraderplatform-api-settings', 'matchtrader_api_section');
 
         add_settings_field('matchtrader_env', 'Environment', function() {
