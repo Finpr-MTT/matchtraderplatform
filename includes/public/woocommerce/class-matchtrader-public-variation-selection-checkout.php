@@ -26,18 +26,6 @@ class MatchTrader_Variation_Manager {
             add_action('woocommerce_checkout_before_customer_details', [$this, 'display_variant_selector'], 5);
             add_action('wp_ajax_matchtrader_update_cart', [$this, 'update_cart']);
             add_action('wp_ajax_nopriv_matchtrader_update_cart', [$this, 'update_cart']);
-            add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts']);
-        }
-    }
-
-    public function enqueue_scripts() {
-        if (is_checkout()) {
-            wp_enqueue_style('matchtrader-switch-variant-style', MATCHTRADERPLUGIN_URL . 'assets/css/matchtrader-switch-variant.css', [], MATCHTRADERPLUGIN_VERSION );
-            wp_enqueue_script('matchtrader-switch-variant', MATCHTRADERPLUGIN_URL . 'assets/js/matchtrader-switch-variant.js', ['jquery'], MATCHTRADERPLUGIN_VERSION, true);            
-            wp_localize_script('matchtrader-switch-variant', 'matchtraderAjax', [
-                'ajaxurl' => admin_url('admin-ajax.php'),
-                'nonce' => wp_create_nonce('matchtrader_nonce'),
-            ]);
         }
     }
 

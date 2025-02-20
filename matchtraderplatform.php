@@ -49,6 +49,7 @@ class MatchTraderPlatform {
     */
     private function load_helpers() {
         require_once MATCHTRADERPLUGIN_PATH . 'includes/helper/class-matchtrader-helper.php';
+        require_once MATCHTRADERPLUGIN_PATH . 'includes/helper/class-matchtrader-enqueue.php';
     }
 
     /**
