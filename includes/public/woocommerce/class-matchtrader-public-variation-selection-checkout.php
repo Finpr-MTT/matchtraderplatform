@@ -66,7 +66,7 @@ class MatchTrader_Variation_Manager {
                     $formatted_attributes['attribute_' . $key] = $value;
                 }
 
-                $variation_id = $this->get_variation_id_by_attributes($product, $formatted_attributes);
+                $variation_id = $product->get_matching_variation($formatted_attributes);
 
                 if ($variation_id) {
                     WC()->cart->add_to_cart($this->default_product_id, 1, $variation_id, $formatted_attributes);
