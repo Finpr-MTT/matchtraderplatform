@@ -70,7 +70,7 @@ class MatchTraderPlatform {
         require_once MATCHTRADERPLUGIN_PATH . 'includes/public/general/class-matchtrader-public-general.php';
         require_once MATCHTRADERPLUGIN_PATH . 'includes/public/platform-connection/class-matchtrader-api-get-account-by-uuid.php';
         require_once MATCHTRADERPLUGIN_PATH . 'includes/public/woocommerce/class-matchtrader-public-woocommerce.php';
-        require_once MATCHTRADERPLUGIN_PATH . 'includes/public/woocommerce/class-matchtrader-public-variation-selection-checkout.php';
+        require_once MATCHTRADERPLUGIN_PATH . 'includes/public/woocommerce/class-matchtrader-public-variation-selection.php';
     }
 
     /**
