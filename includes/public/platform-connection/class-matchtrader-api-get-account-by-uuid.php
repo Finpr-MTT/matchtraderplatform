@@ -1,4 +1,13 @@
 <?php
+/**
+ * Plugin functions and definitions for Get Account by Uuid.
+ *
+ * For additional information on potential customization options,
+ * read the developers' documentation:
+ *
+ * @package matchtraderplatform
+ */
+
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
@@ -21,10 +30,7 @@ class MatchTrader_Get_Account_By_UUID {
 
         $this->save_logs = get_option('matchtrader_save_logs', false);
 
-        // Log initialization
-        $this->log_message("Initializing MatchTrader_Get_Account_By_UUID with environment: $env");
-
-        // Hook into WooCommerce Checkout process **AFTER session is initialized**
+        // Hook into WooCommerce Checkout process
         add_action('template_redirect', [$this, 'handle_uuid_param'], 3);
         add_filter('woocommerce_checkout_fields', [$this, 'prefill_checkout_fields']);
     }
@@ -33,32 +39,17 @@ class MatchTrader_Get_Account_By_UUID {
      * Handle the UUID parameter in URL and fetch account details.
      */
     public function handle_uuid_param() {
-        if (!is_checkout() || !isset($_GET['uuid'])) {
+        if (!is_checkout()) {
             return;
         }
 
-        $uuid = sanitize_text_field($_GET['uuid']);
-        $this->log_message("UUID detected in URL: $uuid");
+        if (isset($_GET['uuid']) && !empty($_GET['uuid'])) {
+            $uuid = sanitize_text_field($_GET['uuid']);
+            $account_data = $this->get_account_by_uuid($uuid);
 
-        if (!WC()->session) {
-            $this->log_message("WooCommerce session is not available.", 'error');
-            return;
-        }
-
-        // Check if session data already exists
-        $cached_data = WC()->session->get('matchtrader_account_data');
-        if ($cached_data && isset($cached_data['uuid']) && $cached_data['uuid'] === $uuid) {
-            $this->log_message("Using cached account data for UUID: $uuid");
-            return;
-        }
-
-        // Fetch data from API
-        $account_data = $this->get_account_by_uuid($uuid);
-        if ($account_data) {
-            WC()->session->set('matchtrader_account_data', $account_data);
-            $this->log_message("Stored API response in WooCommerce session.");
-        } else {
-            $this->log_message("Failed to fetch account details for UUID: $uuid", 'error');
+            if ($account_data) {
+                WC()->session->set('matchtrader_account_data', $account_data);
+            }
         }
     }
 
@@ -68,10 +59,9 @@ class MatchTrader_Get_Account_By_UUID {
      * @param string $uuid
      * @return array|null
      */
-    public function get_account_by_uuid($uuid) {
-        $endpoint_url = rtrim($this->api_url, '/') . "/v1/accounts/by-uuid/" . ltrim($uuid, '/');
-
-        $this->log_message("Making API request to: $endpoint_url");
+    private function get_account_by_uuid($uuid) {
+        $endpoint_path = "v1/accounts/by-uuid/{$uuid}";
+        $endpoint_url = rtrim($this->api_url, '/') . '/' . ltrim($endpoint_path, '/');
 
         $response = wp_remote_get($endpoint_url, [
             'headers' => [
@@ -83,8 +73,7 @@ class MatchTrader_Get_Account_By_UUID {
         ]);
 
         if (is_wp_error($response)) {
-            $error_message = $response->get_error_message();
-            $this->log_message("API request failed: $error_message", 'error');
+            $this->log_api_error($response->get_error_message());
             return null;
         }
 
@@ -92,7 +81,7 @@ class MatchTrader_Get_Account_By_UUID {
         $data = json_decode($body, true);
 
         if ($this->save_logs) {
-            $this->log_message("API Response: " . print_r($data, true));
+            $this->log_api_response($data);
         }
 
         return $data;
@@ -105,19 +94,11 @@ class MatchTrader_Get_Account_By_UUID {
      * @return array
      */
     public function prefill_checkout_fields($fields) {
-        if (!WC()->session) {
-            $this->log_message("WooCommerce session not available for pre-filling checkout fields.", 'error');
-            return $fields;
-        }
-
         $account_data = WC()->session->get('matchtrader_account_data');
 
         if (!$account_data || !isset($account_data['personalDetails'])) {
-            $this->log_message("No account data found in session for pre-filling checkout fields.");
             return $fields;
         }
-
-        $this->log_message("Prefilling WooCommerce checkout fields with API response.");
 
         // Prefill checkout fields from API response
         if (!empty($account_data['personalDetails']['firstname'])) {
@@ -129,28 +110,49 @@ class MatchTrader_Get_Account_By_UUID {
         if (!empty($account_data['email'])) {
             $fields['billing']['billing_email']['default'] = sanitize_email($account_data['email']);
         }
+        if (!empty($account_data['contactDetails']['phoneNumber'])) {
+            $fields['billing']['billing_phone']['default'] = sanitize_text_field($account_data['contactDetails']['phoneNumber']);
+        }
+        if (!empty($account_data['addressDetails']['country'])) {
+            $fields['billing']['billing_country']['default'] = sanitize_text_field($account_data['addressDetails']['country']);
+        }
+        if (!empty($account_data['addressDetails']['state'])) {
+            $fields['billing']['billing_state']['default'] = sanitize_text_field($account_data['addressDetails']['state']);
+        }
+        if (!empty($account_data['addressDetails']['city'])) {
+            $fields['billing']['billing_city']['default'] = sanitize_text_field($account_data['addressDetails']['city']);
+        }
+        if (!empty($account_data['addressDetails']['postCode'])) {
+            $fields['billing']['billing_postcode']['default'] = sanitize_text_field($account_data['addressDetails']['postCode']);
+        }
+        if (!empty($account_data['addressDetails']['address'])) {
+            $fields['billing']['billing_address_1']['default'] = sanitize_text_field($account_data['addressDetails']['address']);
+        }
 
         return $fields;
     }
 
     /**
-     * Log API responses and steps using WordPress default logger.
+     * Log API responses using MatchTrader_Helper::connection_response_logger()
      *
-     * @param string $message
-     * @param string $level (default: 'info', options: 'error', 'warning', 'debug')
+     * @param array $data
      */
-    private function log_message($message, $level = 'info') {
+    private function log_api_response($data) {
         if ($this->save_logs) {
             $logger_data = MatchTrader_Helper::connection_response_logger();
-            if ($level === 'error') {
-                $logger_data['logger']->error($message, $logger_data['context']);
-            } elseif ($level === 'warning') {
-                $logger_data['logger']->warning($message, $logger_data['context']);
-            } elseif ($level === 'debug') {
-                $logger_data['logger']->debug($message, $logger_data['context']);
-            } else {
-                $logger_data['logger']->info($message, $logger_data['context']);
-            }
+            $logger_data['logger']->info('API Response: ' . wp_json_encode($data), $logger_data['context']);
+        }
+    }
+
+    /**
+     * Log API errors using MatchTrader_Helper::connection_response_logger()
+     *
+     * @param string $error_message
+     */
+    private function log_api_error($error_message) {
+        if ($this->save_logs) {
+            $logger_data = MatchTrader_Helper::connection_response_logger();
+            $logger_data['logger']->error('API Error: ' . $error_message, $logger_data['context']);
         }
     }
 }
