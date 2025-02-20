@@ -21,8 +21,10 @@ class MatchTrader_Enqueue_Manager {
     }
 
     public function enqueue_scripts() {
-        if (is_checkout()) {
+        if (is_checkout()) {            
+            wp_enqueue_style('matchtrader-platform-style', MATCHTRADERPLUGIN_URL . 'assets/css/matchtraderplatform-public.css', [], MATCHTRADERPLUGIN_VERSION );
             wp_enqueue_style('matchtrader-switch-variant-style', MATCHTRADERPLUGIN_URL . 'assets/css/matchtrader-switch-variant.css', [], MATCHTRADERPLUGIN_VERSION );
+            wp_enqueue_script('matchtrader-platform-script', MATCHTRADERPLUGIN_URL . 'assets/js/matchtraderplatform-public.css.js', ['jquery'], MATCHTRADERPLUGIN_VERSION, true);  
             wp_enqueue_script('matchtrader-switch-variant', MATCHTRADERPLUGIN_URL . 'assets/js/matchtrader-switch-variant.js', ['jquery'], MATCHTRADERPLUGIN_VERSION, true);            
             wp_localize_script('matchtrader-switch-variant', 'matchtraderAjax', [
                 'ajaxurl' => admin_url('admin-ajax.php'),
