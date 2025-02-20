@@ -53,13 +53,6 @@ class MatchTrader_General_Functions{
         require_once MATCHTRADERPLUGIN_PATH . 'includes/public/woocommerce/class-matchtrader-public-woocommerce.php';
         require_once MATCHTRADERPLUGIN_PATH . 'includes/public/woocommerce/class-matchtrader-public-variation-selection.php';
     }
-
-    /**
-     * Initialize plugin functionality
-     */
-    public function init() {
-        MatchTrader_Functions::init();
-    }
 }
 
-MatchTrader_General_Functions::init();
+New MatchTrader_General_Functions();
