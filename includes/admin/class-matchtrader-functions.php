@@ -85,16 +85,12 @@ class MatchTrader_Functions {
         echo '<p>Manage your Match Trader integration here.</p>';
         ?>
         <div class="wrap">
+            <h1>MatchTrader Platform Dashboard</h1>
             <form method="post" action="options.php">
                 <?php
                 settings_fields('matchtrader_dashboard_options');
                 do_settings_sections('matchtraderplatform-dashboard');
-                submit_button();
                 ?>
-            </form>
-            <h2>Settings</h2>
-            <form method="post" action="options.php">
-                <?php settings_fields('matchtrader_dashboard_options'); ?>
                 <table class="form-table">
                     <tr>
                         <th scope="row">Disable Frontend Routes</th>
