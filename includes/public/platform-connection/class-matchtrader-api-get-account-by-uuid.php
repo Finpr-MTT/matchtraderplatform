@@ -79,11 +79,6 @@ class MatchTrader_Get_Account_By_UUID {
 
         $body = wp_remote_retrieve_body($response);
         $data = json_decode($body, true);
-
-        if ($this->save_logs) {
-            $this->log_api_response($data);
-        }
-
         return $data;
     }
 
