@@ -12,8 +12,6 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
-// Ensure the helper class is included
-require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/helper/class-matchtrader-helper.php';
 
 class MatchTrader_Get_Account_By_UUID {
     private $api_url;
