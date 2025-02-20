@@ -16,6 +16,7 @@ class MatchTrader_Functions {
     
     public static function init() {
         add_action('admin_menu', [__CLASS__, 'add_admin_menu']);
+        add_action('admin_init', [__CLASS__, 'register_settings']);
     }
 
     public static function add_admin_menu() {
@@ -27,15 +28,6 @@ class MatchTrader_Functions {
             [__CLASS__, 'dashboard_page'],
             'dashicons-chart-area',
              3 // Position
-        );
-
-        add_submenu_page(
-            'matchtraderplatform',
-            'MatchTrader Platform',
-            'MatchTrader Platform',
-            'manage_options',
-            'matchtraderplatform',
-            ['MatchTrader_General_Settings', 'settings_page']
         );
 
         add_submenu_page(
@@ -84,9 +76,39 @@ class MatchTrader_Functions {
         );
     }
 
+    public static function register_settings() {
+        register_setting('matchtrader_dashboard_options', 'matchtrader_disable_frontend_route');
+    }
+
     public static function dashboard_page() {
         echo '<h1>MatchTrader Platform Dashboard</h1>';
         echo '<p>Manage your Match Trader integration here.</p>';
+        ?>
+        <div class="wrap">
+            <form method="post" action="options.php">
+                <?php
+                settings_fields('matchtrader_dashboard_options');
+                do_settings_sections('matchtraderplatform-dashboard');
+                submit_button();
+                ?>
+            </form>
+            <h2>Settings</h2>
+            <form method="post" action="options.php">
+                <?php settings_fields('matchtrader_dashboard_options'); ?>
+                <table class="form-table">
+                    <tr>
+                        <th scope="row">Disable Frontend Routes</th>
+                        <td>
+                            <?php $value = get_option('matchtrader_disable_frontend_route', 0); ?>
+                            <input type="checkbox" name="matchtrader_disable_frontend_route" value="1" <?php checked(1, $value, true); ?>>
+                            <p class="description">Check this to disable frontend routing.</p>
+                        </td>
+                    </tr>
+                </table>
+                <?php submit_button(); ?>
+            </form>
+        </div>
+        <?php
     }
 }
 
