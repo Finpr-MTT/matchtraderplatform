@@ -50,7 +50,7 @@ class MatchTraderPlatform {
         require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/settings/class-matchtrader-api-settings.php';
         require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/settings/class-matchtrader-addons-settings.php';
         require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/settings/class-matchtrader-prctable-settings.php';
-        require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/settings/class-matchtrader-general-settings.php';
+        require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/settings/class-matchtrader-woocommerce-settings.php';
     }
 
     /**

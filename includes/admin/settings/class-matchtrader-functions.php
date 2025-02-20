@@ -58,11 +58,11 @@ class MatchTrader_Functions {
 
         add_submenu_page(
             'matchtraderplatform',
-            'MTT General Settings',
-            'MTT General Settings',
+            'MTT Woo Settings',
+            'MTT Woo Settings',
             'manage_options',
-            'matchtraderplatform-general-settings',
-            ['MatchTrader_General_Settings', 'settings_page']
+            'matchtraderplatform-woo-settings',
+            ['MatchTrader_WooCommerce_Settings', 'settings_page']
         );
     }
 
