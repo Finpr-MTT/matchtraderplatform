@@ -31,6 +31,15 @@ class MatchTrader_Functions {
 
         add_submenu_page(
             'matchtraderplatform',
+            'MatchTrader Platform',
+            'MatchTrader Platform',
+            'manage_options',
+            'matchtraderplatform',
+            ['MatchTrader_General_Settings', 'settings_page']
+        );
+
+        add_submenu_page(
+            'matchtraderplatform',
             'MTT API Settings',
             'MTT API Settings',
             'manage_options',
@@ -54,6 +63,15 @@ class MatchTrader_Functions {
             'manage_options',
             'matchtraderplatform-prctable-settings',
             ['MatchTrader_PrcTable_Settings', 'settings_page']
+        );
+
+        add_submenu_page(
+            'matchtraderplatform',
+            'MTT Woo Settings',
+            'MTT Woo Settings',
+            'manage_options',
+            'matchtraderplatform-woo-settings',
+            ['MatchTrader_WooCommerce_Settings', 'settings_page']
         );
 
         add_submenu_page(
