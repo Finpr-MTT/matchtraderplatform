@@ -32,8 +32,10 @@ class MatchTraderPlatform {
      * Constructor to initialize the plugin
      */
     public function __construct() {
-        // Load dependencies
-        $this->includes();
+        // Load required files
+        $this->load_helpers();
+        $this->load_admin();
+        $this->load_public();
 
         // Hook into WordPress
         add_action('plugins_loaded', [$this, 'init']);
@@ -42,15 +44,29 @@ class MatchTraderPlatform {
     }
 
     /**
-     * Include required files
+    * Load helper classes
+    */
+    private function load_helpers() {
+        require_once MATCHTRADERPLUGIN_PATH . 'includes/helper/class-matchtrader-helper.php';
+    }
+
+    /**
+     * Load admin classes
      */
-    private function includes() {
-        require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/helper/class-matchtrader-helper.php';
-        require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/settings/class-matchtrader-functions.php';
-        require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/settings/class-matchtrader-api-settings.php';
-        require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/settings/class-matchtrader-addons-settings.php';
-        require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/settings/class-matchtrader-prctable-settings.php';
-        require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/settings/class-matchtrader-woocommerce-settings.php';
+    private function load_admin() {
+        require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/class-matchtrader-functions.php';
+        require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/class-matchtrader-api-settings.php';
+        require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/class-matchtrader-addons-settings.php';
+        require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/class-matchtrader-prctable-settings.php';
+        require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/class-matchtrader-woocommerce-settings.php';
+    }
+
+    /**
+     * Load public-facing classes
+     */
+    private function load_public() {
+        // If you plan to have frontend/public classes, include them here
+        // Example: require_once MATCHTRADERPLUGIN_PATH . 'includes/public/class-matchtrader-public.php';
     }
 
     /**
