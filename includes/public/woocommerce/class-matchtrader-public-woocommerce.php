@@ -33,6 +33,9 @@ class MatchTrader_Public_WooCommerce {
 
         if (get_option('matchtrader_enable_mtt_checkout', false)) {
             add_filter('woocommerce_locate_template', [$this, 'matchtrader_override_templates'], 10, 3);
+            add_action('woocommerce_checkout_before_order_review', 'woocommerce_order_review', 10);
+            add_action('woocommerce_checkout_order_review', 'woocommerce_checkout_payment', 20);
+            add_action('wp', [$this, 'matchtrader_split_order_review_checkout']); 
         }
 
         // Disable Product Page
@@ -114,6 +117,14 @@ class MatchTrader_Public_WooCommerce {
             }
         }
         return $template;
+    }
+
+    /**
+     * Adjust WooCommerce Checkout Layout by Removing Default Sections
+     */
+    public function matchtrader_split_order_review_checkout() {
+        remove_action('woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10);
+        remove_action('woocommerce_checkout_order_review', 'woocommerce_order_review', 10);
     }
 
 
