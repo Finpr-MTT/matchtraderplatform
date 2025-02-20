@@ -21,15 +21,6 @@ class MatchTrader_Helper {
      * @return array Logger and context.
      */
     public static function connection_response_logger() {
-        // Ensure WooCommerce is active before using wc_get_logger()
-        if (!function_exists('wc_get_logger')) {
-            error_log('[MatchTrader] WooCommerce logger is not available. Using WordPress error log instead.');
-            return [
-                'logger'  => new MatchTrader_WP_Logger(), // Fallback logger
-                'context' => ['source' => 'matchtrader_connection_response_log']
-            ];
-        }
-
         $logger = wc_get_logger();
         $context = ['source' => 'matchtrader_connection_response_log'];
         return ['logger' => $logger, 'context' => $context];
@@ -89,27 +80,5 @@ class MatchTrader_Helper {
             'message' => 'You do not have permission to access this resource.'
         ]);
         exit;
-    }
-}
-
-
-/**
- * Fallback WordPress Logger for MatchTrader if WooCommerce Logger is not available.
- */
-class MatchTrader_WP_Logger {
-    public function info($message, $context = []) {
-        error_log('[INFO] ' . $message);
-    }
-
-    public function error($message, $context = []) {
-        error_log('[ERROR] ' . $message);
-    }
-
-    public function warning($message, $context = []) {
-        error_log('[WARNING] ' . $message);
-    }
-
-    public function debug($message, $context = []) {
-        error_log('[DEBUG] ' . $message);
     }
 }
