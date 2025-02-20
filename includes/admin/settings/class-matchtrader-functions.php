@@ -21,7 +21,7 @@ class MatchTrader_Functions {
     public static function add_admin_menu() {
         add_menu_page(
             'MatchTrader Platform',
-            'MatchTrader Platform',
+            'MatchTrader',
             'manage_options',
             'matchtraderplatform',
             [__CLASS__, 'dashboard_page'],
