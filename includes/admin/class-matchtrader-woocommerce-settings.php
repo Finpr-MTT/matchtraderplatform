@@ -29,9 +29,9 @@ class MatchTrader_WooCommerce_Settings {
         register_setting('matchtrader_woo_options', 'matchtrader_disable_shop_page');
         register_setting('matchtrader_woo_options', 'matchtrader_disable_product_page');
         register_setting('matchtrader_woo_options', 'matchtrader_enable_mtt_checkout');
-        register_setting('matchtrader_woo_options', 'matchtrader_checkout_mode');
-        register_setting('matchtrader_woo_options', 'matchtrader_product_configuration');
         register_setting('matchtrader_woo_options', 'matchtrader_enable_checkout_selection');
+        register_setting('matchtrader_woo_options', 'matchtrader_checkout_mode');
+        register_setting('matchtrader_woo_options', 'matchtrader_product_configuration');        
         register_setting('matchtrader_woo_options', 'matchtrader_default_product_cart');
 
         add_settings_section('matchtrader_woo_section', 'WooCommerce Configuration', null, 'matchtraderplatform-woo-settings');
@@ -56,6 +56,11 @@ class MatchTrader_WooCommerce_Settings {
             echo '<input type="checkbox" name="matchtrader_enable_mtt_checkout" value="1" ' . checked(1, $value, false) . '>';
         }, 'matchtraderplatform-woo-settings', 'matchtrader_woo_section');
 
+        add_settings_field('matchtrader_enable_checkout_selection', 'Enable Checkout Product Selection', function() {
+            $value = get_option('matchtrader_enable_checkout_selection', '');
+            echo '<input type="checkbox" name="matchtrader_enable_checkout_selection" value="1" ' . checked(1, $value, false) . '>';
+        }, 'matchtraderplatform-woo-settings', 'matchtrader_woo_section');
+
         add_settings_field('matchtrader_checkout_mode', 'Checkout Mode', function() {
             $value = get_option('matchtrader_checkout_mode', 'single');
             echo '<select name="matchtrader_checkout_mode">
@@ -70,11 +75,6 @@ class MatchTrader_WooCommerce_Settings {
                     <option value="simple" ' . selected('simple', $value, false) . '>Simple Product</option>
                     <option value="variable" ' . selected('variable', $value, false) . '>Variable Product</option>
                   </select>';
-        }, 'matchtraderplatform-woo-settings', 'matchtrader_woo_section');
-
-        add_settings_field('matchtrader_enable_checkout_selection', 'Enable Checkout Product Selection', function() {
-            $value = get_option('matchtrader_enable_checkout_selection', '');
-            echo '<input type="checkbox" name="matchtrader_enable_checkout_selection" value="1" ' . checked(1, $value, false) . '>';
         }, 'matchtraderplatform-woo-settings', 'matchtrader_woo_section');
 
         add_settings_field('matchtrader_default_product_cart', 'Default Product on The Cart', function() {
