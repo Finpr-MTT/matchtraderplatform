@@ -9,6 +9,12 @@ class MatchTrader_Get_Account_By_UUID {
     private $save_logs;
 
     public function __construct() {
+        // Ensure WooCommerce is active
+        if (!class_exists('WooCommerce')) {
+            error_log('[MatchTrader] WooCommerce is not active. Plugin cannot function properly.');
+            return;
+        }
+
         // Determine the environment (Sandbox or Live)
         $env = get_option('matchtrader_env', 'sandbox');
         if ($env === 'sandbox') {
@@ -24,8 +30,8 @@ class MatchTrader_Get_Account_By_UUID {
         // Log initialization
         $this->log_message("Initializing MatchTrader_Get_Account_By_UUID with environment: $env");
 
-        // Hook into WooCommerce Checkout process
-        add_action('template_redirect', [$this, 'handle_uuid_param']);
+        // Hook into WooCommerce Checkout process **AFTER session is initialized**
+        add_action('wp', [$this, 'handle_uuid_param'], 5);
         add_filter('woocommerce_checkout_fields', [$this, 'prefill_checkout_fields']);
     }
 
@@ -33,22 +39,32 @@ class MatchTrader_Get_Account_By_UUID {
      * Handle the UUID parameter in URL and fetch account details.
      */
     public function handle_uuid_param() {
-        if (!is_checkout()) {
+        if (!is_checkout() || !isset($_GET['uuid'])) {
             return;
         }
 
-        if (isset($_GET['uuid']) && !empty($_GET['uuid'])) {
-            $uuid = sanitize_text_field($_GET['uuid']);
-            $this->log_message("UUID detected in URL: $uuid");
+        $uuid = sanitize_text_field($_GET['uuid']);
+        $this->log_message("UUID detected in URL: $uuid");
 
-            $account_data = $this->get_account_by_uuid($uuid);
+        if (!WC()->session) {
+            $this->log_message("WooCommerce session is not available.", 'error');
+            return;
+        }
 
-            if ($account_data) {
-                WC()->session->set('matchtrader_account_data', $account_data);
-                $this->log_message("Stored API response in WooCommerce session.");
-            } else {
-                $this->log_message("Failed to fetch account details for UUID: $uuid", 'error');
-            }
+        // Check if session data already exists
+        $cached_data = WC()->session->get('matchtrader_account_data');
+        if ($cached_data && isset($cached_data['uuid']) && $cached_data['uuid'] === $uuid) {
+            $this->log_message("Using cached account data for UUID: $uuid");
+            return;
+        }
+
+        // Fetch data from API
+        $account_data = $this->get_account_by_uuid($uuid);
+        if ($account_data) {
+            WC()->session->set('matchtrader_account_data', $account_data);
+            $this->log_message("Stored API response in WooCommerce session.");
+        } else {
+            $this->log_message("Failed to fetch account details for UUID: $uuid", 'error');
         }
     }
 
@@ -59,8 +75,7 @@ class MatchTrader_Get_Account_By_UUID {
      * @return array|null
      */
     private function get_account_by_uuid($uuid) {
-        $endpoint_path = "v1/accounts/by-uuid/{$uuid}";
-        $endpoint_url = rtrim($this->api_url, '/') . '/' . ltrim($endpoint_path, '/');
+        $endpoint_url = rtrim($this->api_url, '/') . "/v1/accounts/by-uuid/" . ltrim($uuid, '/');
 
         $this->log_message("Making API request to: $endpoint_url");
 
@@ -96,6 +111,11 @@ class MatchTrader_Get_Account_By_UUID {
      * @return array
      */
     public function prefill_checkout_fields($fields) {
+        if (!WC()->session) {
+            $this->log_message("WooCommerce session not available for pre-filling checkout fields.", 'error');
+            return $fields;
+        }
+
         $account_data = WC()->session->get('matchtrader_account_data');
 
         if (!$account_data || !isset($account_data['personalDetails'])) {
@@ -114,24 +134,6 @@ class MatchTrader_Get_Account_By_UUID {
         }
         if (!empty($account_data['email'])) {
             $fields['billing']['billing_email']['default'] = sanitize_email($account_data['email']);
-        }
-        if (!empty($account_data['contactDetails']['phoneNumber'])) {
-            $fields['billing']['billing_phone']['default'] = sanitize_text_field($account_data['contactDetails']['phoneNumber']);
-        }
-        if (!empty($account_data['addressDetails']['country'])) {
-            $fields['billing']['billing_country']['default'] = sanitize_text_field($account_data['addressDetails']['country']);
-        }
-        if (!empty($account_data['addressDetails']['state'])) {
-            $fields['billing']['billing_state']['default'] = sanitize_text_field($account_data['addressDetails']['state']);
-        }
-        if (!empty($account_data['addressDetails']['city'])) {
-            $fields['billing']['billing_city']['default'] = sanitize_text_field($account_data['addressDetails']['city']);
-        }
-        if (!empty($account_data['addressDetails']['postCode'])) {
-            $fields['billing']['billing_postcode']['default'] = sanitize_text_field($account_data['addressDetails']['postCode']);
-        }
-        if (!empty($account_data['addressDetails']['address'])) {
-            $fields['billing']['billing_address_1']['default'] = sanitize_text_field($account_data['addressDetails']['address']);
         }
 
         return $fields;
