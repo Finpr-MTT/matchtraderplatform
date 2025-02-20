@@ -88,7 +88,7 @@ class MatchTrader_Functions {
                         <td>
                             <?php $value = get_option('matchtrader_disable_frontend_route', 0); ?>
                             <input type="checkbox" name="matchtrader_disable_frontend_route" value="1" <?php checked(1, $value, true); ?>>
-                            <p class="description">Check this to disable frontend routing.</p>
+                            <span>Check this to disable frontend routing.</span>
                         </td>
                     </tr>
                 </table>
