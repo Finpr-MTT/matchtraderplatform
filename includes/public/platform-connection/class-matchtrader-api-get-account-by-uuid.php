@@ -1,17 +1,7 @@
 <?php
-/**
- * Plugin functions and definitions for Get Account by Uuid.
- *
- * For additional information on potential customization options,
- * read the developers' documentation:
- *
- * @package matchtraderplatform
- */
-
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
-
 
 class MatchTrader_Get_Account_By_UUID {
     private $api_url;
@@ -31,6 +21,9 @@ class MatchTrader_Get_Account_By_UUID {
 
         $this->save_logs = get_option('matchtrader_save_logs', false);
 
+        // Log initialization
+        $this->log_message("Initializing MatchTrader_Get_Account_By_UUID with environment: $env");
+
         // Hook into WooCommerce Checkout process
         add_action('template_redirect', [$this, 'handle_uuid_param']);
         add_filter('woocommerce_checkout_fields', [$this, 'prefill_checkout_fields']);
@@ -46,10 +39,15 @@ class MatchTrader_Get_Account_By_UUID {
 
         if (isset($_GET['uuid']) && !empty($_GET['uuid'])) {
             $uuid = sanitize_text_field($_GET['uuid']);
+            $this->log_message("UUID detected in URL: $uuid");
+
             $account_data = $this->get_account_by_uuid($uuid);
 
             if ($account_data) {
                 WC()->session->set('matchtrader_account_data', $account_data);
+                $this->log_message("Stored API response in WooCommerce session.");
+            } else {
+                $this->log_message("Failed to fetch account details for UUID: $uuid", 'error');
             }
         }
     }
@@ -64,9 +62,11 @@ class MatchTrader_Get_Account_By_UUID {
         $endpoint_path = "v1/accounts/by-uuid/{$uuid}";
         $endpoint_url = rtrim($this->api_url, '/') . '/' . ltrim($endpoint_path, '/');
 
+        $this->log_message("Making API request to: $endpoint_url");
+
         $response = wp_remote_get($endpoint_url, [
             'headers' => [
-                'Authorization' => $this->api_key,
+                'Authorization' => 'Bearer ' . $this->api_key,
                 'Accept'        => 'application/json',
                 'Content-Type'  => 'application/json'
             ],
@@ -74,7 +74,8 @@ class MatchTrader_Get_Account_By_UUID {
         ]);
 
         if (is_wp_error($response)) {
-            $this->log_api_error($response->get_error_message());
+            $error_message = $response->get_error_message();
+            $this->log_message("API request failed: $error_message", 'error');
             return null;
         }
 
@@ -82,7 +83,7 @@ class MatchTrader_Get_Account_By_UUID {
         $data = json_decode($body, true);
 
         if ($this->save_logs) {
-            $this->log_api_response($data);
+            $this->log_message("API Response: " . print_r($data, true));
         }
 
         return $data;
@@ -98,8 +99,11 @@ class MatchTrader_Get_Account_By_UUID {
         $account_data = WC()->session->get('matchtrader_account_data');
 
         if (!$account_data || !isset($account_data['personalDetails'])) {
+            $this->log_message("No account data found in session for pre-filling checkout fields.");
             return $fields;
         }
+
+        $this->log_message("Prefilling WooCommerce checkout fields with API response.");
 
         // Prefill checkout fields from API response
         if (!empty($account_data['personalDetails']['firstname'])) {
@@ -134,26 +138,23 @@ class MatchTrader_Get_Account_By_UUID {
     }
 
     /**
-     * Log API responses using MatchTrader_Helper::connection_response_logger()
+     * Log API responses and steps using WordPress default logger.
      *
-     * @param array $data
+     * @param string $message
+     * @param string $level (default: 'info', options: 'error', 'warning', 'debug')
      */
-    private function log_api_response($data) {
+    private function log_message($message, $level = 'info') {
         if ($this->save_logs) {
             $logger_data = MatchTrader_Helper::connection_response_logger();
-            $logger_data['logger']->info('API Response: ' . wp_json_encode($data), $logger_data['context']);
-        }
-    }
-
-    /**
-     * Log API errors using MatchTrader_Helper::connection_response_logger()
-     *
-     * @param string $error_message
-     */
-    private function log_api_error($error_message) {
-        if ($this->save_logs) {
-            $logger_data = MatchTrader_Helper::connection_response_logger();
-            $logger_data['logger']->error('API Error: ' . $error_message, $logger_data['context']);
+            if ($level === 'error') {
+                $logger_data['logger']->error($message, $logger_data['context']);
+            } elseif ($level === 'warning') {
+                $logger_data['logger']->warning($message, $logger_data['context']);
+            } elseif ($level === 'debug') {
+                $logger_data['logger']->debug($message, $logger_data['context']);
+            } else {
+                $logger_data['logger']->info($message, $logger_data['context']);
+            }
         }
     }
 }
