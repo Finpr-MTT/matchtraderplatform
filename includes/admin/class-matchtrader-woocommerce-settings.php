@@ -28,6 +28,7 @@ class MatchTrader_WooCommerce_Settings {
         register_setting('matchtrader_woo_options', 'matchtrader_skip_cart_page');
         register_setting('matchtrader_woo_options', 'matchtrader_disable_shop_page');
         register_setting('matchtrader_woo_options', 'matchtrader_disable_product_page');
+        register_setting('matchtrader_woo_options', 'matchtrader_enable_mtt_checkout');
         register_setting('matchtrader_woo_options', 'matchtrader_checkout_mode');
         register_setting('matchtrader_woo_options', 'matchtrader_product_configuration');
         register_setting('matchtrader_woo_options', 'matchtrader_enable_checkout_selection');
@@ -48,6 +49,11 @@ class MatchTrader_WooCommerce_Settings {
         add_settings_field('matchtrader_disable_product_page', 'Disable Product Page', function() {
             $value = get_option('matchtrader_disable_product_page', '');
             echo '<input type="checkbox" name="matchtrader_disable_product_page" value="1" ' . checked(1, $value, false) . '>';
+        }, 'matchtraderplatform-woo-settings', 'matchtrader_woo_section');
+
+        add_settings_field('matchtrader_enable_mtt_checkout', 'Enable Match Trader Checkout', function() {
+            $value = get_option('matchtrader_enable_mtt_checkout', '');
+            echo '<input type="checkbox" name="matchtrader_enable_mtt_checkout" value="1" ' . checked(1, $value, false) . '>';
         }, 'matchtraderplatform-woo-settings', 'matchtrader_woo_section');
 
         add_settings_field('matchtrader_checkout_mode', 'Checkout Mode', function() {
