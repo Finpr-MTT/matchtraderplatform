@@ -65,7 +65,6 @@ class MatchTrader_WooCommerce_Settings {
             $value = get_option('matchtrader_checkout_mode', 'single');
             echo '<select name="matchtrader_checkout_mode">
                     <option value="single" ' . selected('single', $value, false) . '>Single Product</option>
-                    <option value="multiple" ' . selected('multiple', $value, false) . '>Multiple Product</option>
                   </select>';
         }, 'matchtraderplatform-woo-settings', 'matchtrader_woo_section');
 
