@@ -64,7 +64,8 @@ class MatchTraderPlatform {
     /**
      * Load public-facing classes
      */
-    private function load_public() {
+    private function load_public() {        
+        require_once MATCHTRADERPLUGIN_PATH . 'includes/public/general/class-matchtrader-public-general.php';
         require_once MATCHTRADERPLUGIN_PATH . 'includes/public/woocommerce/class-matchtrader-public-woocommerce.php';
     }
 

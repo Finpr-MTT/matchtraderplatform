@@ -65,15 +65,6 @@ class MatchTrader_Functions {
             'matchtraderplatform-woo-settings',
             ['MatchTrader_WooCommerce_Settings', 'settings_page']
         );
-
-        add_submenu_page(
-            'matchtraderplatform',
-            'MTT Woo Settings',
-            'MTT Woo Settings',
-            'manage_options',
-            'matchtraderplatform-woo-settings',
-            ['MatchTrader_WooCommerce_Settings', 'settings_page']
-        );
     }
 
     public static function register_settings() {

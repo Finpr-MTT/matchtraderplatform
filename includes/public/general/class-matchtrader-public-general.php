@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin functions and definitions for Helper.
+ * Plugin functions and definitions for Public General.
  *
  * For additional information on potential customization options,
  * read the developers' documentation:
@@ -12,37 +12,20 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
-class MatchTrader_Helper {
-
+class MatchTrader_Public_General {
     /**
-     * Logger function to track API responses.
-     * Uses WooCommerce logging system.
-     *
-     * @return array Logger and context.
+     * Constructor to initialize the public WooCommerce modifications.
      */
-    public static function connection_response_logger() {
-        $logger = wc_get_logger();
-        $context = array('source' => 'matchtrader_connection_response_log');
-        return array('logger' => $logger, 'context' => $context);
-    }
-
-    /**
-     * Masks API Key for logging/debugging purposes.
-     *
-     * @param string $api_key The API key to be masked.
-     * @return string Masked API key.
-     */
-    public static function connection_mask_api_key($api_key) {
-        $key_length = strlen($api_key);
-        if ($key_length <= 8) {
-            return str_repeat('*', $key_length); // Mask whole key if too short
+    public function __construct() {
+        // Restrict Frontend Website Access
+        if (get_option('matchtrader_disable_frontend_route', false)) {
+            add_action('template_redirect', [$this, 'restrict_frontend_website_access']);
         }
-        $start = substr($api_key, 0, 4);
-        $end = substr($api_key, -4);
-        $masked = str_repeat('*', $key_length - 8); // Masking middle part
-        return $start . $masked . $end;
     }
 
+    /**
+     * Restrict Frontend Website Access if matchtrader_disable_frontend_route is enabled
+     */
     public function restrict_frontend_website_access() {
         if (is_admin()) {
             return; // Allow wp-admin access
@@ -66,9 +49,9 @@ class MatchTrader_Helper {
             return;
         }
 
-        // Check if the user is logged in and is an admin
+        // Allow admins to access all pages
         if (is_user_logged_in() && current_user_can('administrator')) {
-            return; // Allow admins to access all pages
+            return;
         }
 
         // Block all other requests and return JSON response
@@ -82,3 +65,6 @@ class MatchTrader_Helper {
         exit;
     }
 }
+
+// Initialize the class instance
+new MatchTrader_Public_General();
