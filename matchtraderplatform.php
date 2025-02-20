@@ -45,6 +45,7 @@ class MatchTraderPlatform {
      * Include required files
      */
     private function includes() {
+        require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/helper/class-matchtrader-helper.php';
         require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/settings/class-matchtrader-functions.php';
         require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/settings/class-matchtrader-api-settings.php';
         require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/settings/class-matchtrader-addons-settings.php';

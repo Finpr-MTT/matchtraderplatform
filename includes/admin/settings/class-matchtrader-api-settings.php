@@ -14,22 +14,17 @@ if (!defined('ABSPATH')) {
 
 class MatchTrader_Api_Settings {
 
-    public static function settings_page() {
-        ?>
-        <div class="wrap">
-            <h1>MatchTrader API Settings</h1>
-            <form method="post" action="options.php">
-                <?php
-                settings_fields('matchtrader_api_options');
-                do_settings_sections('matchtraderplatform-api-settings');
-                submit_button();
-                ?>
-            </form>
-        </div>
-        <?php
+    /**
+     * Constructor to initialize API settings.
+     */
+    public function __construct() {
+        add_action('admin_init', [$this, 'register_settings']);
     }
 
-    public static function register_settings() {
+    /**
+     * Registers API-related settings in WordPress.
+     */
+    public function register_settings() {
         register_setting('matchtrader_api_options', 'matchtrader_enable_plugin');
         register_setting('matchtrader_api_options', 'matchtrader_env');
         register_setting('matchtrader_api_options', 'matchtrader_sandbox_url');
@@ -78,6 +73,25 @@ class MatchTrader_Api_Settings {
             echo '<input type="checkbox" name="matchtrader_save_logs" value="1" '.checked(1, $value, false).'>';
         }, 'matchtraderplatform-api-settings', 'matchtrader_api_section');
     }
+
+    /**
+     * Renders the API settings page.
+     */
+    public static function settings_page() {
+        ?>
+        <div class="wrap">
+            <h1>MatchTrader API Settings</h1>
+            <form method="post" action="options.php">
+                <?php
+                settings_fields('matchtrader_api_options');
+                do_settings_sections('matchtraderplatform-api-settings');
+                submit_button();
+                ?>
+            </form>
+        </div>
+        <?php
+    }
 }
 
-add_action('admin_init', ['MatchTrader_Api_Settings', 'register_settings']);
+// Initialize the class instance
+new MatchTrader_Api_Settings();
