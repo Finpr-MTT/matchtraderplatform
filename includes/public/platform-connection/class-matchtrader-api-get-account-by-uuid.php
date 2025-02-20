@@ -68,7 +68,7 @@ class MatchTrader_Get_Account_By_UUID {
      * @param string $uuid
      * @return array|null
      */
-    private function get_account_by_uuid($uuid) {
+    public function get_account_by_uuid($uuid) {
         $endpoint_url = rtrim($this->api_url, '/') . "/v1/accounts/by-uuid/" . ltrim($uuid, '/');
 
         $this->log_message("Making API request to: $endpoint_url");
