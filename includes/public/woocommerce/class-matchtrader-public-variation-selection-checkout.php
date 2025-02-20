@@ -16,17 +16,18 @@ class MatchTrader_Variation_Manager {
     private $default_product_id;
 
     public function __construct() {
-        // Set the default product from WooCommerce option
-        $this->default_product_id = get_option('matchtrader_default_product_cart', 89); // Default fallback to 1202
+        if (get_option('matchtrader_enable_checkout_selection', false)) {
+            $this->default_product_id = get_option('matchtrader_default_product_cart', 89); // Default fallback to 1202
 
-        add_action('template_redirect', [$this, 'add_default_variation_to_cart'], 5);
-        add_filter('woocommerce_checkout_redirect_empty_cart', '__return_false');
+            add_action('template_redirect', [$this, 'add_default_variation_to_cart'], 5);
+            add_filter('woocommerce_checkout_redirect_empty_cart', '__return_false');
 
-        // Initialize variation switcher hooks
-        add_action('woocommerce_checkout_before_customer_details', [$this, 'display_variant_selector'], 5);
-        add_action('wp_ajax_matchtrader_update_cart', [$this, 'update_cart']);
-        add_action('wp_ajax_nopriv_matchtrader_update_cart', [$this, 'update_cart']);
-        add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts']);
+            // Initialize variation switcher hooks
+            add_action('woocommerce_checkout_before_customer_details', [$this, 'display_variant_selector'], 5);
+            add_action('wp_ajax_matchtrader_update_cart', [$this, 'update_cart']);
+            add_action('wp_ajax_nopriv_matchtrader_update_cart', [$this, 'update_cart']);
+            add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts']);
+        }
     }
 
     public function enqueue_scripts() {
