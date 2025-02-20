@@ -23,6 +23,9 @@ class MatchTrader_Get_Account_By_UUID {
 
         // Log initialization
         $this->log_message("Initializing MatchTrader_Get_Account_By_UUID with environment: $env");
+
+        // Hook into WooCommerce Checkout process **AFTER session is initialized**
+        add_action('template_redirect', [$this, 'handle_uuid_param'], 3);
         add_filter('woocommerce_checkout_fields', [$this, 'prefill_checkout_fields']);
     }
 
@@ -30,10 +33,6 @@ class MatchTrader_Get_Account_By_UUID {
      * Handle the UUID parameter in URL and fetch account details.
      */
     public function handle_uuid_param() {
-        if (!is_checkout() || !isset($_GET['uuid'])) {
-            return;
-        }
-
         $uuid = sanitize_text_field($_GET['uuid']);
         $this->log_message("UUID detected in URL: $uuid");
 

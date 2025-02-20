@@ -17,9 +17,8 @@ class MatchTrader_Variation_Manager {
 
     public function __construct() {
         if (get_option('matchtrader_enable_checkout_selection', false)) {
-            $this->default_product_id = get_option('matchtrader_default_product_cart', 89);
+            $this->default_product_id = get_option('matchtrader_default_product_cart', 89); // Default fallback to 1202
 
-            add_action('template_redirect', [$this, 'fetch_uuid_data'], 3);
             add_action('template_redirect', [$this, 'add_default_variation_to_cart'], 5);
             add_filter('woocommerce_checkout_redirect_empty_cart', '__return_false');
 
@@ -28,38 +27,6 @@ class MatchTrader_Variation_Manager {
             add_action('wp_ajax_matchtrader_update_cart', [$this, 'update_cart']);
             add_action('wp_ajax_nopriv_matchtrader_update_cart', [$this, 'update_cart']);
         }
-    }
-
-    /**
-     * Fetch user details from API if UUID exists in URL
-     */
-    public function fetch_uuid_data() {
-        $uuid = sanitize_text_field($_GET['uuid']);
-        $this->log_message("UUID detected in URL: $uuid");
-
-        // Check if data is already stored in session
-        if (!WC()->session) {
-            $this->log_message("WooCommerce session not available.", 'error');
-            return;
-        }
-
-        $cached_data = WC()->session->get('matchtrader_account_data');
-        if ($cached_data && isset($cached_data['uuid']) && $cached_data['uuid'] === $uuid) {
-            $this->log_message("Using cached account data for UUID: $uuid");
-            return;
-        }
-
-        // Fetch data from API
-        $api_instance = new MatchTrader_Get_Account_By_UUID();
-        $account_data = $api_instance->get_account_by_uuid($uuid);
-
-        if ($account_data) {
-            WC()->session->set('matchtrader_account_data', $account_data);
-            $this->log_message("Stored API response in WooCommerce session.");
-        } else {
-            $this->log_message("Failed to fetch account details for UUID: $uuid", 'error');
-        }
-        error_log(print_r(WC()->session->get('matchtrader_account_data'), true));
     }
 
     public function add_default_variation_to_cart() {
@@ -208,25 +175,6 @@ class MatchTrader_Variation_Manager {
             }
         }
         return false;
-    }
-
-    /**
-     * Log messages for debugging
-     *
-     * @param string $message
-     * @param string $level (default: 'info', options: 'error', 'warning', 'debug')
-     */
-    private function log_message($message, $level = 'info') {
-        $logger_data = MatchTrader_Helper::connection_response_logger();
-        if ($level === 'error') {
-            $logger_data['logger']->error($message, $logger_data['context']);
-        } elseif ($level === 'warning') {
-            $logger_data['logger']->warning($message, $logger_data['context']);
-        } elseif ($level === 'debug') {
-            $logger_data['logger']->debug($message, $logger_data['context']);
-        } else {
-            $logger_data['logger']->info($message, $logger_data['context']);
-        }
     }
 }
 
