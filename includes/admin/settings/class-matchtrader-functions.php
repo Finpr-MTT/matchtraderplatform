@@ -25,7 +25,8 @@ class MatchTrader_Functions {
             'manage_options',
             'matchtraderplatform',
             [__CLASS__, 'dashboard_page'],
-            'dashicons-chart-area'
+            'dashicons-chart-area',
+             3 // Position
         );
 
         add_submenu_page(
