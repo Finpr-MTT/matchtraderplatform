@@ -10,7 +10,7 @@
  * Plugin URI:        https://finpr.com
  * Description:       This Plugin to Create User and Account to Dashboard Match Trader
  * Version:           1.0.1
- * Author:            Finpr x MTT Team
+ * Author:            Finpr x Match Trader Team
  * Author URI:        https://finpr.com
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
@@ -22,14 +22,66 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
-class Match_Trader_Platform_Setup {
+// Define plugin constants
+define('MATCHTRADERPLUGIN_PATH', plugin_dir_path(__FILE__));
+define('MATCHTRADERPLUGIN_URL', plugin_dir_url(__FILE__));
+
+class MatchTraderPlatform {
+
+    /**
+     * Constructor to initialize the plugin
+     */
     public function __construct() {
-        add_action('wp_enqueue_scripts', [$this, 'matchtraderplatform_enqueue_scripts']);
+        // Load dependencies
+        $this->includes();
+
+        // Hook into WordPress
+        add_action('plugins_loaded', [$this, 'init']);
+        register_activation_hook(__FILE__, [$this, 'activate']);
+        register_deactivation_hook(__FILE__, [$this, 'deactivate']);
     }
 
-    public function matchtraderplatform_enqueue_scripts() {
-        
+    /**
+     * Include required files
+     */
+    private function includes() {
+        require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/settings/class-matchtrader-functions.php';
+        require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/settings/class-matchtrader-api-settings.php';
+        require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/settings/class-matchtrader-addons-settings.php';
+        require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/settings/class-matchtrader-prctable-settings.php';
+        require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/settings/class-matchtrader-general-settings.php';
+    }
+
+    /**
+     * Initialize plugin functionality
+     */
+    public function init() {
+        MatchTrader_Functions::init();
+    }
+
+    /**
+     * Activation Hook: Run when the plugin is activated
+     */
+    public function activate() {
+        // Set default options if not already set
+        if (get_option('matchtrader_enable_plugin') === false) {
+            update_option('matchtrader_enable_plugin', 1);
+        }
+        if (get_option('matchtrader_env') === false) {
+            update_option('matchtrader_env', 'sandbox');
+        }
+        if (get_option('matchtrader_save_logs') === false) {
+            update_option('matchtrader_save_logs', 0);
+        }
+    }
+
+    /**
+     * Deactivation Hook: Run when the plugin is deactivated
+     */
+    public function deactivate() {
+        // No immediate cleanup needed
     }
 }
 
-new Match_Trader_Platform_Setup();
+// Initialize the plugin
+new MatchTraderPlatform();
