@@ -34,14 +34,6 @@ class MatchTrader_Variation_Manager {
      * Fetch user details from API if UUID exists in URL
      */
     public function fetch_uuid_data() {
-        if (!is_checkout()) {
-            return;
-        }
-
-        if (!isset($_GET['uuid']) || empty($_GET['uuid'])) {
-            return;
-        }
-
         $uuid = sanitize_text_field($_GET['uuid']);
         $this->log_message("UUID detected in URL: $uuid");
 
