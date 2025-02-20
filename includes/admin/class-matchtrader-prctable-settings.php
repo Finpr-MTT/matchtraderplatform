@@ -11,3 +11,35 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+
+class MatchTrader_PrcTable_Settings{
+
+    /**
+     * Constructor to initialize WooCommerce settings.
+     */
+    public function __construct() {
+        add_action('admin_init', [$this, 'register_settings']);
+    }
+
+    /**
+     * Registers WooCommerce settings in WordPress.
+     */
+    public function register_settings() {
+
+    }
+
+    /**
+     * Renders the WooCommerce settings page.
+     */
+    public static function settings_page() {
+        ?>
+        <div class="wrap">
+            <h1>MTT Pricing Table Settings</h1>
+            <p>This section is currently under development.</p>
+        </div>
+        <?php
+    }
+}
+
+// Initialize the class instance
+new MatchTrader_PrcTable_Settings();

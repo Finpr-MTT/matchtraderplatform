@@ -35,6 +35,7 @@ class MatchTrader_Addons_Settings{
         ?>
         <div class="wrap">
             <h1>MTT Addons Settings</h1>
+            <p>This section is currently under development.</p>
         </div>
         <?php
     }
