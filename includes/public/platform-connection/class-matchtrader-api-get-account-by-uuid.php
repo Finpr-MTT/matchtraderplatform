@@ -9,13 +9,7 @@ class MatchTrader_Get_Account_By_UUID {
     private $save_logs;
 
     public function __construct() {
-        // Ensure WooCommerce is active
-        if (!class_exists('WooCommerce')) {
-            error_log('[MatchTrader] WooCommerce is not active. Plugin cannot function properly.');
-            return;
-        }
-
-        // Determine the environment (Sandbox or Live)
+=        // Determine the environment (Sandbox or Live)
         $env = get_option('matchtrader_env', 'sandbox');
         if ($env === 'sandbox') {
             $this->api_url = get_option('matchtrader_sandbox_url', 'https://broker-api-demo.match-trader.com');
