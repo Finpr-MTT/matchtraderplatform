@@ -15,9 +15,9 @@ if (!defined('ABSPATH')) {
 class MatchTrader_Variable_Product_Settings {
 
     public function __construct() {
-        // Check if MatchTrader is enabled and Product Configuration is set to "variable"
+        // Only apply if MatchTrader is enabled and product configuration is set to "variable"
         if ($this->is_matchtrader_enabled_for_variable_products()) {
-            add_action('woocommerce_variation_options_pricing', [$this, 'add_matchtrader_challenge_id_field'], 10, 3);
+            add_action('woocommerce_product_after_variable_attributes', [$this, 'add_matchtrader_challenge_id_field'], 10, 3);
             add_action('woocommerce_save_product_variation', [$this, 'save_matchtrader_challenge_id'], 10, 2);
         }
     }
@@ -42,15 +42,22 @@ class MatchTrader_Variable_Product_Settings {
      * @param object $variation WooCommerce product variation object.
      */
     public function add_matchtrader_challenge_id_field($loop, $variation_data, $variation) {
-        woocommerce_wp_text_input([
-            'id'          => 'matchtrader_challenge_id_' . $variation->ID,
-            'name'        => 'matchtrader_challenge_id[' . $variation->ID . ']',
-            'value'       => get_post_meta($variation->ID, '_matchtrader_challenge_id', true),
-            'label'       => __('MatchTrader Challenge ID', 'matchtraderplatform'),
-            'desc_tip'    => true,
-            'description' => __('Enter the MatchTrader Challenge ID for this variation.', 'matchtraderplatform'),
-            'type'        => 'text',
-        ]);
+        $challenge_id = get_post_meta($variation->ID, '_matchtrader_challenge_id', true);
+        ?>
+        <tr>
+            <td class="form-row form-row-full">
+                <label for="matchtrader_challenge_id_<?php echo esc_attr($variation->ID); ?>">
+                    <?php esc_html_e('MatchTrader Challenge ID', 'matchtraderplatform'); ?>
+                </label>
+                <input type="text" 
+                       id="matchtrader_challenge_id_<?php echo esc_attr($variation->ID); ?>" 
+                       name="matchtrader_challenge_id[<?php echo esc_attr($variation->ID); ?>]" 
+                       value="<?php echo esc_attr($challenge_id); ?>" 
+                       placeholder="<?php esc_attr_e('Enter MatchTrader Challenge ID', 'matchtraderplatform'); ?>" />
+                <p class="description"><?php esc_html_e('Enter the MatchTrader Challenge ID for this variation.', 'matchtraderplatform'); ?></p>
+            </td>
+        </tr>
+        <?php
     }
 
     /**
