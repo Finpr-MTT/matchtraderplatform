@@ -35,7 +35,7 @@ class MatchTrader_Get_Account_By_UUID {
         add_filter('woocommerce_checkout_fields', [$this, 'prefill_checkout_fields']);
 
         // Hook into order update to save UUID
-        add_action('woocommerce_checkout_update_order_meta', [$this, 'save_uuid_to_order_meta'], 10, 2);
+        add_action('woocommerce_checkout_update_order_meta', [$this, 'save_uuid_challenge_id_to_order_meta'], 10, 2);
     }
 
     /**
@@ -96,8 +96,9 @@ class MatchTrader_Get_Account_By_UUID {
      * @param int $order_id WooCommerce Order ID
      * @param array $data Order data
      */
-    public function save_uuid_to_order_meta($order_id, $data) {
+    public function save_uuid_challenge_id_to_order_meta($order_id, $data) {
         $uuid = '';
+        $challenge_id = '';
 
         // Check if UUID exists in the URL
         if (isset($_GET['uuid']) && !empty($_GET['uuid'])) {
@@ -114,7 +115,21 @@ class MatchTrader_Get_Account_By_UUID {
         if (!empty($uuid)) {
             update_post_meta($order_id, '_matchtrader_account_uuid', $uuid);
         }
+
+        // Get Challenge ID from the cart
+        foreach (WC()->cart->get_cart() as $cart_item) {
+            if (isset($cart_item['variation_id']) && !empty($cart_item['variation_id'])) {
+                $challenge_id = get_post_meta($cart_item['variation_id'], '_matchtrader_challenge_id', true);
+                break; // Save only the first match (assuming 1 product in cart)
+            }
+        }
+
+        // Save Challenge ID as order meta if available
+        if (!empty($challenge_id)) {
+            update_post_meta($order_id, '_matchtrader_challenge_id', $challenge_id);
+        }
     }
+
 
 
     /**
