@@ -105,25 +105,25 @@ class MatchTrader_API_Helper {
                 return $body;
             case 204:
                 self::log_api_success("$method Request to $url successful but no content");
-                return null;
+                return $body;
             case 400:
                 self::log_api_error("400 Bad Request - Invalid request to $url", $body);
-                return null;
+                return $body;
             case 401:
                 self::log_api_error("401 Unauthorized - Invalid API key for $url", $body);
-                return null;
+                return $body;
             case 403:
                 self::log_api_error("403 Forbidden - No permission for $url", $body);
-                return null;
+                return $body;
             case 422:
                 self::log_api_error("422 Unprocessable Entity - Request correct but cannot be processed for $url", $body);
-                return null;
+                return $body;
             case 500:
                 self::log_api_error("500 Internal Server Error - MatchTrader API failed at $url", $body);
-                return null;
+                return $body;
             default:
                 self::log_api_error("$status_code Unexpected API response from $url", $body);
-                return null;
+                return $body;
         }
     }
 
