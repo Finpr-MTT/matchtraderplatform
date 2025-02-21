@@ -129,16 +129,19 @@ class MatchTrader_Create_Trading_Account {
 
         // Send API request using the centralized helper
         $response = MatchTrader_API_Helper::post_request($endpoint, $payload);
-        $uuid = $response['uuid'] ?? null;
-
-        if (!empty($uuid)) {
-            update_post_meta($order->get_id(), '_matchtrader_account_uuid', $uuid);
-            $order->add_order_note(__('MatchTrader Account Created: ' . $uuid, 'matchtraderplatform'));
+        
+        if (!empty($response['uuid'])) {
+            update_post_meta($order->get_id(), '_matchtrader_account_uuid', $response['uuid']);
+            $order->add_order_note(__('MatchTrader Account Created: ' . $response['uuid'], 'matchtraderplatform'));
+            return $response['uuid'];
         }
 
-        return $uuid;
-    }
+        // Handle API Error
+        $error_message = isset($response['title']) ? $response['title'] . ' - ' . ($response['detail'] ?? 'Unknown error') : 'Unknown API error';
+        $order->add_order_note(__('MatchTrader Account Creation Failed: ' . $error_message, 'matchtraderplatform'));
 
+        return null;
+    }
 
     /**
      * Create a Trading Account.
@@ -158,13 +161,18 @@ class MatchTrader_Create_Trading_Account {
         ];
 
         $response = MatchTrader_API_Helper::post_request($endpoint, $payload);
-        $trading_id = $response['id'] ?? null;
-
-        if (!empty($trading_id)) {
-            update_post_meta($order_id, '_matchtrader_trading_account_id', $trading_id);
+        
+        if (!empty($response['id'])) {
+            update_post_meta($order_id, '_matchtrader_trading_account_id', $response['id']);
             $order = wc_get_order($order_id);
-            $order->add_order_note(__('MatchTrader Trading Account Created: ' . $trading_id, 'matchtraderplatform'));
+            $order->add_order_note(__('MatchTrader Trading Account Created: ' . $response['id'], 'matchtraderplatform'));
+            return;
         }
+
+        // Handle API Error
+        $error_message = isset($response['title']) ? $response['title'] . ' - ' . ($response['detail'] ?? 'Unknown error') : 'Unknown API error';
+        $order = wc_get_order($order_id);
+        $order->add_order_note(__('MatchTrader Trading Account Creation Failed: ' . $error_message, 'matchtraderplatform'));
     }
 }
 
