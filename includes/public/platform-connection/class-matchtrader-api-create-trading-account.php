@@ -38,13 +38,12 @@ class MatchTrader_Create_Trading_Account {
         if (false !== get_transient('send_api_lock_' . $order_id)) {
             return;
         }
+        set_transient('send_api_lock_' . $order_id, true, 3);
 
-        // Check if connection was already completed, if so, exit early
+        // Check if connection was already completed; if so, do NOT send any API request
         if (get_post_meta($order_id, '_matchtrader_connection_completed', true)) {
             return;
         }
-
-        set_transient('send_api_lock_' . $order_id, true, 3);
 
         // Fetch order details
         $uuid = get_post_meta($order_id, '_matchtrader_account_uuid', true);
@@ -55,29 +54,26 @@ class MatchTrader_Create_Trading_Account {
         // If UUID exists, create a trading account
         if (!empty($uuid)) {
             $this->create_trading_account($challenge_id, $uuid, $name, $order_id);
-            return;
-        }
-
-        // Fetch UUID by Email
-        $uuid = $this->get_account_uuid_by_email($email);
-        if (!empty($uuid)) {
-            update_post_meta($order_id, '_matchtrader_account_uuid', $uuid);
-            $this->create_trading_account($challenge_id, $uuid, $name, $order_id);
-            return;
-        }
-
-        // If email is not found, create a new account
-        $uuid = $this->create_new_account($order);
-        if (!empty($uuid)) {
-            update_post_meta($order_id, '_matchtrader_account_uuid', $uuid);
-            $this->create_trading_account($challenge_id, $uuid, $name, $order_id);
+        } else {
+            // Fetch UUID by Email
+            $uuid = $this->get_account_uuid_by_email($email);
+            if (!empty($uuid)) {
+                update_post_meta($order_id, '_matchtrader_account_uuid', $uuid);
+                $this->create_trading_account($challenge_id, $uuid, $name, $order_id);
+            } else {
+                // If email is not found, create a new account
+                $uuid = $this->create_new_account($order);
+                if (!empty($uuid)) {
+                    update_post_meta($order_id, '_matchtrader_account_uuid', $uuid);
+                    $this->create_trading_account($challenge_id, $uuid, $name, $order_id);
+                }
+            }
         }
 
         // Mark as processed and remove transient lock
         update_post_meta($order_id, '_matchtrader_connection_completed', 1);
         delete_transient('send_api_lock_' . $order_id);
     }
-
 
     /**
      * Get UUID by checking email.
