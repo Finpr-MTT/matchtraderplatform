@@ -91,9 +91,9 @@ class MatchTrader_Create_Trading_Account {
     }
 
     /**
-     * Create a new account if email does not exist.
+     * Create a new MatchTrader account using WooCommerce billing details.
      *
-     * @param WC_Order $order
+     * @param WC_Order $order WooCommerce Order Object
      * @return string|null
      */
     private function create_new_account($order) {
@@ -103,25 +103,42 @@ class MatchTrader_Create_Trading_Account {
             "email" => $order->get_billing_email(),
             "password" => wp_generate_password(),
             "clientType" => "RETAIL",
-            "createAsDepositedAccount" => false,
             "personalDetails" => [
                 "firstname" => $order->get_billing_first_name(),
                 "lastname" => $order->get_billing_last_name(),
+                "citizenship" => $order->get_billing_country(), // Assuming country as citizenship
+                "language" => "en" // Defaulting to English, can be dynamic if needed
             ],
             "contactDetails" => [
                 "phoneNumber" => $order->get_billing_phone()
+            ],
+            "addressDetails" => [
+                "country" => $order->get_billing_country(),
+                "state" => $order->get_billing_state(),
+                "city" => $order->get_billing_city(),
+                "postCode" => $order->get_billing_postcode(),
+                "address" => $order->get_billing_address_1()
+            ],
+            "bankingDetails" => [
+                "accountName" => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name()
+            ],
+            "leadDetails" => [
+                "source" => "woocommerce"
             ]
         ];
 
+        // Send API request using the centralized helper
         $response = MatchTrader_API_Helper::post_request($endpoint, $payload);
         $uuid = $response['uuid'] ?? null;
 
         if (!empty($uuid)) {
+            update_post_meta($order->get_id(), '_matchtrader_account_uuid', $uuid);
             $order->add_order_note(__('MatchTrader Account Created: ' . $uuid, 'matchtraderplatform'));
         }
 
         return $uuid;
     }
+
 
     /**
      * Create a Trading Account.
