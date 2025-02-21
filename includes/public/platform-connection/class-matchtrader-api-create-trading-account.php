@@ -193,9 +193,6 @@ class MatchTrader_Create_Trading_Account {
         if (!empty($response['status'])) {
             $error_parts[] = "Status: " . $response['status'];
         }
-        if (!empty($response['type'])) {
-            $error_parts[] = "Type: " . $response['type'];
-        }
         if (!empty($response['title'])) {
             $error_parts[] = "Title: " . $response['title'];
         }
