@@ -136,12 +136,13 @@ class MatchTrader_Create_Trading_Account {
             return $response['uuid'];
         }
 
-        // Handle API Error
-        $error_message = isset($response['title']) ? $response['title'] . ' - ' . ($response['detail'] ?? 'Unknown error') : 'Unknown API error';
+        // Handle API Error and add detailed order note
+        $error_message = self::format_api_error_message($response);
         $order->add_order_note(__('MatchTrader Account Creation Failed: ' . $error_message, 'matchtraderplatform'));
 
         return null;
     }
+
 
     /**
      * Create a Trading Account.
@@ -169,11 +170,41 @@ class MatchTrader_Create_Trading_Account {
             return;
         }
 
-        // Handle API Error
-        $error_message = isset($response['title']) ? $response['title'] . ' - ' . ($response['detail'] ?? 'Unknown error') : 'Unknown API error';
+        // Handle API Error and add detailed order note
+        $error_message = self::format_api_error_message($response);
         $order = wc_get_order($order_id);
         $order->add_order_note(__('MatchTrader Trading Account Creation Failed: ' . $error_message, 'matchtraderplatform'));
     }
+
+    /**
+     * Format API error message for WooCommerce order notes.
+     *
+     * @param array|null $response
+     * @return string
+     */
+    private static function format_api_error_message($response) {
+        if (empty($response)) {
+            return 'Unknown API error';
+        }
+
+        $error_parts = [];
+
+        if (!empty($response['status'])) {
+            $error_parts[] = "Status: " . $response['status'];
+        }
+        if (!empty($response['type'])) {
+            $error_parts[] = "Type: " . $response['type'];
+        }
+        if (!empty($response['title'])) {
+            $error_parts[] = "Title: " . $response['title'];
+        }
+        if (!empty($response['detail'])) {
+            $error_parts[] = "Detail: " . $response['detail'];
+        }
+
+        return implode(" | ", $error_parts);
+    }
+
 }
 
 // Initialize the class
