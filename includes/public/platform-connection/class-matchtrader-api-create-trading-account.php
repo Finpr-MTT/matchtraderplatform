@@ -38,12 +38,13 @@ class MatchTrader_Create_Trading_Account {
         if (false !== get_transient('send_api_lock_' . $order_id)) {
             return;
         }
-        set_transient('send_api_lock_' . $order_id, true, 3);
 
-        // Check if connection was already completed
+        // Check if connection was already completed, if so, exit early
         if (get_post_meta($order_id, '_matchtrader_connection_completed', true)) {
             return;
         }
+
+        set_transient('send_api_lock_' . $order_id, true, 3);
 
         // Fetch order details
         $uuid = get_post_meta($order_id, '_matchtrader_account_uuid', true);
@@ -76,6 +77,7 @@ class MatchTrader_Create_Trading_Account {
         update_post_meta($order_id, '_matchtrader_connection_completed', 1);
         delete_transient('send_api_lock_' . $order_id);
     }
+
 
     /**
      * Get UUID by checking email.

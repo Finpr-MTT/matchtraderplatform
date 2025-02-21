@@ -93,6 +93,7 @@ class MatchTrader_Get_Account_By_UUID {
         if (!empty($challenge_id)) {
             update_post_meta($order_id, '_matchtrader_challenge_id', $challenge_id);
         }
+         update_post_meta($order_id, '_matchtrader_connection_completed', 0);
     }
 
     /**
