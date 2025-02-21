@@ -170,7 +170,7 @@ class MatchTrader_Create_Trading_Account {
         }
 
         // Handle API Error and add detailed order note
-        $error_message = $response;
+        $error_message = self::format_api_error_message($response);
         $order = wc_get_order($order_id);
         $order->add_order_note(__('MatchTrader Trading Account Creation Failed: ' . $error_message, 'matchtraderplatform'));
     }
