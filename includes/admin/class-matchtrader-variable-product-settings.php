@@ -42,22 +42,16 @@ class MatchTrader_Variable_Product_Settings {
      * @param object $variation WooCommerce product variation object.
      */
     public function add_matchtrader_challenge_id_field($loop, $variation_data, $variation) {
-        $challenge_id = get_post_meta($variation->ID, '_matchtrader_challenge_id', true);
-        ?>
-        <tr>
-            <td class="form-row form-row-full">
-                <label for="matchtrader_challenge_id_<?php echo esc_attr($variation->ID); ?>">
-                    <?php esc_html_e('MatchTrader Challenge ID', 'matchtraderplatform'); ?>
-                </label>
-                <input type="text" 
-                       id="matchtrader_challenge_id_<?php echo esc_attr($variation->ID); ?>" 
-                       name="matchtrader_challenge_id[<?php echo esc_attr($variation->ID); ?>]" 
-                       value="<?php echo esc_attr($challenge_id); ?>" 
-                       placeholder="<?php esc_attr_e('Enter MatchTrader Challenge ID', 'matchtraderplatform'); ?>" />
-                <p class="description"><?php esc_html_e('Enter the MatchTrader Challenge ID for this variation.', 'matchtraderplatform'); ?></p>
-            </td>
-        </tr>
-        <?php
+        woocommerce_wp_text_input([
+            'id'          => 'matchtrader_challenge_id_' . $variation->ID,
+            'name'        => 'matchtrader_challenge_id[' . $variation->ID . ']',
+            'value'       => get_post_meta($variation->ID, '_matchtrader_challenge_id', true),
+            'label'       => __('MatchTrader Challenge ID', 'matchtraderplatform'),
+            'desc_tip'    => true,
+            'description' => __('Enter the MatchTrader Challenge ID for this variation.', 'matchtraderplatform'),
+            'type'        => 'text',
+            'wrapper_class' => 'form-row form-row-full',
+        ]);
     }
 
     /**
