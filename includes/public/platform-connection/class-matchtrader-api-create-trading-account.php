@@ -1,39 +1,24 @@
 <?php
+/**
+ * Plugin functions and definitions for Get Account by Uuid.
+ *
+ * For additional information on potential customization options,
+ * read the developers' documentation:
+ *
+ * @package matchtraderplatform
+ */
+
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
 // Ensure the helper class is included
-require_once MATCHTRADERPLUGIN_PATH . 'includes/admin/helper/class-matchtrader-helper.php';
+require_once MATCHTRADERPLUGIN_PATH . 'includes/public/class-matchtrader-api-helper.php';
 
 class MatchTrader_Create_Trading_Account {
-    private $api_url;
-    private $api_key;
-    private $save_logs;
 
     public function __construct() {
-        // Initialize API settings on class instantiation
-        $this->initialize_api_settings();
-
-        // Hook into WooCommerce order status change
         add_action('woocommerce_order_status_changed', [$this, 'handle_order_status_change'], 10, 4);
-    }
-
-    /**
-     * Initialize API settings
-     */
-    private function initialize_api_settings() {
-        $env = get_option('matchtrader_env', 'sandbox');
-
-        if ($env === 'live') {
-            $this->api_url = get_option('matchtrader_live_url', 'https://broker-api.match-trader.com');
-            $this->api_key = get_option('matchtrader_live_key', '');
-        } else {
-            $this->api_url = get_option('matchtrader_sandbox_url', 'https://broker-api-demo.match-trader.com');
-            $this->api_key = get_option('matchtrader_sandbox_key', '');
-        }
-
-        $this->save_logs = get_option('matchtrader_save_logs', false);
     }
 
     /**
@@ -99,24 +84,10 @@ class MatchTrader_Create_Trading_Account {
      * @return string|null
      */
     private function get_account_uuid_by_email($email) {
-        $endpoint = rtrim($this->api_url, '/') . '/v1/accounts/by-email/' . urlencode($email);
-        
-        $response = wp_remote_get($endpoint, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $this->api_key,
-                'Accept'        => 'application/json',
-                'Content-Type'  => 'application/json'
-            ],
-            'timeout' => 10
-        ]);
+        $endpoint = "v1/accounts/by-email/" . urlencode($email);
+        $response = MatchTrader_API_Helper::get_request($endpoint);
 
-        if (is_wp_error($response)) {
-            $this->log_api_error($response->get_error_message());
-            return null;
-        }
-
-        $body = json_decode(wp_remote_retrieve_body($response), true);
-        return $body['uuid'] ?? null;
+        return $response['uuid'] ?? null;
     }
 
     /**
@@ -126,7 +97,7 @@ class MatchTrader_Create_Trading_Account {
      * @return string|null
      */
     private function create_new_account($order) {
-        $endpoint = rtrim($this->api_url, '/') . '/v1/accounts';
+        $endpoint = "v1/accounts";
 
         $payload = [
             "email" => $order->get_billing_email(),
@@ -142,22 +113,14 @@ class MatchTrader_Create_Trading_Account {
             ]
         ];
 
-        $response = wp_remote_post($endpoint, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $this->api_key,
-                'Content-Type'  => 'application/json'
-            ],
-            'body'    => json_encode($payload),
-            'timeout' => 10
-        ]);
+        $response = MatchTrader_API_Helper::post_request($endpoint, $payload);
+        $uuid = $response['uuid'] ?? null;
 
-        if (is_wp_error($response)) {
-            $this->log_api_error($response->get_error_message());
-            return null;
+        if (!empty($uuid)) {
+            $order->add_order_note(__('MatchTrader Account Created: ' . $uuid, 'matchtraderplatform'));
         }
 
-        $body = json_decode(wp_remote_retrieve_body($response), true);
-        return $body['uuid'] ?? null;
+        return $uuid;
     }
 
     /**
@@ -169,7 +132,7 @@ class MatchTrader_Create_Trading_Account {
      * @param int $order_id
      */
     private function create_trading_account($challenge_id, $uuid, $name, $order_id) {
-        $endpoint = rtrim($this->api_url, '/') . '/v1/prop/accounts?instantlyActive=false&phaseStep=1';
+        $endpoint = "v1/prop/accounts?instantlyActive=false&phaseStep=1";
 
         $payload = [
             "challengeId" => $challenge_id,
@@ -177,37 +140,13 @@ class MatchTrader_Create_Trading_Account {
             "name" => $name
         ];
 
-        $response = wp_remote_post($endpoint, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $this->api_key,
-                'Content-Type'  => 'application/json'
-            ],
-            'body'    => json_encode($payload),
-            'timeout' => 10
-        ]);
-
-        if (is_wp_error($response)) {
-            $this->log_api_error($response->get_error_message());
-            return;
-        }
-
-        $body = json_decode(wp_remote_retrieve_body($response), true);
-        $trading_id = $body['id'] ?? null;
+        $response = MatchTrader_API_Helper::post_request($endpoint, $payload);
+        $trading_id = $response['id'] ?? null;
 
         if (!empty($trading_id)) {
             update_post_meta($order_id, '_matchtrader_trading_account_id', $trading_id);
-        }
-    }
-
-    /**
-     * Log API errors using MatchTrader_Helper::connection_response_logger()
-     *
-     * @param string $error_message
-     */
-    private function log_api_error($error_message) {
-        if ($this->save_logs) {
-            $logger_data = MatchTrader_Helper::connection_response_logger();
-            $logger_data['logger']->error('API Error: ' . $error_message, $logger_data['context']);
+            $order = wc_get_order($order_id);
+            $order->add_order_note(__('MatchTrader Trading Account Created: ' . $trading_id, 'matchtraderplatform'));
         }
     }
 }

@@ -12,24 +12,12 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
+// Ensure the helper class is included
+require_once MATCHTRADERPLUGIN_PATH . 'includes/public/class-matchtrader-api-helper.php';
+
 class MatchTrader_Get_Account_By_UUID {
-    private $api_url;
-    private $api_key;
-    private $save_logs;
 
     public function __construct() {
-        // Determine the environment (Sandbox or Live)
-        $env = get_option('matchtrader_env', 'sandbox');
-        if ($env === 'sandbox') {
-            $this->api_url = get_option('matchtrader_sandbox_url', 'https://broker-api-demo.match-trader.com');
-            $this->api_key = get_option('matchtrader_sandbox_key', '');
-        } else {
-            $this->api_url = get_option('matchtrader_live_url', 'https://broker-api.match-trader.com');
-            $this->api_key = get_option('matchtrader_live_key', '');
-        }
-
-        $this->save_logs = get_option('matchtrader_save_logs', false);
-
         // Hook into WooCommerce Checkout process
         add_action('template_redirect', [$this, 'handle_uuid_param'], 3);
         add_filter('woocommerce_checkout_fields', [$this, 'prefill_checkout_fields']);
@@ -57,41 +45,18 @@ class MatchTrader_Get_Account_By_UUID {
     }
 
     /**
-     * Fetch account details by UUID using WP Remote GET.
+     * Fetch account details by UUID using Centralized API Helper.
      *
      * @param string $uuid
      * @return array|null
      */
     private function get_account_by_uuid($uuid) {
-        $endpoint_path = "v1/accounts/by-uuid/{$uuid}";
-        $endpoint_url = rtrim($this->api_url, '/') . '/' . ltrim($endpoint_path, '/');
-
-        $response = wp_remote_get($endpoint_url, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $this->api_key,
-                'Accept'        => 'application/json',
-                'Content-Type'  => 'application/json'
-            ],
-            'timeout' => 10
-        ]);
-
-        if (is_wp_error($response)) {
-            $this->log_api_error($response->get_error_message());
-            return null;
-        }
-
-        $body = wp_remote_retrieve_body($response);
-        $data = json_decode($body, true);
-
-        // if ($this->save_logs) {
-        //     $this->log_api_response($data);
-        // }
-
-        return $data;
+        $endpoint = "v1/accounts/by-uuid/{$uuid}";
+        return MatchTrader_API_Helper::get_request($endpoint);
     }
 
     /**
-     * Save UUID to WooCommerce order meta after checkout.
+     * Save UUID and Challenge ID to WooCommerce order meta after checkout.
      *
      * @param int $order_id WooCommerce Order ID
      * @param array $data Order data
@@ -129,8 +94,6 @@ class MatchTrader_Get_Account_By_UUID {
             update_post_meta($order_id, '_matchtrader_challenge_id', $challenge_id);
         }
     }
-
-
 
     /**
      * Prefill WooCommerce checkout fields with API response data.
@@ -175,30 +138,6 @@ class MatchTrader_Get_Account_By_UUID {
         }
 
         return $fields;
-    }
-
-    /**
-     * Log API responses using MatchTrader_Helper::connection_response_logger()
-     *
-     * @param array $data
-     */
-    private function log_api_response($data) {
-        if ($this->save_logs) {
-            $logger_data = MatchTrader_Helper::connection_response_logger();
-            $logger_data['logger']->info('API Response: ' . wp_json_encode($data), $logger_data['context']);
-        }
-    }
-
-    /**
-     * Log API errors using MatchTrader_Helper::connection_response_logger()
-     *
-     * @param string $error_message
-     */
-    private function log_api_error($error_message) {
-        if ($this->save_logs) {
-            $logger_data = MatchTrader_Helper::connection_response_logger();
-            $logger_data['logger']->error('API Error: ' . $error_message, $logger_data['context']);
-        }
     }
 }
 
