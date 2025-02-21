@@ -28,8 +28,9 @@ class MatchTrader_General_Functions{
     * Load helper classes
     */
     private function load_helpers() {
-        require_once MATCHTRADERPLUGIN_PATH . 'includes/helper/class-matchtrader-helper.php';
-        require_once MATCHTRADERPLUGIN_PATH . 'includes/helper/class-matchtrader-enqueue.php';
+        require_once MATCHTRADERPLUGIN_PATH . 'includes/helper/class-matchtrader-admin-helper.php';
+        require_once MATCHTRADERPLUGIN_PATH . 'includes/helper/class-matchtrader-public-helper.php';
+        require_once MATCHTRADERPLUGIN_PATH . 'includes/helper/class-matchtrader-all-style-script.php';
     }
 
     /**

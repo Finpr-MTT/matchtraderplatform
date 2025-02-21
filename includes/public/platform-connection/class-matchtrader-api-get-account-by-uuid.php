@@ -33,6 +33,9 @@ class MatchTrader_Get_Account_By_UUID {
         // Hook into WooCommerce Checkout process
         add_action('template_redirect', [$this, 'handle_uuid_param'], 3);
         add_filter('woocommerce_checkout_fields', [$this, 'prefill_checkout_fields']);
+
+        // Hook into order creation to save UUID
+        add_action('woocommerce_checkout_create_order', [$this, 'save_uuid_to_order_meta'], 10, 2);
     }
 
     /**
@@ -85,6 +88,32 @@ class MatchTrader_Get_Account_By_UUID {
         // }
 
         return $data;
+    }
+
+    /**
+     * Save UUID to WooCommerce order meta.
+     *
+     * @param WC_Order $order WooCommerce Order object
+     * @param array $data Order data
+     */
+    public function save_uuid_to_order_meta($order, $data) {
+        $uuid = '';
+
+        // Check if UUID exists in the URL
+        if (isset($_GET['uuid']) && !empty($_GET['uuid'])) {
+            $uuid = sanitize_text_field($_GET['uuid']);
+        }
+
+        // Check if UUID is in WooCommerce session (API response)
+        $account_data = WC()->session->get('matchtrader_account_data');
+        if ($account_data && isset($account_data['uuid'])) {
+            $uuid = sanitize_text_field($account_data['uuid']);
+        }
+
+        // Save UUID as order meta if available
+        if (!empty($uuid)) {
+            $order->update_meta_data('_matchtrader_account_uuid', $uuid);
+        }
     }
 
     /**
