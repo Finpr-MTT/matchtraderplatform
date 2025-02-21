@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Ensure the helper class is included
-require_once MATCHTRADERPLUGIN_PATH . 'includes/public/class-matchtrader-api-helper.php';
+require_once MATCHTRADERPLUGIN_PATH . 'includes/helper/class-matchtrader-api-helper.php';
 
 class MatchTrader_Get_Account_By_UUID {
 
