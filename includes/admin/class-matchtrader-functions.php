@@ -69,6 +69,7 @@ class MatchTrader_Functions {
 
     public static function register_settings() {
         register_setting('matchtrader_dashboard_options', 'matchtrader_disable_frontend_route');
+        register_setting('matchtrader_dashboard_options', 'matchtrader_enable_mtt_plugin');
     }
 
     public static function dashboard_page() {
@@ -82,6 +83,14 @@ class MatchTrader_Functions {
                 do_settings_sections('matchtraderplatform-dashboard');
                 ?>
                 <table class="form-table">
+                    <tr>
+                        <th scope="row">Enable Plugin</th>
+                        <td>
+                            <?php $enable = get_option('matchtrader_enable_mtt_plugin', 0); ?>
+                            <input type="checkbox" name="matchtrader_enable_mtt_plugin" value="1" <?php checked(1, $enable, true); ?>>
+                            <span>Check this to enable matchtrader plugin.</span>
+                        </td>
+                    </tr>
                     <tr>
                         <th scope="row">Disable Frontend Routes</th>
                         <td>
