@@ -106,8 +106,8 @@ class MatchTrader_Create_Trading_Account {
             "personalDetails" => [
                 "firstname" => $order->get_billing_first_name(),
                 "lastname" => $order->get_billing_last_name(),
-                "citizenship" => $order->get_billing_country(), // Assuming country as citizenship
-                "language" => "en" // Defaulting to English, can be dynamic if needed
+                "citizenship" => $order->get_billing_country(),
+                "language" => "en"
             ],
             "contactDetails" => [
                 "phoneNumber" => $order->get_billing_phone()
@@ -129,8 +129,8 @@ class MatchTrader_Create_Trading_Account {
 
         // Send API request using the centralized helper
         $response = MatchTrader_API_Helper::post_request($endpoint, $payload);
-        
-        if (!empty($response['uuid'])) {
+
+        if (is_array($response) && !empty($response['uuid'])) {
             update_post_meta($order->get_id(), '_matchtrader_account_uuid', $response['uuid']);
             $order->add_order_note(__('MatchTrader Account Created: ' . $response['uuid'], 'matchtraderplatform'));
             return $response['uuid'];
@@ -142,7 +142,6 @@ class MatchTrader_Create_Trading_Account {
 
         return null;
     }
-
 
     /**
      * Create a Trading Account.
@@ -162,8 +161,8 @@ class MatchTrader_Create_Trading_Account {
         ];
 
         $response = MatchTrader_API_Helper::post_request($endpoint, $payload);
-        
-        if (!empty($response['id'])) {
+
+        if (is_array($response) && !empty($response['id'])) {
             update_post_meta($order_id, '_matchtrader_trading_account_id', $response['id']);
             $order = wc_get_order($order_id);
             $order->add_order_note(__('MatchTrader Trading Account Created: ' . $response['id'], 'matchtraderplatform'));
@@ -176,15 +175,17 @@ class MatchTrader_Create_Trading_Account {
         $order->add_order_note(__('MatchTrader Trading Account Creation Failed: ' . $error_message, 'matchtraderplatform'));
     }
 
+
     /**
      * Format API error message for WooCommerce order notes.
      *
-     * @param array|null $response
+     * @param mixed $response
      * @return string
      */
     private static function format_api_error_message($response) {
-        if (empty($response)) {
-            return 'Unknown API error';
+        // Ensure response is an array before processing
+        if (!is_array($response)) {
+            return 'Unknown API error - No valid response received';
         }
 
         $error_parts = [];
