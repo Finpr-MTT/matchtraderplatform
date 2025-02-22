@@ -69,11 +69,11 @@ class MatchTrader_Variation_Manager {
 
     public function display_variant_selector() {
         if (WC()->cart->is_empty()) return;
-        
+
         $cart_items = WC()->cart->get_cart();
         $product_id = 0;
         $selected_variation_id = 0;
-        
+
         foreach ($cart_items as $cart_item) {
             $product_id = $cart_item['product_id'];
             if (isset($cart_item['variation_id']) && $cart_item['variation_id'] > 0) {
@@ -81,7 +81,7 @@ class MatchTrader_Variation_Manager {
             }
             break;
         }
-        
+
         if (!$product_id) return;
 
         $product = wc_get_product($product_id);
@@ -99,6 +99,18 @@ class MatchTrader_Variation_Manager {
                 }
             }
         }
+
+        // Retrieve attribute positions
+        $attribute_positions = [];
+        foreach ($attributes as $attribute_name => $options) {
+            $attribute_obj = wc_get_attribute(str_replace('pa_', '', $attribute_name));
+            $attribute_positions[$attribute_name] = $attribute_obj ? $attribute_obj->position : 0;
+        }
+
+        // Sort attributes by position
+        uksort($attributes, function($a, $b) use ($attribute_positions) {
+            return $attribute_positions[$a] <=> $attribute_positions[$b];
+        });
 
         echo '<div id="matchtrader-variant-switcher">';
         echo '<h3>Select Account</h3>';
