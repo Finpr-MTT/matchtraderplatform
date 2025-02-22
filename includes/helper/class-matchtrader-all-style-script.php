@@ -28,8 +28,8 @@ class MatchTrader_Enqueue_Manager {
             wp_enqueue_script('matchtrader-woocommerce-script', MATCHTRADERPLUGIN_URL . 'assets/js/matchtraderplatform-woocommerce.js', ['jquery'], MATCHTRADERPLUGIN_VERSION, true);
             wp_enqueue_script('matchtrader-switch-variant', MATCHTRADERPLUGIN_URL . 'assets/js/matchtrader-switch-variant.js', ['jquery'], MATCHTRADERPLUGIN_VERSION, true);
             wp_localize_script('matchtrader-woocommerce-script', 'wc_country_states', [
-                'countries' => WC()->countries->get_countries(),
-                'states'    => WC()->countries->get_states(),
+                'countries' => WC()->countries->get_allowed_countries(),
+                'states' => WC()->countries->get_states(),
             ]);
             wp_localize_script('matchtrader-switch-variant', 'matchtraderAjax', [
                 'ajaxurl' => admin_url('admin-ajax.php'),
