@@ -3,16 +3,15 @@
 
     $(document).ready(function () {
         const countryField = $('#billing_country');
-        const stateField = $('#billing_state');
         const stateFieldContainer = $('#billing_state_field');
-        const states = wc_country_states.states; // ✅ Make sure this contains actual data
+        const states = wc_country_select_params.countries; // WooCommerce country-state data
 
         function updateStateField() {
             const selectedCountry = countryField.val();
 
             // Ensure WooCommerce updates the field dynamically
             setTimeout(() => {
-                // Remove any existing state field content
+                // Clear previous state field content
                 stateFieldContainer.empty();
 
                 // Add label for State/Region
@@ -23,7 +22,6 @@
                 });
                 stateFieldContainer.append(stateLabel);
 
-                // ✅ Check if states exist for the selected country
                 if (states[selectedCountry] && Object.keys(states[selectedCountry]).length > 0) {
                     // Create a select dropdown for states
                     const stateSelect = $('<select>', {
@@ -40,8 +38,8 @@
                     $.each(states[selectedCountry], function (code, name) {
                         const option = $('<option>', { value: code, text: name });
 
-                        // Restore selected state from WooCommerce session data
-                        if (stateField.val() && stateField.val() === code) {
+                        // Prefill with WooCommerce session data
+                        if (wc_checkout_params && wc_checkout_params.billing_state && wc_checkout_params.billing_state === code) {
                             option.prop('selected', true);
                         }
 
@@ -60,8 +58,9 @@
                         placeholder: 'Enter State/Region',
                     });
 
-                    if (stateField.val()) {
-                        stateInput.val(stateField.val()); // Restore value from WC session
+                    // Prefill with WooCommerce session data
+                    if (wc_checkout_params && wc_checkout_params.billing_state) {
+                        stateInput.val(wc_checkout_params.billing_state);
                     }
 
                     stateFieldContainer.append(stateInput);
@@ -69,7 +68,7 @@
 
                 // Ensure WooCommerce triggers change event for billing state
                 $('#billing_state').trigger('change');
-            }, 500); // Delay to allow WooCommerce to update country field first
+            }, 1000); // Delay to allow WooCommerce to load states
         }
 
         // Handle country change event
