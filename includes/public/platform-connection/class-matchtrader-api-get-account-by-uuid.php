@@ -20,7 +20,7 @@ class MatchTrader_Get_Account_By_UUID {
     public function __construct() {
         // Hook into WooCommerce Checkout process
         add_action('template_redirect', [$this, 'handle_uuid_param'], 3);
-        //add_filter('woocommerce_checkout_fields', [$this, 'prefill_checkout_fields']);
+        add_filter('woocommerce_checkout_fields', [$this, 'prefill_checkout_fields']);
 
         // Hook into order update to save UUID
         add_action('woocommerce_checkout_update_order_meta', [$this, 'save_uuid_challenge_id_to_order_meta'], 10, 2);
@@ -39,7 +39,7 @@ class MatchTrader_Get_Account_By_UUID {
 
             // Reset session data before setting a new one
             WC()->session->get('matchtrader_account_data', null);
-            
+
             // Fetch account details and update session
             $account_data = $this->get_account_by_uuid($uuid);
             
