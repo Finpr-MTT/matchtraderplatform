@@ -6,8 +6,10 @@
         const stateFieldContainer = $('#billing_state_field');
         const states = wc_country_states.states;
 
-        // Set saved country and state on page load
-        // Removed localStorage usage
+        // Get session data from WooCommerce
+        const accountData = wc_checkout_params.matchtrader_account_data || {};
+        const sessionCountry = accountData.addressDetails?.country || '';
+        const sessionState = accountData.addressDetails?.state || '';
 
         function updateStateField(clearState = true) {
             const selectedCountry = countryField.val();
@@ -38,6 +40,9 @@
                 // Add state options
                 $.each(states[selectedCountry], function (code, name) {
                     const option = $('<option>', { value: code, text: name });
+                    if (code === sessionState) {
+                        option.attr('selected', 'selected'); // ✅ Set selected state
+                    }
                     stateSelect.append(option);
                 });
 
@@ -51,6 +56,7 @@
                     class: 'input-text',
                     required: true,
                     placeholder: 'Enter State/Region',
+                    value: sessionState // ✅ Set default state value
                 });
 
                 stateFieldContainer.append(stateInput);
@@ -62,7 +68,11 @@
             updateStateField(true);
         });
 
-        // Initialize the state field
+        // Initialize the state field with session data
+        if (sessionCountry) {
+            countryField.val(sessionCountry).trigger('change'); // ✅ Ensure country is set before updating state
+        }
+
         updateStateField(false);
     });
 })(jQuery);
