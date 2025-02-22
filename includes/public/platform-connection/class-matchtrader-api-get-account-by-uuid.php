@@ -38,10 +38,8 @@ class MatchTrader_Get_Account_By_UUID {
             $uuid = sanitize_text_field($_GET['uuid']);
 
             // Reset session data before setting a new one
-            if (WC()->session->get('matchtrader_account_data')) {
-                WC()->session->__unset('matchtrader_account_data');
-            }
-
+            WC()->session->get('matchtrader_account_data', null);
+            
             // Fetch account details and update session
             $account_data = $this->get_account_by_uuid($uuid);
             
