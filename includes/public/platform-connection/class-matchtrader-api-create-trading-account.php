@@ -138,23 +138,21 @@ class MatchTrader_Create_Trading_Account {
 
             // If API response is 500, retry with backoff delay
             if (isset($response['status']) && $response['status'] == 500) {
-                $error_message = self::format_api_error_message($response);
-                $this->log_api_error($order, "Retry $attempt: " . $error_message);
-
-                if ($attempt < $max_retries) {
-                    sleep($retry_delay);
-                    $retry_delay *= 2; // Double the delay (1s → 2s → 4s → 8s)
-                    continue;
-                }
+                sleep($retry_delay);
+                $retry_delay *= 2; // Double the delay (1s → 2s → 4s → 8s)
+                continue;
             }
 
-            // If all retries fail, log final error
+            // Handle API Error and add detailed order note
             $error_message = self::format_api_error_message($response);
-            $this->log_api_error($order, "MatchTrader Account Creation Failed: " . $error_message);
+            $order = wc_get_order($order->get_id());
+            $order->add_order_note(__('MatchTrader Account Creation Failed: ' . $error_message, 'matchtraderplatform'));
+
+            // Log error using MatchTrader_Helper
+            $this->log_api_error($error_message);
             return null;
         }
     }
-
 
     /**
      * Create a Trading Account with Exponential Backoff.
@@ -181,43 +179,40 @@ class MatchTrader_Create_Trading_Account {
             if (is_array($response) && !empty($response['id'])) {
                 update_post_meta($order_id, '_matchtrader_trading_account_id', $response['id']);
                 $order = wc_get_order($order_id);
-                $order->add_order_note(__('MatchTrader Trading Account Created: ' . $response['id'], 'matchtraderplatform'));
+                $order->add_order_note(__('✅ MatchTrader Trading Account Created: ' . $response['id'], 'matchtraderplatform'));
                 return;
             }
 
             // If API response is 500, retry with backoff delay
             if (isset($response['status']) && $response['status'] == 500) {
-                $error_message = self::format_api_error_message($response);
-                $this->log_api_error($order, "Retry $attempt: " . $error_message);
-
-                if ($attempt < $max_retries) {
-                    sleep($retry_delay);
-                    $retry_delay *= 2; // Double the delay (1s → 2s → 4s → 8s)
-                    continue;
-                }
+                sleep($retry_delay);
+                $retry_delay *= 2; // Double the delay (1s → 2s → 4s → 8s)
+                continue;
             }
 
-            // If all retries fail, log final error
+            // Handle API Error and add detailed order note
             $error_message = self::format_api_error_message($response);
-            $this->log_api_error($order, "MatchTrader Trading Account Creation Failed: " . $error_message);
+            $order = wc_get_order($order_id);
+            $order->add_order_note(__('❌ MatchTrader Trading Account Creation Failed: ' . $error_message, 'matchtraderplatform'));
+
+            // Log error using MatchTrader_Helper
+            $this->log_api_error($error_message);
         }
     }
 
     /**
-     * Log API errors in WooCommerce order notes and logs.
+     * Log API errors in WooCommerce logs using MatchTrader_Helper.
      *
-     * @param WC_Order $order WooCommerce Order Object
      * @param string $message The error message to log
      */
-    private function log_api_error($order, $message) {
-        // Add to WooCommerce Order Notes
-        $order->add_order_note($message);
+    private function log_api_error($message) {
+        $logger_data = MatchTrader_Helper::connection_response_logger();
+        $logger = $logger_data['logger'];
+        $context = $logger_data['context'];
 
-        // Add to WooCommerce Logs
-        $logger = wc_get_logger();
-        $context = ['source' => 'matchtraderplatform_api_response'];
         $logger->error($message, $context);
     }
+
 
     /**
      * Format API error message for WooCommerce order notes.
