@@ -40,13 +40,15 @@
                 // Add state options
                 $.each(states[selectedCountry], function (code, name) {
                     const option = $('<option>', { value: code, text: name });
-                    if (code === sessionState) {
-                        option.attr('selected', 'selected'); // ✅ Set selected state
-                    }
                     stateSelect.append(option);
                 });
 
                 stateFieldContainer.append(stateSelect);
+
+                // **DELAYED STATE SELECTION TO ENSURE DROPDOWN LOADS**
+                setTimeout(function () {
+                    stateSelect.val(sessionState).trigger('change'); // ✅ Set the session state
+                }, 300);
             } else {
                 // Create a text input for states
                 const stateInput = $('<input>', {
@@ -68,11 +70,16 @@
             updateStateField(true);
         });
 
-        // Initialize the state field with session data
+        // **Initialize the state field AFTER country is set**
         if (sessionCountry) {
-            countryField.val(sessionCountry).trigger('change'); // ✅ Ensure country is set before updating state
-        }
+            countryField.val(sessionCountry).trigger('change');
 
-        updateStateField(false);
+            // **Ensure the state is set after WooCommerce updates the dropdown**
+            setTimeout(function () {
+                updateStateField(false);
+            }, 500);
+        } else {
+            updateStateField(false);
+        }
     });
 })(jQuery);
