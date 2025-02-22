@@ -1,0 +1,19 @@
+/* Global */
+:focus-visible,
+:focus{
+    outline:unset;
+}
+.page-content a{
+    text-decoration: unset;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 9999s ease-in-out 0s;
+    color: #eee !important;
+    -webkit-text-fill-color: grey!important;
+    -webkit-box-shadow: 0 0 0 1000px var( --e-global-color-f33c269 ) inset !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important
+}
