@@ -13,18 +13,19 @@
             const selectedCountry = countryField.val();
             const currentState = clearState ? '' : prefilledState; // Keep prefilled state if not clearing
 
-            // Clear previous state field content only if country is changed manually
-            if (clearState) {
-                stateFieldContainer.empty();
-            }
+            // ❌ Remove existing state field before adding a new one
+            $('#billing_state').remove();
 
-            // Add label for State/Region
-            const stateLabel = $('<label>', {
-                for: 'billing_state',
-                text: 'State/Region',
-                class: 'form-label',
-            });
-            stateFieldContainer.append(stateLabel);
+            // Add label for State/Region (if not already added)
+            if (stateFieldContainer.find('label[for="billing_state"]').length === 0) {
+                stateFieldContainer.append(
+                    $('<label>', {
+                        for: 'billing_state',
+                        text: 'State/Region',
+                        class: 'form-label',
+                    })
+                );
+            }
 
             if (states[selectedCountry] && Object.keys(states[selectedCountry]).length > 0) {
                 // Create a select dropdown for states
