@@ -67,75 +67,59 @@ class MatchTrader_Variation_Manager {
         }
     }
 
-public function display_variant_selector() {
-    if (WC()->cart->is_empty()) return;
-
-    $cart_items = WC()->cart->get_cart();
-    $product_id = 0;
-    $selected_variation_id = 0;
-
-    foreach ($cart_items as $cart_item) {
-        $product_id = $cart_item['product_id'];
-        if (isset($cart_item['variation_id']) && $cart_item['variation_id'] > 0) {
-            $selected_variation_id = $cart_item['variation_id'];
+    public function display_variant_selector() {
+        if (WC()->cart->is_empty()) return;
+        
+        $cart_items = WC()->cart->get_cart();
+        $product_id = 0;
+        $selected_variation_id = 0;
+        
+        foreach ($cart_items as $cart_item) {
+            $product_id = $cart_item['product_id'];
+            if (isset($cart_item['variation_id']) && $cart_item['variation_id'] > 0) {
+                $selected_variation_id = $cart_item['variation_id'];
+            }
+            break;
         }
-        break;
-    }
+        
+        if (!$product_id) return;
 
-    if (!$product_id) return;
+        $product = wc_get_product($product_id);
+        if (!$product->is_type('variable')) return;
 
-    $product = wc_get_product($product_id);
-    if (!$product->is_type('variable')) return;
+        $variations = $product->get_available_variations();
+        $attributes = $product->get_variation_attributes();
+        $selected_attributes = [];
 
-    $variations = $product->get_available_variations();
-    $attributes = $product->get_variation_attributes();
-    $selected_attributes = [];
-
-    if ($selected_variation_id) {
-        foreach ($variations as $variation) {
-            if ($variation['variation_id'] == $selected_variation_id) {
-                $selected_attributes = $variation['attributes'];
-                break;
+        if ($selected_variation_id) {
+            foreach ($variations as $variation) {
+                if ($variation['variation_id'] == $selected_variation_id) {
+                    $selected_attributes = $variation['attributes'];
+                    break;
+                }
             }
         }
-    }
 
-    echo '<div id="matchtrader-variant-switcher">';
-    echo '<h3>Select Account</h3>';
+        echo '<div id="matchtrader-variant-switcher">';
+        echo '<h3>Select Account</h3>';
 
-    foreach ($attributes as $attribute_name => $options) {
-        // Get attribute terms sorted by menu order
-        $taxonomy = 'pa_' . sanitize_title($attribute_name);
-        $terms = get_terms([
-            'taxonomy' => $taxonomy,
-            'hide_empty' => false,
-            'orderby' => 'menu_order',
-            'order' => 'ASC',
-        ]);
+        foreach ($attributes as $attribute_name => $options) {
+            echo '<strong><label>' . wc_attribute_label($attribute_name) . '</label></strong>';
+            echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
 
-        // Convert terms to an array of names in correct order
-        $sorted_options = [];
-        foreach ($terms as $term) {
-            $sorted_options[] = $term->name;
-        }
+            foreach ($options as $option) {
+                $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $option) ? ' checked' : '';
+                echo '<div class="matchtrader-radio-option">';
+                echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($option) . '" class="matchtrader-switch"' . $selected . '>';
+                echo '<label class="matchtrader-radio-label">' . esc_html($option) . '</label>';
+                echo '</div>';
+            }
 
-        echo '<strong><label>' . wc_attribute_label($attribute_name) . '</label></strong>';
-        echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
-
-        foreach ($sorted_options as $option) {
-            $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $option) ? ' checked' : '';
-            echo '<div class="matchtrader-radio-option">';
-            echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($option) . '" class="matchtrader-switch"' . $selected . '>';
-            echo '<label class="matchtrader-radio-label">' . esc_html($option) . '</label>';
             echo '</div>';
         }
 
         echo '</div>';
     }
-
-    echo '</div>';
-}
-
 
     public function update_cart() {
         check_ajax_referer('matchtrader_nonce', 'security');
