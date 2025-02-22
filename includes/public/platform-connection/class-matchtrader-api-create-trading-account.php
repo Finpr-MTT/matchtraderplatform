@@ -204,6 +204,22 @@ class MatchTrader_Create_Trading_Account {
     }
 
     /**
+     * Log API errors in WooCommerce order notes and logs.
+     *
+     * @param WC_Order $order WooCommerce Order Object
+     * @param string $message The error message to log
+     */
+    private function log_api_error($order, $message) {
+        // Add to WooCommerce Order Notes
+        $order->add_order_note($message);
+
+        // Add to WooCommerce Logs
+        $logger = wc_get_logger();
+        $context = ['source' => 'matchtraderplatform_api_response'];
+        $logger->error($message, $context);
+    }
+
+    /**
      * Format API error message for WooCommerce order notes.
      *
      * @param mixed $response
