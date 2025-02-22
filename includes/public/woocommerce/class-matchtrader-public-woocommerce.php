@@ -133,7 +133,7 @@ class MatchTrader_Public_WooCommerce {
         unset($fields['billing']);
 
         // Get session data
-        $account_data = WC()->session->get('matchtrader_account_data', null);
+        $account_data = WC()->session->get('matchtrader_account_data');
         $is_prefilled = !empty($account_data); // Check if session data exists
 
         // Helper function to add readonly attributes
