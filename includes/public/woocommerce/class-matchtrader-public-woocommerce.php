@@ -136,30 +136,9 @@ class MatchTrader_Public_WooCommerce {
         $account_data = WC()->session->get('matchtrader_account_data', null);
         $is_prefilled = !empty($account_data); // Check if session data exists
 
-        // List of fields to disable if data is prefilled
-        $disable_fields = [
-            'billing_first_name',
-            'billing_last_name',
-            'billing_email',
-            'billing_phone',
-            'billing_address_1',
-            'billing_country',
-            'billing_state',
-            'billing_city',
-            'billing_postcode',
-        ];
-
-        // Helper function to add disabled attributes
+        // Helper function to add readonly attributes
         function get_custom_attributes($field_name, $is_prefilled) {
-            return in_array($field_name, [
-                'billing_first_name',
-                'billing_last_name',
-                'billing_email',
-                'billing_phone',
-                'billing_address_1',
-                'billing_city',
-                'billing_postcode'
-            ]) && $is_prefilled ? ['disabled' => 'disabled'] : [];
+            return $is_prefilled ? ['readonly' => 'readonly'] : [];
         }
 
         // Get country and state from session
