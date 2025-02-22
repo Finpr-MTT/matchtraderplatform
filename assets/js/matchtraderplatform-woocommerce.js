@@ -6,14 +6,17 @@
         const stateFieldContainer = $('#billing_state_field');
         const states = wc_country_states.states;
 
-        // Set saved country and state on page load
-        // Removed localStorage usage
+        // Get prefilled state from WooCommerce session
+        const prefilledState = $('#billing_state').val(); // Get existing value
 
         function updateStateField(clearState = true) {
             const selectedCountry = countryField.val();
+            const currentState = clearState ? '' : prefilledState; // Keep prefilled state if not clearing
 
-            // Clear previous state field content
-            stateFieldContainer.empty();
+            // Clear previous state field content only if country is changed manually
+            if (clearState) {
+                stateFieldContainer.empty();
+            }
 
             // Add label for State/Region
             const stateLabel = $('<label>', {
@@ -38,6 +41,12 @@
                 // Add state options
                 $.each(states[selectedCountry], function (code, name) {
                     const option = $('<option>', { value: code, text: name });
+
+                    // If the prefilled state matches, select it
+                    if (code === currentState) {
+                        option.attr('selected', 'selected');
+                    }
+
                     stateSelect.append(option);
                 });
 
@@ -51,6 +60,7 @@
                     class: 'input-text',
                     required: true,
                     placeholder: 'Enter State/Region',
+                    value: currentState, // Keep prefilled state
                 });
 
                 stateFieldContainer.append(stateInput);
@@ -59,10 +69,10 @@
 
         // Handle country change event
         countryField.on('change', function () {
-            updateStateField(true);
+            updateStateField(true); // Clear state only on manual country change
         });
 
-        // Initialize the state field
+        // Initialize the state field (keep prefilled data if available)
         updateStateField(false);
     });
 })(jQuery);
