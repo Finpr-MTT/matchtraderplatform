@@ -118,8 +118,6 @@ class MatchTrader_Public_WooCommerce {
         return $template;
     }
 
-    add_filter('woocommerce_checkout_fields', [$this, 'restructure_checkout_fields']);
-
     /**
      * Customize and prefill WooCommerce checkout fields
      *
