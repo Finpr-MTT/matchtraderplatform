@@ -56,11 +56,18 @@ class MatchTrader_Get_Account_By_UUID {
     }
 
     /**
-     * Save UUID and Challenge ID to WooCommerce order meta after checkout.
+     * Get UUID by checking email.
      *
-     * @param int $order_id WooCommerce Order ID
-     * @param array $data Order data
+     * @param string $email
+     * @return string|null
      */
+    private function get_account_uuid_by_email($email) {
+        $endpoint = "v1/accounts/by-email/" . urlencode($email);
+        $response = MatchTrader_API_Helper::get_request($endpoint);
+
+        return $response['uuid'] ?? null;
+    }
+
     public function save_uuid_challenge_id_to_order_meta($order_id, $data) {
         $uuid = '';
         $challenge_id = '';
@@ -74,6 +81,22 @@ class MatchTrader_Get_Account_By_UUID {
         $account_data = WC()->session->get('matchtrader_account_data');
         if ($account_data && isset($account_data['uuid'])) {
             $uuid = sanitize_text_field($account_data['uuid']);
+        }
+
+        // If UUID is still empty, try to fetch it by email
+        if (empty($uuid)) {
+            $order = wc_get_order($order_id);
+            $email = $order->get_billing_email();
+
+            if (!empty($email)) {
+                $uuid = $this->get_account_uuid_by_email($email);
+
+                // If UUID is found, update order meta
+                if (!empty($uuid)) {
+                    update_post_meta($order_id, '_matchtrader_account_uuid', $uuid);
+                    $order->add_order_note(__('MatchTrader UUID Retrieved by Email: ' . $uuid, 'matchtraderplatform'));
+                }
+            }
         }
 
         // Save UUID as order meta if available
@@ -93,7 +116,8 @@ class MatchTrader_Get_Account_By_UUID {
         if (!empty($challenge_id)) {
             update_post_meta($order_id, '_matchtrader_challenge_id', $challenge_id);
         }
-         update_post_meta($order_id, '_matchtrader_connection_completed', 0);
+
+        update_post_meta($order_id, '_matchtrader_connection_completed', 0);
     }
 
     /**

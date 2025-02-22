@@ -89,13 +89,15 @@ class MatchTrader_Create_Trading_Account {
     }
 
     /**
-     * Create a new MatchTrader account using WooCommerce billing details.
+     * Create a new MatchTrader account using WooCommerce billing details with Exponential Backoff.
      *
      * @param WC_Order $order WooCommerce Order Object
      * @return string|null
      */
     private function create_new_account($order) {
         $endpoint = "v1/accounts";
+        $max_retries = 5;
+        $retry_delay = 1; // Initial delay (1 second)
 
         $payload = [
             "email" => $order->get_billing_email(),
@@ -125,24 +127,37 @@ class MatchTrader_Create_Trading_Account {
             ]
         ];
 
-        // Send API request using the centralized helper
-        $response = MatchTrader_API_Helper::post_request($endpoint, $payload);
+        for ($attempt = 1; $attempt <= $max_retries; $attempt++) {
+            $response = MatchTrader_API_Helper::post_request($endpoint, $payload);
 
-        if (is_array($response) && !empty($response['uuid'])) {
-            update_post_meta($order->get_id(), '_matchtrader_account_uuid', $response['uuid']);
-            $order->add_order_note(__('MatchTrader Account Created: ' . $response['uuid'], 'matchtraderplatform'));
-            return $response['uuid'];
+            if (is_array($response) && !empty($response['uuid'])) {
+                update_post_meta($order->get_id(), '_matchtrader_account_uuid', $response['uuid']);
+                $order->add_order_note(__('MatchTrader Account Created: ' . $response['uuid'], 'matchtraderplatform'));
+                return $response['uuid'];
+            }
+
+            // If API response is 500, retry with backoff delay
+            if (isset($response['status']) && $response['status'] == 500) {
+                $error_message = self::format_api_error_message($response);
+                $this->log_api_error($order, "Retry $attempt: " . $error_message);
+
+                if ($attempt < $max_retries) {
+                    sleep($retry_delay);
+                    $retry_delay *= 2; // Double the delay (1s → 2s → 4s → 8s)
+                    continue;
+                }
+            }
+
+            // If all retries fail, log final error
+            $error_message = self::format_api_error_message($response);
+            $this->log_api_error($order, "MatchTrader Account Creation Failed: " . $error_message);
+            return null;
         }
-
-        // Handle API Error and add detailed order note
-        $error_message = self::format_api_error_message($response);
-        $order->add_order_note(__('MatchTrader Account Creation Failed: ' . $error_message, 'matchtraderplatform'));
-
-        return null;
     }
 
+
     /**
-     * Create a Trading Account.
+     * Create a Trading Account with Exponential Backoff.
      *
      * @param string $challenge_id
      * @param string $uuid
@@ -151,6 +166,8 @@ class MatchTrader_Create_Trading_Account {
      */
     private function create_trading_account($challenge_id, $uuid, $name, $order_id) {
         $endpoint = "v1/prop/accounts?instantlyActive=false&phaseStep=1";
+        $max_retries = 5;
+        $retry_delay = 1; // Initial delay (1 second)
 
         $payload = [
             "challengeId" => $challenge_id,
@@ -158,21 +175,33 @@ class MatchTrader_Create_Trading_Account {
             "name" => $name
         ];
 
-        $response = MatchTrader_API_Helper::post_request($endpoint, $payload);
+        for ($attempt = 1; $attempt <= $max_retries; $attempt++) {
+            $response = MatchTrader_API_Helper::post_request($endpoint, $payload);
 
-        if (is_array($response) && !empty($response['id'])) {
-            update_post_meta($order_id, '_matchtrader_trading_account_id', $response['id']);
-            $order = wc_get_order($order_id);
-            $order->add_order_note(__('MatchTrader Trading Account Created: ' . $response['id'], 'matchtraderplatform'));
-            return;
+            if (is_array($response) && !empty($response['id'])) {
+                update_post_meta($order_id, '_matchtrader_trading_account_id', $response['id']);
+                $order = wc_get_order($order_id);
+                $order->add_order_note(__('MatchTrader Trading Account Created: ' . $response['id'], 'matchtraderplatform'));
+                return;
+            }
+
+            // If API response is 500, retry with backoff delay
+            if (isset($response['status']) && $response['status'] == 500) {
+                $error_message = self::format_api_error_message($response);
+                $this->log_api_error($order, "Retry $attempt: " . $error_message);
+
+                if ($attempt < $max_retries) {
+                    sleep($retry_delay);
+                    $retry_delay *= 2; // Double the delay (1s → 2s → 4s → 8s)
+                    continue;
+                }
+            }
+
+            // If all retries fail, log final error
+            $error_message = self::format_api_error_message($response);
+            $this->log_api_error($order, "MatchTrader Trading Account Creation Failed: " . $error_message);
         }
-
-        // Handle API Error and add detailed order note
-        $error_message = self::format_api_error_message($response);
-        $order = wc_get_order($order_id);
-        $order->add_order_note(__('MatchTrader Trading Account Creation Failed: ' . $error_message, 'matchtraderplatform'));
     }
-
 
     /**
      * Format API error message for WooCommerce order notes.
