@@ -3,22 +3,16 @@
 
     $(document).ready(function () {
         const countryField = $('#billing_country');
+        const stateField = $('#billing_state');
         const stateFieldContainer = $('#billing_state_field');
-        const savedCountry = sessionStorage.getItem('billing_country');
-        const savedState = sessionStorage.getItem('billing_state');
         const states = wc_country_select_params.countries; // WooCommerce country-state data
 
-        // Restore saved country and state on page load
-        if (savedCountry) {
-            countryField.val(savedCountry).trigger('change');
-        }
-
-        function updateStateField(clearState = true) {
+        function updateStateField() {
             const selectedCountry = countryField.val();
 
             // Ensure WooCommerce updates the field dynamically
             setTimeout(() => {
-                // Clear previous state field content
+                // Remove any existing state field content
                 stateFieldContainer.empty();
 
                 // Add label for State/Region
@@ -45,8 +39,8 @@
                     $.each(states[selectedCountry], function (code, name) {
                         const option = $('<option>', { value: code, text: name });
 
-                        // Restore selected state if it matches saved value and clearState is false
-                        if (!clearState && savedState && savedState === code) {
+                        // Restore selected state from WooCommerce session data
+                        if (stateField.val() && stateField.val() === code) {
                             option.prop('selected', true);
                         }
 
@@ -65,40 +59,29 @@
                         placeholder: 'Enter State/Region',
                     });
 
-                    if (!clearState && savedState) {
-                        stateInput.val(savedState); // Restore saved value if clearState is false
+                    if (stateField.val()) {
+                        stateInput.val(stateField.val()); // Restore value from WC session
                     }
 
                     stateFieldContainer.append(stateInput);
                 }
 
-                // Clear state saved in session storage if clearState is true
-                if (clearState) {
-                    sessionStorage.removeItem('billing_state');
-                }
-
                 // Ensure WooCommerce triggers change event for billing state
                 $('#billing_state').trigger('change');
-            }, 300); // Delay to allow WooCommerce to load states
+            }, 500); // Delay to allow WooCommerce to update country field first
         }
 
         // Handle country change event
         countryField.on('change', function () {
-            updateStateField(true);
-            sessionStorage.setItem('billing_country', countryField.val());
-        });
-
-        // Save state value to session storage on change
-        stateFieldContainer.on('change', '#billing_state', function () {
-            sessionStorage.setItem('billing_state', $(this).val());
+            updateStateField();
         });
 
         // Ensure the state field updates correctly when WooCommerce reloads checkout
         $(document.body).on('updated_checkout', function () {
-            updateStateField(false);
+            updateStateField();
         });
 
         // Initialize the state field on page load
-        updateStateField(false);
+        updateStateField();
     });
 })(jQuery);
