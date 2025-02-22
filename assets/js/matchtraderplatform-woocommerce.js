@@ -4,70 +4,57 @@
     $(document).ready(function () {
         const countryField = $('#billing_country');
         const stateFieldContainer = $('#billing_state_field');
-        const states = wc_country_select_params.countries; // WooCommerce country-state data
+        const states = wc_country_states.states;
+
+        // Set saved country and state on page load
+        // Removed localStorage usage
 
         function updateStateField(clearState = true) {
             const selectedCountry = countryField.val();
 
-            // Ensure WooCommerce updates the field dynamically
-            setTimeout(() => {
-                // Clear previous state field content
-                stateFieldContainer.empty();
+            // Clear previous state field content
+            stateFieldContainer.empty();
 
-                // Add label for State/Region
-                const stateLabel = $('<label>', {
-                    for: 'billing_state',
-                    text: 'State/Region',
-                    class: 'form-label',
+            // Add label for State/Region
+            const stateLabel = $('<label>', {
+                for: 'billing_state',
+                text: 'State/Region',
+                class: 'form-label',
+            });
+            stateFieldContainer.append(stateLabel);
+
+            if (states[selectedCountry] && Object.keys(states[selectedCountry]).length > 0) {
+                // Create a select dropdown for states
+                const stateSelect = $('<select>', {
+                    id: 'billing_state',
+                    name: 'billing_state',
+                    class: 'state_select input-text',
+                    required: true,
                 });
-                stateFieldContainer.append(stateLabel);
 
-                if (states[selectedCountry] && Object.keys(states[selectedCountry]).length > 0) {
-                    // Create a select dropdown for states
-                    const stateSelect = $('<select>', {
-                        id: 'billing_state',
-                        name: 'billing_state',
-                        class: 'state_select input-text',
-                        required: true,
-                    });
+                // Add a placeholder option
+                stateSelect.append($('<option>', { value: '', text: 'Select State/Region' }));
 
-                    // Add a placeholder option
-                    stateSelect.append($('<option>', { value: '', text: 'Select State/Region' }));
+                // Add state options
+                $.each(states[selectedCountry], function (code, name) {
+                    const option = $('<option>', { value: code, text: name });
+                    stateSelect.append(option);
+                });
 
-                    // Add state options
-                    $.each(states[selectedCountry], function (code, name) {
-                        const option = $('<option>', { value: code, text: name });
+                stateFieldContainer.append(stateSelect);
+            } else {
+                // Create a text input for states
+                const stateInput = $('<input>', {
+                    type: 'text',
+                    id: 'billing_state',
+                    name: 'billing_state',
+                    class: 'input-text',
+                    required: true,
+                    placeholder: 'Enter State/Region',
+                });
 
-                        // Restore selected state from WooCommerce session
-                        if (!clearState && wc_checkout_params.billing_state && wc_checkout_params.billing_state === code) {
-                            option.prop('selected', true);
-                        }
-
-                        stateSelect.append(option);
-                    });
-
-                    stateFieldContainer.append(stateSelect);
-                } else {
-                    // Create a text input for states
-                    const stateInput = $('<input>', {
-                        type: 'text',
-                        id: 'billing_state',
-                        name: 'billing_state',
-                        class: 'input-text',
-                        required: true,
-                        placeholder: 'Enter State/Region',
-                    });
-
-                    if (!clearState && wc_checkout_params.billing_state) {
-                        stateInput.val(wc_checkout_params.billing_state);
-                    }
-
-                    stateFieldContainer.append(stateInput);
-                }
-
-                // Ensure WooCommerce triggers change event for billing state
-                $('#billing_state').trigger('change');
-            }, 1000); // Delay to allow WooCommerce to load states
+                stateFieldContainer.append(stateInput);
+            }
         }
 
         // Handle country change event
@@ -75,15 +62,7 @@
             updateStateField(true);
         });
 
-        // Ensure the state field updates correctly when WooCommerce reloads checkout
-        $(document.body).on('updated_checkout', function () {
-            updateStateField(false);
-        });
-
-        // Initialize the state field on page load
+        // Initialize the state field
         updateStateField(false);
-
-        console.log(wc_country_select_params);
-
     });
 })(jQuery);
