@@ -5,7 +5,7 @@
         const countryField = $('#billing_country');
         const stateField = $('#billing_state');
         const stateFieldContainer = $('#billing_state_field');
-        const states = wc_country_select_params.countries; // WooCommerce country-state data
+        const states = wc_country_states.states; // ✅ Make sure this contains actual data
 
         function updateStateField() {
             const selectedCountry = countryField.val();
@@ -23,6 +23,7 @@
                 });
                 stateFieldContainer.append(stateLabel);
 
+                // ✅ Check if states exist for the selected country
                 if (states[selectedCountry] && Object.keys(states[selectedCountry]).length > 0) {
                     // Create a select dropdown for states
                     const stateSelect = $('<select>', {
