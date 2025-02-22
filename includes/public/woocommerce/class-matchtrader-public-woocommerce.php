@@ -131,8 +131,6 @@ class MatchTrader_Public_WooCommerce {
         // Unset all billing fields
         unset($fields['billing']);
 
-        WC()->session->get('matchtrader_account_data', null);
-
         // Get prefill data
         $account_data = WC()->session->get('matchtrader_account_data');
 
@@ -142,7 +140,9 @@ class MatchTrader_Public_WooCommerce {
 
         // Get available states for the country
         $states = WC()->countries->get_states($country);
-        $has_states = !empty($states); // True if country has predefined states
+
+        // ✅ Fix: Ensure WooCommerce recognizes states
+        $has_states = (is_array($states) && count($states) > 0);
 
         // Add customized billing fields with WooCommerce classes
         $fields['billing'] = [
@@ -204,7 +204,7 @@ class MatchTrader_Public_WooCommerce {
                 'input_class' => ['input-text'],
                 'placeholder' => __('State/Region', 'matchtraderplatform'),
                 'clear' => true,
-                'type' => $has_states ? 'select' : 'text', // Select if states exist, else text input
+                'type' => $has_states ? 'select' : 'text', // ✅ Dynamically switch input type
                 'options' => $has_states ? ['' => __('Select State', 'matchtraderplatform')] + $states : [],
                 'default' => $state,
             ],
@@ -229,6 +229,8 @@ class MatchTrader_Public_WooCommerce {
 
         return $fields;
     }
+
+
 
     /**
      * Adjust WooCommerce Checkout Layout by Removing Default Sections
