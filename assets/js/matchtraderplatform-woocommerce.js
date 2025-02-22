@@ -67,7 +67,7 @@
 
                 // Ensure WooCommerce triggers change event for billing state
                 $('#billing_state').trigger('change');
-            }, 300); // Delay to allow WooCommerce to load states
+            }, 1000); // Delay to allow WooCommerce to load states
         }
 
         // Handle country change event
