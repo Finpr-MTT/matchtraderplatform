@@ -44,12 +44,12 @@ class MatchTrader_Get_Account_By_UUID {
             // Clear WooCommerce customer fields (forces checkout reload)
             WC()->customer->set_billing_first_name('');
             WC()->customer->set_billing_last_name('');
+            WC()->customer->set_billing_country('');
             WC()->customer->set_billing_address_1('');
             WC()->customer->set_billing_address_2('');
             WC()->customer->set_billing_city('');
             WC()->customer->set_billing_state('');
-            WC()->customer->set_billing_postcode('');
-            WC()->customer->set_billing_country('');
+            WC()->customer->set_billing_postcode('');            
             WC()->customer->set_billing_phone('');
             WC()->customer->set_billing_email('');
             WC()->customer->save(); // Save the reset data
@@ -186,40 +186,44 @@ class MatchTrader_Get_Account_By_UUID {
     }
 
     /**
-     * Enqueue JavaScript to fix billing_state update issue.
+     * Enqueue JavaScript to fix billing_state issue.
      */
     public function enqueue_billing_state_fix() {
+        $session_data = WC()->session->get('matchtrader_account_data');
+        $billing_state = isset($session_data['addressDetails']['state']) ? sanitize_text_field($session_data['addressDetails']['state']) : '';
         ?>
         <script type="text/javascript">
         jQuery(function($) {
-            function setBillingState() {
-                let billingState = $('input[name="billing_state"]').val(); 
-                let selectedCountry = $('#billing_country').val();
+            let billingState = "<?php echo esc_js($billing_state); ?>";
 
-                if (billingState && selectedCountry) {
-                    // Delay setting the value to ensure country has been set
+            function updateBillingState() {
+                let country = $('#billing_country').val();
+
+                // Check if country and state exist
+                if (country && billingState) {
                     setTimeout(function() {
                         $('#billing_state').val(billingState).trigger('change');
-                    }, 500); // Adjust delay if needed
+                    }, 800); // Ensure it runs AFTER WooCommerce updates states
                 }
             }
 
             // Run when checkout updates
             $(document.body).on('updated_checkout', function() {
-                setBillingState();
+                updateBillingState();
             });
 
             // Run when country is changed (since state depends on it)
             $(document).on('change', '#billing_country', function() {
-                setBillingState();
+                updateBillingState();
             });
 
             // Run on page load
-            setBillingState();
+            updateBillingState();
         });
         </script>
         <?php
     }
+
 }
 
 // Initialize the class
