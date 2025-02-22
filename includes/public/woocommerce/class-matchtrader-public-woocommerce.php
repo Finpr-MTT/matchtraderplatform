@@ -131,10 +131,24 @@ class MatchTrader_Public_WooCommerce {
         // Unset all billing fields
         unset($fields['billing']);
 
+        // Ensure WooCommerce session is fresh
         WC()->session->get('matchtrader_account_data', null);
 
         // Get prefill data
         $account_data = WC()->session->get('matchtrader_account_data');
+
+        // Get country options
+        $country_options = WC()->countries->get_countries();
+
+        // Get preselected country and state
+        $billing_country = !empty($account_data['addressDetails']['country']) ? sanitize_text_field($account_data['addressDetails']['country']) : '';
+        $billing_state = !empty($account_data['addressDetails']['state']) ? sanitize_text_field($account_data['addressDetails']['state']) : '';
+
+        // Ensure the state dropdown updates correctly
+        $state_options = [];
+        if (!empty($billing_country) && isset(WC()->countries->get_states()[$billing_country])) {
+            $state_options = WC()->countries->get_states()[$billing_country];
+        }
 
         // Add customized billing fields with WooCommerce classes
         $fields['billing'] = [
@@ -184,19 +198,21 @@ class MatchTrader_Public_WooCommerce {
                 'label' => __('Country', 'matchtraderplatform'),
                 'required' => true,
                 'type' => 'select',
-                'class' => ['form-row-first'],
+                'class' => ['form-row-first', 'update_totals_on_change'], // Ensure WooCommerce updates the state field dynamically
                 'input_class' => ['input-text'],
-                'options' => WC()->countries->get_countries(),
-                'default' => (!empty($account_data['addressDetails']['country'])) ? sanitize_text_field($account_data['addressDetails']['country']) : '',
+                'options' => $country_options,
+                'default' => $billing_country,
             ],
             'billing_state' => [
                 'label' => __('State/Region', 'matchtraderplatform'),
                 'required' => true,
+                'type' => 'select',
                 'class' => ['form-row-last'],
                 'input_class' => ['input-text'],
-                'placeholder' => __('State/Region', 'matchtraderplatform'),
+                'options' => !empty($state_options) ? $state_options : [],
+                'placeholder' => __('Select State/Region', 'matchtraderplatform'),
                 'clear' => true,
-                'default' => (!empty($account_data['addressDetails']['state'])) ? sanitize_text_field($account_data['addressDetails']['state']) : '',
+                'default' => $billing_state,
             ],
             'billing_city' => [
                 'label' => __('City', 'matchtraderplatform'),
@@ -219,6 +235,7 @@ class MatchTrader_Public_WooCommerce {
 
         return $fields;
     }
+
 
     /**
      * Adjust WooCommerce Checkout Layout by Removing Default Sections
