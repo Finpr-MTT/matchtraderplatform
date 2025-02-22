@@ -33,7 +33,7 @@ class MatchTrader_Public_WooCommerce {
 
         if (get_option('matchtrader_enable_mtt_checkout', false)) {
             add_filter('woocommerce_locate_template', [$this, 'matchtrader_override_templates'], 10, 3);
-            //add_filter('woocommerce_checkout_fields', [$this, 'restructure_checkout_fields']);
+            add_filter('woocommerce_checkout_fields', [$this, 'restructure_checkout_fields']);
             add_action('wp', [$this, 'matchtrader_remove_default_order_review_checkout']);            
         }
 
@@ -118,8 +118,10 @@ class MatchTrader_Public_WooCommerce {
         return $template;
     }
 
+    add_filter('woocommerce_checkout_fields', [$this, 'restructure_checkout_fields']);
+
     /**
-     * Customize WooCommerce checkout fields
+     * Customize and prefill WooCommerce checkout fields
      *
      * @param array $fields
      * @return array
@@ -127,9 +129,12 @@ class MatchTrader_Public_WooCommerce {
     public function restructure_checkout_fields($fields) {
         // Remove shipping fields
         unset($fields['shipping']);
-        
+
         // Unset all billing fields
         unset($fields['billing']);
+
+        // Get prefill data
+        $account_data = WC()->session->get('matchtrader_account_data');
 
         // Add customized billing fields with WooCommerce classes
         $fields['billing'] = [
@@ -139,6 +144,7 @@ class MatchTrader_Public_WooCommerce {
                 'class' => ['form-row-first'],
                 'input_class' => ['input-text'],
                 'placeholder' => __('First Name', 'matchtraderplatform'),
+                'default' => (!empty($account_data['personalDetails']['firstname'])) ? sanitize_text_field($account_data['personalDetails']['firstname']) : '',
             ],
             'billing_last_name' => [
                 'label' => __('Last Name', 'matchtraderplatform'),
@@ -147,6 +153,7 @@ class MatchTrader_Public_WooCommerce {
                 'input_class' => ['input-text'],
                 'placeholder' => __('Last Name', 'matchtraderplatform'),
                 'clear' => true,
+                'default' => (!empty($account_data['personalDetails']['lastname'])) ? sanitize_text_field($account_data['personalDetails']['lastname']) : '',
             ],
             'billing_email' => [
                 'label' => __('Email', 'matchtraderplatform'),
@@ -154,6 +161,7 @@ class MatchTrader_Public_WooCommerce {
                 'class' => ['form-row-first'],
                 'input_class' => ['input-text'],
                 'placeholder' => __('Email', 'matchtraderplatform'),
+                'default' => (!empty($account_data['email'])) ? sanitize_email($account_data['email']) : '',
             ],
             'billing_phone' => [
                 'label' => __('Phone Number', 'matchtraderplatform'),
@@ -162,6 +170,7 @@ class MatchTrader_Public_WooCommerce {
                 'input_class' => ['input-text'],
                 'placeholder' => __('Phone Number', 'matchtraderplatform'),
                 'clear' => true,
+                'default' => (!empty($account_data['contactDetails']['phoneNumber'])) ? sanitize_text_field($account_data['contactDetails']['phoneNumber']) : '',
             ],
             'billing_address_1' => [
                 'label' => __('Address', 'matchtraderplatform'),
@@ -169,6 +178,7 @@ class MatchTrader_Public_WooCommerce {
                 'class' => ['form-row-wide'],
                 'input_class' => ['input-text'],
                 'placeholder' => __('Address', 'matchtraderplatform'),
+                'default' => (!empty($account_data['addressDetails']['address'])) ? sanitize_text_field($account_data['addressDetails']['address']) : '',
             ],
             'billing_country' => [
                 'label' => __('Country', 'matchtraderplatform'),
@@ -177,6 +187,7 @@ class MatchTrader_Public_WooCommerce {
                 'class' => ['form-row-first'],
                 'input_class' => ['input-text'],
                 'options' => WC()->countries->get_countries(),
+                'default' => (!empty($account_data['addressDetails']['country'])) ? sanitize_text_field($account_data['addressDetails']['country']) : '',
             ],
             'billing_state' => [
                 'label' => __('State/Region', 'matchtraderplatform'),
@@ -185,6 +196,7 @@ class MatchTrader_Public_WooCommerce {
                 'input_class' => ['input-text'],
                 'placeholder' => __('State/Region', 'matchtraderplatform'),
                 'clear' => true,
+                'default' => (!empty($account_data['addressDetails']['state'])) ? sanitize_text_field($account_data['addressDetails']['state']) : '',
             ],
             'billing_city' => [
                 'label' => __('City', 'matchtraderplatform'),
@@ -192,6 +204,7 @@ class MatchTrader_Public_WooCommerce {
                 'class' => ['form-row-first'],
                 'input_class' => ['input-text'],
                 'placeholder' => __('City', 'matchtraderplatform'),
+                'default' => (!empty($account_data['addressDetails']['city'])) ? sanitize_text_field($account_data['addressDetails']['city']) : '',
             ],
             'billing_postcode' => [
                 'label' => __('Postal Code', 'matchtraderplatform'),
@@ -200,6 +213,7 @@ class MatchTrader_Public_WooCommerce {
                 'input_class' => ['input-text'],
                 'placeholder' => __('Postal Code', 'matchtraderplatform'),
                 'clear' => true,
+                'default' => (!empty($account_data['addressDetails']['postCode'])) ? sanitize_text_field($account_data['addressDetails']['postCode']) : '',
             ],
         ];
 
