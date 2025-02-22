@@ -33,6 +33,7 @@ class MatchTrader_Public_WooCommerce {
 
         if (get_option('matchtrader_enable_mtt_checkout', false)) {
             add_filter('woocommerce_locate_template', [$this, 'matchtrader_override_templates'], 10, 3);
+            add_filter('woocommerce_checkout_fields', [$this, 'restructure_checkout_fields']);
             add_action('wp', [$this, 'matchtrader_remove_default_order_review_checkout']);            
         }
 
@@ -115,6 +116,94 @@ class MatchTrader_Public_WooCommerce {
             }
         }
         return $template;
+    }
+
+    /**
+     * Customize WooCommerce checkout fields
+     *
+     * @param array $fields
+     * @return array
+     */
+    public function restructure_checkout_fields($fields) {
+        // Remove shipping fields
+        unset($fields['shipping']);
+        
+        // Unset all billing fields
+        unset($fields['billing']);
+
+        // Add customized billing fields with WooCommerce classes
+        $fields['billing'] = [
+            'billing_first_name' => [
+                'label' => __('First Name', 'matchtraderplatform'),
+                'required' => true,
+                'class' => ['form-row-first'],
+                'input_class' => ['input-text'],
+                'placeholder' => __('First Name', 'matchtraderplatform'),
+            ],
+            'billing_last_name' => [
+                'label' => __('Last Name', 'matchtraderplatform'),
+                'required' => true,
+                'class' => ['form-row-last'],
+                'input_class' => ['input-text'],
+                'placeholder' => __('Last Name', 'matchtraderplatform'),
+                'clear' => true,
+            ],
+            'billing_email' => [
+                'label' => __('Email', 'matchtraderplatform'),
+                'required' => true,
+                'class' => ['form-row-first'],
+                'input_class' => ['input-text'],
+                'placeholder' => __('Email', 'matchtraderplatform'),
+            ],
+            'billing_phone' => [
+                'label' => __('Phone Number', 'matchtraderplatform'),
+                'required' => true,
+                'class' => ['form-row-last'],
+                'input_class' => ['input-text'],
+                'placeholder' => __('Phone Number', 'matchtraderplatform'),
+                'clear' => true,
+            ],
+            'billing_address_1' => [
+                'label' => __('Address', 'matchtraderplatform'),
+                'required' => true,
+                'class' => ['form-row-wide'],
+                'input_class' => ['input-text'],
+                'placeholder' => __('Address', 'matchtraderplatform'),
+            ],
+            'billing_country' => [
+                'label' => __('Country', 'matchtraderplatform'),
+                'required' => true,
+                'type' => 'select',
+                'class' => ['form-row-first'],
+                'input_class' => ['input-text'],
+                'options' => WC()->countries->get_countries(),
+            ],
+            'billing_state' => [
+                'label' => __('State/Region', 'matchtraderplatform'),
+                'required' => true,
+                'class' => ['form-row-last'],
+                'input_class' => ['input-text'],
+                'placeholder' => __('State/Region', 'matchtraderplatform'),
+                'clear' => true,
+            ],
+            'billing_city' => [
+                'label' => __('City', 'matchtraderplatform'),
+                'required' => true,
+                'class' => ['form-row-first'],
+                'input_class' => ['input-text'],
+                'placeholder' => __('City', 'matchtraderplatform'),
+            ],
+            'billing_postcode' => [
+                'label' => __('Postal Code', 'matchtraderplatform'),
+                'required' => true,
+                'class' => ['form-row-last'],
+                'input_class' => ['input-text'],
+                'placeholder' => __('Postal Code', 'matchtraderplatform'),
+                'clear' => true,
+            ],
+        ];
+
+        return $fields;
     }
 
     /**
