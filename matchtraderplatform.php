@@ -9,7 +9,7 @@
  * Plugin Name:       Match Trader Connection Dashboard
  * Plugin URI:        https://finpr.com
  * Description:       This Plugin to Create User and Account to Dashboard Match Trader
- * Version:           1.0.1
+ * Version:           1.0.12
  * Author:            Finpr x Match Trader Team
  * Author URI:        https://finpr.com
  * License:           GPL-2.0+
@@ -23,7 +23,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('MATCHTRADERPLUGIN_VERSION', '1.0.1');
+define('MATCHTRADERPLUGIN_VERSION', '1.0.12');
 define('MATCHTRADERPLUGIN_PATH', plugin_dir_path(__FILE__));
 define('MATCHTRADERPLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -80,13 +80,3 @@ class MatchTraderPlatform {
 
 // Initialize the plugin
 new MatchTraderPlatform();
-add_action('woocommerce_before_checkout_form', function() {
-    if (is_checkout()) {
-        $account_data = WC()->session->get('matchtrader_account_data');
-
-        echo '<pre style="background: #f1f1f1; padding: 10px; border: 1px solid #ccc; font-size: 14px;">';
-        echo '<strong>Debug: matchtrader_account_data Session</strong><br>';
-        print_r($account_data);
-        echo '</pre>';
-    }
-});
