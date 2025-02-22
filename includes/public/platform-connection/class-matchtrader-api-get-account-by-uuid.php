@@ -37,16 +37,30 @@ class MatchTrader_Get_Account_By_UUID {
         if (isset($_GET['uuid']) && !empty($_GET['uuid'])) {
             $uuid = sanitize_text_field($_GET['uuid']);
 
-            // Reset session data before setting a new one
-            WC()->session->get('matchtrader_account_data', null);
+            // Fully clear previous session data
+            WC()->session->__unset('matchtrader_account_data');
 
-            // Fetch account details and update session
+            // Clear WooCommerce customer fields (forces checkout reload)
+            WC()->customer->set_billing_first_name('');
+            WC()->customer->set_billing_last_name('');
+            WC()->customer->set_billing_address_1('');
+            WC()->customer->set_billing_address_2('');
+            WC()->customer->set_billing_city('');
+            WC()->customer->set_billing_state('');
+            WC()->customer->set_billing_postcode('');
+            WC()->customer->set_billing_country('');
+            WC()->customer->set_billing_phone('');
+            WC()->customer->set_billing_email('');
+            WC()->customer->save(); // Save the reset data
+
+            // Fetch new account data
             $account_data = $this->get_account_by_uuid($uuid);
-            
+
             if ($account_data) {
                 WC()->session->set('matchtrader_account_data', $account_data);
             }
         }
+
     }
 
     /**
