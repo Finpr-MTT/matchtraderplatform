@@ -21,6 +21,7 @@ class MatchTrader_Get_Account_By_UUID {
         // Hook into WooCommerce Checkout process
         add_action('template_redirect', [$this, 'handle_uuid_param'], 3);
         add_filter('woocommerce_checkout_fields', [$this, 'prefill_checkout_fields']);
+        add_action('woocommerce_after_checkout_form', [$this, 'enqueue_billing_state_fix']);
 
         // Hook into order update to save UUID
         add_action('woocommerce_checkout_update_order_meta', [$this, 'save_uuid_challenge_id_to_order_meta'], 10, 2);
@@ -182,6 +183,42 @@ class MatchTrader_Get_Account_By_UUID {
         }
 
         return $fields;
+    }
+
+    /**
+     * Enqueue JavaScript to fix billing_state update issue.
+     */
+    public function enqueue_billing_state_fix() {
+        ?>
+        <script type="text/javascript">
+        jQuery(function($) {
+            function setBillingState() {
+                let billingState = $('input[name="billing_state"]').val(); 
+                let selectedCountry = $('#billing_country').val();
+
+                if (billingState && selectedCountry) {
+                    // Delay setting the value to ensure country has been set
+                    setTimeout(function() {
+                        $('#billing_state').val(billingState).trigger('change');
+                    }, 500); // Adjust delay if needed
+                }
+            }
+
+            // Run when checkout updates
+            $(document.body).on('updated_checkout', function() {
+                setBillingState();
+            });
+
+            // Run when country is changed (since state depends on it)
+            $(document).on('change', '#billing_country', function() {
+                setBillingState();
+            });
+
+            // Run on page load
+            setBillingState();
+        });
+        </script>
+        <?php
     }
 }
 
