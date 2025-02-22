@@ -104,6 +104,22 @@ class MatchTrader_Variation_Manager {
         echo '<h3>Select Account</h3>';
 
         foreach ($attributes as $attribute_name => $options) {
+            // Get terms and sort them by name
+            if (taxonomy_exists($attribute_name)) {
+                $terms = get_terms([
+                    'taxonomy'   => $attribute_name,
+                    'hide_empty' => false,
+                    'orderby'    => 'name',
+                    'order'      => 'ASC'
+                ]);
+
+                // Extract sorted term names
+                $options = wp_list_pluck($terms, 'name');
+            } else {
+                // If not a taxonomy, sort normally
+                sort($options, SORT_NATURAL | SORT_FLAG_CASE);
+            }
+
             echo '<strong><label>' . wc_attribute_label($attribute_name) . '</label></strong>';
             echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
 
