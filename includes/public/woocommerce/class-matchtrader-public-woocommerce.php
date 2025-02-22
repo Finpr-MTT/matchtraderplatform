@@ -131,9 +131,6 @@ class MatchTrader_Public_WooCommerce {
         // Unset all billing fields
         unset($fields['billing']);
 
-        // Ensure WooCommerce session is fresh
-        WC()->session->get('matchtrader_account_data', null);
-
         // Get prefill data
         $account_data = WC()->session->get('matchtrader_account_data');
 
