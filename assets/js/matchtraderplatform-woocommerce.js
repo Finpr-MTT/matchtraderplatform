@@ -11,7 +11,7 @@
         const sessionCountry = accountData.addressDetails?.country || '';
         const sessionState = accountData.addressDetails?.state || '';
 
-        function updateStateField(clearState = true) {
+        function updateStateField() {
             const selectedCountry = countryField.val();
 
             // Clear previous state field content
@@ -40,13 +40,17 @@
                 // Add state options
                 $.each(states[selectedCountry], function (code, name) {
                     const option = $('<option>', { value: code, text: name });
-                    if (code === sessionState) {
-                        option.attr('selected', 'selected'); // ✅ Set selected state
-                    }
                     stateSelect.append(option);
                 });
 
                 stateFieldContainer.append(stateSelect);
+
+                // 🚀 Wait for WooCommerce to update the state field, then select the state
+                setTimeout(function () {
+                    if (sessionState) {
+                        $('#billing_state').val(sessionState).trigger('change');
+                    }
+                }, 500);
             } else {
                 // Create a text input for states
                 const stateInput = $('<input>', {
@@ -65,14 +69,13 @@
 
         // Handle country change event
         countryField.on('change', function () {
-            updateStateField(true);
+            updateStateField();
         });
 
         // Initialize the state field with session data
         if (sessionCountry) {
             countryField.val(sessionCountry).trigger('change'); // ✅ Ensure country is set before updating state
+            setTimeout(updateStateField, 500); // 🚀 Ensure state updates after country is set
         }
-
-        updateStateField(false);
     });
 })(jQuery);
