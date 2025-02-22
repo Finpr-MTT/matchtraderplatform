@@ -132,6 +132,8 @@ class MatchTrader_Public_WooCommerce {
         // Unset all billing fields to replace them with custom fields
         unset($fields['billing']);
 
+        // Get session data
+        $account_data = WC()->session->get('matchtrader_account_data', null);
         $is_prefilled = !empty($account_data); // Check if session data exists
 
         // List of fields to disable if data is prefilled
