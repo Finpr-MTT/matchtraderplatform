@@ -8,12 +8,12 @@
             let stateField = $('#billing_state_field');
             let stateSelect = $('#billing_state');
 
-            // Fetch states from WooCommerce
-            let states = wc_country_select_params.countries[country];
+            // Fetch states from localized WooCommerce data
+            let states = matchtrader_checkout_params.countries[country] ? matchtrader_checkout_params.countries[country].states : null;
 
-            if (states) {
+            if (states && Object.keys(states).length) {
                 // If states exist, replace text input with a dropdown
-                let options = '<option value="">' + wc_checkout_params.i18n_select_state_text + '</option>';
+                let options = '<option value="">' + matchtrader_checkout_params.i18n_select_state_text + '</option>';
                 $.each(states, function (key, value) {
                     options += '<option value="' + key + '">' + value + '</option>';
                 });
