@@ -136,9 +136,9 @@ class MatchTrader_Public_WooCommerce {
         $account_data = WC()->session->get('matchtrader_account_data');
         $is_prefilled = !empty($account_data); // Check if session data exists
 
-        // Helper function to add readonly attributes
+         // Helper function to set custom attributes
         function get_custom_attributes($field_name, $is_prefilled) {
-            return $is_prefilled ? ['readonly' => 'readonly'] : [];
+            return $is_prefilled ? ['readonly' => 'readonly', 'class' => 'matchtrader-readonly'] : [];
         }
 
         // Get country and state from session
@@ -198,28 +198,24 @@ class MatchTrader_Public_WooCommerce {
                 'default' => $account_data['addressDetails']['address'] ?? '',
                 'custom_attributes' => get_custom_attributes('billing_address_1', $is_prefilled),
             ],
-            'billing_country' => [
-                'label' => __('Country', 'matchtraderplatform'),
-                'required' => true,
-                'type' => 'select',
-                'class' => ['form-row-first', 'update_totals_on_change'],
-                'input_class' => ['input-text'],
-                'options' => WC()->countries->get_countries(),
-                'default' => $country,
-                'custom_attributes' => get_custom_attributes('billing_country', $is_prefilled),
-            ],
-            'billing_state' => [
-                'label' => __('State/Region', 'matchtraderplatform'),
-                'required' => true,
-                'class' => ['form-row-last'],
-                'input_class' => ['input-text'],
-                'placeholder' => __('State/Region', 'matchtraderplatform'),
-                'clear' => true,
-                'type' => $has_states ? 'select' : 'text',
-                'options' => $has_states ? ['' => __('Select State', 'matchtraderplatform')] + $states : [],
-                'default' => $state,
-                'custom_attributes' => get_custom_attributes('billing_state', $is_prefilled),
-            ],
+             'billing_country' => [
+            'label' => __('Country', 'matchtraderplatform'),
+            'required' => true,
+            'type' => 'select',
+            'class' => ['form-row-first', 'update_totals_on_change'],
+            'options' => WC()->countries->get_countries(),
+            'default' => $country,
+            'custom_attributes' => $is_prefilled ? ['data-prefilled' => 'true'] : [], // Add marker for JS
+        ],
+        'billing_state' => [
+            'label' => __('State/Region', 'matchtraderplatform'),
+            'required' => true,
+            'class' => ['form-row-last'],
+            'type' => $has_states ? 'select' : 'text',
+            'options' => $has_states ? ['' => __('Select State', 'matchtraderplatform')] + $states : [],
+            'default' => $state,
+            'custom_attributes' => $is_prefilled ? ['data-prefilled' => 'true'] : [],
+        ],
             'billing_city' => [
                 'label' => __('City', 'matchtraderplatform'),
                 'required' => true,
