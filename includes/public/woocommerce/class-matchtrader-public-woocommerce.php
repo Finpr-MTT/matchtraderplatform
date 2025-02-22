@@ -33,7 +33,7 @@ class MatchTrader_Public_WooCommerce {
 
         if (get_option('matchtrader_enable_mtt_checkout', false)) {
             add_filter('woocommerce_locate_template', [$this, 'matchtrader_override_templates'], 10, 3);
-            add_filter('woocommerce_checkout_fields', [$this, 'restructure_checkout_fields']);
+            //add_filter('woocommerce_checkout_fields', [$this, 'restructure_checkout_fields']);
             add_action('wp', [$this, 'matchtrader_remove_default_order_review_checkout']);            
         }
 
