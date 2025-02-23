@@ -110,30 +110,42 @@ class MatchTrader_Variation_Manager {
                     'order'      => 'ASC'
                 ]);
                 
-                // Create an associative array of slug => name for terms
+                // Create an associative array of slug => formatted name for terms
                 $term_options = [];
                 foreach ($terms as $term) {
-                    $term_options[$term->slug] = $term->name;
+                    // Format the term name (capitalize first letter of each word)
+                    $formatted_name = ucwords(str_replace('-', ' ', $term->name));
+                    $term_options[$term->slug] = $formatted_name;
                 }
                 $options = $term_options;
             } else {
-                // If it's not a taxonomy, just sort normally
-                natcasesort($options);
+                // For non-taxonomy attributes, format the values
+                $formatted_options = [];
+                foreach ($options as $option) {
+                    $formatted_name = ucwords(str_replace('-', ' ', $option));
+                    $formatted_options[$option] = $formatted_name;
+                }
+                $options = $formatted_options;
             }
             
-            echo '<strong><label>' . wc_attribute_label($attribute_name) . '</label></strong>';
+            // Format the attribute label
+            $attribute_label = wc_attribute_label($attribute_name);
+            
+            echo '<strong><label>' . esc_html($attribute_label) . '</label></strong>';
             echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
             
-            foreach ($options as $slug => $name) {
-                $option_value = taxonomy_exists($taxonomy) ? $slug : $name;
-                $option_label = taxonomy_exists($taxonomy) ? $name : $name;
-                
+            foreach ($options as $value => $label) {
                 $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && 
-                           $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $option_value) ? ' checked' : '';
+                           $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $value) ? ' checked' : '';
+                
+                // Special formatting for numbers (like trading capital)
+                if (is_numeric($label)) {
+                    $label = number_format($label);
+                }
                 
                 echo '<div class="matchtrader-radio-option">';
-                echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($option_value) . '" class="matchtrader-switch"' . $selected . '>';
-                echo '<label class="matchtrader-radio-label">' . esc_html($option_label) . '</label>';
+                echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($value) . '" class="matchtrader-switch"' . $selected . '>';
+                echo '<label class="matchtrader-radio-label">' . esc_html($label) . '</label>';
                 echo '</div>';
             }
             echo '</div>';
