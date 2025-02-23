@@ -118,13 +118,13 @@ class MatchTrader_Variation_Manager {
             // Extract term names instead of slugs
             $options = [];
             foreach ($terms as $term) {
-                $options[$term->slug] = $term->name;
+                $options[$term->slug] = $term->name; // Keep the correct term name (e.g., "$5,000")
             }
         } else {
-            // If not a taxonomy, sort normally
+            // If not a taxonomy, use raw values from options
             $sorted_options = [];
             foreach ($options as $option_slug) {
-                $sorted_options[$option_slug] = ucwords(str_replace('-', ' ', $option_slug)); // Convert slug to readable text
+                $sorted_options[$option_slug] = $option_slug; // Keep raw text (WooCommerce stores formatted text)
             }
             natcasesort($sorted_options); // Sort case-insensitively
             $options = $sorted_options;
@@ -137,7 +137,7 @@ class MatchTrader_Variation_Manager {
             $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $slug) ? ' checked' : '';
             echo '<div class="matchtrader-radio-option">';
             echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($slug) . '" class="matchtrader-switch"' . $selected . '>';
-            echo '<label class="matchtrader-radio-label">' . esc_html($name) . '</label>';
+            echo '<label class="matchtrader-radio-label">' . esc_html($name) . '</label>'; // Display exact term name
             echo '</div>';
         }
 
