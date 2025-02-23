@@ -45,10 +45,11 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 		    <div class="col-sm-6 border px-4"><?php do_action('woocommerce_checkout_before_customer_details'); ?> </div>
 		    <div class="col-sm-5">
 		    	<?php do_action('woocommerce_checkout_before_order_review'); ?>
+		    	<div class="text-center mt-4 w-100">
+					<button type="button" class="btn btn-success next-step">Next</button>
+				</div>
 		    </div>
-		    <div class="text-center mt-4">
-				<button type="button" class="btn btn-success next-step">Next</button>
-			</div>
+		    
 		</div>
 		</div>
 	</div>
