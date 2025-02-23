@@ -42,7 +42,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 	<div class="step-content active" data-step="1">
 		<div class="container">
 		<div class="row justify-content-md-center">
-		    <div class="col-sm-7 border px-4"><?php do_action('woocommerce_checkout_before_customer_details'); ?> </div>
+		    <div class="col-sm-6 border px-4"><?php do_action('woocommerce_checkout_before_customer_details'); ?> </div>
 		    <div class="col-sm-5">
 		    	<?php do_action('woocommerce_checkout_before_order_review'); ?>
 		    </div>
