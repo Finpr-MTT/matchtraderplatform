@@ -130,7 +130,7 @@ class MatchTrader_Variation_Manager {
                 $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $option) ? ' checked' : '';
                 echo '<div class="matchtrader-radio-option">';
                 echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($option) . '" class="matchtrader-switch"' . $selected . '>';
-                echo '<label class="matchtrader-radio-label">' . wc_attribute_label($option) . '</label>';
+                echo '<label class="matchtrader-radio-label">' . esc_html($option) . '</label>';
                 echo '</div>';
             }
 
