@@ -11,10 +11,20 @@
 
         function updateProgress() {
             steps.each(function(index) {
+                const $step = $(this);
+
+                // Add/remove active class for step number
                 if (index + 1 <= currentStep) {
-                    $(this).addClass('active');
+                    $step.addClass('active');
                 } else {
-                    $(this).removeClass('active');
+                    $step.removeClass('active');
+                }
+
+                // Add/remove progress-active class for progress bar
+                if (index + 1 < currentStep) {
+                    $step.addClass('progress-active');
+                } else {
+                    $step.removeClass('progress-active');
                 }
             });
 
@@ -48,5 +58,8 @@
                 alert('Please complete all steps before submitting the form.');
             }
         });
+
+        // Initialize progress
+        updateProgress();
     });
 })(jQuery);

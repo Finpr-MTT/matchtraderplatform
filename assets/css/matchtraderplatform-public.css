@@ -21,49 +21,54 @@ input:-webkit-autofill:active {
 /*form styles*/
 .woocommerce form#matchTraderCheckout .form-row .input-text, 
 .woocommerce-page form#matchTraderCheckout .form-row .input-text {
-    box-sizing: border-box;
-    width: 100%;
     height: 45px;
 }
-#matchTraderCheckout .step-progress {
+.step-progress {
     display: flex;
     justify-content: space-between;
     margin-bottom: 2rem;
 }
-#matchTraderCheckout .step {
+
+.step {
     text-align: center;
     flex: 1;
     position: relative;
 }
-#matchTraderCheckout .step:not(:last-child)::before {
+
+.step:not(:last-child)::before {
     content: '';
     position: absolute;
     width: 100%;
     height: 2px;
-    background: #dee2e6;
+    background: #dee2e6; /* Default color for inactive progress bar */
     top: 20px;
     left: 50%;
     z-index: -1;
 }
-#matchTraderCheckout .step.active:not(:last-child)::before {
-    background: #0d6efd;
+
+.step.active .step-number {
+    background: #0d6efd; /* Active step number color */
+    color: white;
 }
-#matchTraderCheckout .step-number {
+
+.step.active.progress-active:not(:last-child)::before {
+    background: #0d6efd; /* Active progress bar color */
+}
+
+.step-number {
     width: 40px;
     height: 40px;
     line-height: 40px;
     border-radius: 50%;
-    background: #dee2e6;
+    background: #dee2e6; /* Inactive step number color */
     display: inline-block;
     margin-bottom: 0.5rem;
 }
-#matchTraderCheckout .step.active .step-number {
-    background: #0d6efd;
-    color: white;
-}
-#matchTraderCheckout .step-content {
+
+.step-content {
     display: none;
 }
-#matchTraderCheckout .step-content.active {
+
+.step-content.active {
     display: block;
 }
