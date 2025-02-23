@@ -35,7 +35,7 @@ class MatchTrader_Public_WooCommerce {
 
         if ($checkout_mode !== 'none') {
             add_filter('woocommerce_locate_template', [$this, 'matchtrader_override_templates'], 10, 3);
-            add_action('woocommerce_checkout_after_order_review', [$this, 'add_coupon_form_before_payment']);
+            add_action('woocommerce_after_template_part', [$this, 'add_coupon_form_before_payment']);
             add_action('wp_ajax_apply_coupon_action', [$this, 'apply_coupon_action']);
             add_action('wp_ajax_nopriv_apply_coupon_action', [$this, 'apply_coupon_action']);
         }
