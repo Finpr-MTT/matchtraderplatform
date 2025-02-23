@@ -32,6 +32,8 @@ class MatchTrader_Enqueue_Manager {
             wp_enqueue_script('matchtrader-platform-script', MATCHTRADERPLUGIN_URL . 'assets/js/matchtraderplatform-public.js', ['jquery'], MATCHTRADERPLUGIN_VERSION, true);            
             wp_enqueue_script('matchtrader-switch-variant', MATCHTRADERPLUGIN_URL . 'assets/js/matchtrader-switch-variant.js', ['jquery'], MATCHTRADERPLUGIN_VERSION, true);
             wp_enqueue_script('matchtrader-woocommerce-script', MATCHTRADERPLUGIN_URL . 'assets/js/matchtraderplatform-woocommerce.js', ['jquery'], MATCHTRADERPLUGIN_VERSION, true);
+            wp_enqueue_script('matchtrader-coupon-ajax', MATCHTRADERPLUGIN_URL . '/assets/js/matchtraderplatform-coupon.js', array('jquery'), MATCHTRADERPLUGIN_VERSION, true);
+        
 
             // Wp Localize
             wp_localize_script('matchtrader-woocommerce-script', 'wc_country_states', [
@@ -42,7 +44,9 @@ class MatchTrader_Enqueue_Manager {
                 'ajaxurl' => admin_url('admin-ajax.php'),
                 'nonce' => wp_create_nonce('matchtrader_nonce'),
             ]);
-            
+            wp_localize_script('hello-theme-coupon-ajax', 'ajax_object', [
+                'ajax_url' => admin_url('admin-ajax.php'),
+            ]);            
         }
     }
 }

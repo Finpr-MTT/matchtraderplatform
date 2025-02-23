@@ -35,6 +35,9 @@ class MatchTrader_Public_WooCommerce {
 
         if ($checkout_mode !== 'none') {
             add_filter('woocommerce_locate_template', [$this, 'matchtrader_override_templates'], 10, 3);
+            add_action('woocommerce_review_order_before_payment', [$this, 'add_coupon_form_before_payment']);
+            add_action('wp_ajax_apply_coupon_action', [$this, 'apply_coupon_action']);
+            add_action('wp_ajax_nopriv_apply_coupon_action', [$this, 'apply_coupon_action']);
         }
 
         if (get_option('matchtrader_enable_mtt_checkout', 'default') === 'multi-step') {
@@ -52,7 +55,6 @@ class MatchTrader_Public_WooCommerce {
             add_filter('woocommerce_add_cart_item_data', [$this, 'empty_cart_before_add_product'], 10, 2);
             add_filter('woocommerce_add_to_cart_redirect', [$this, 'redirect_to_checkout']);
         }
-
 
     }
 
@@ -266,8 +268,6 @@ class MatchTrader_Public_WooCommerce {
         return $fields;
     }
 
-
-
     /**
      * Adjust WooCommerce Checkout Layout by Removing Default Sections
      */
@@ -280,7 +280,6 @@ class MatchTrader_Public_WooCommerce {
         add_action('woocommerce_checkout_order_review', 'woocommerce_checkout_payment', 20);
     }
 
-
     /**
      * Redirect to Checkout After Adding Product (For Single Product Checkout)
      * 
@@ -288,6 +287,41 @@ class MatchTrader_Public_WooCommerce {
      */
     public function redirect_to_checkout() {
         return wc_get_checkout_url();
+    }
+
+    /**
+     * apply_coupon_action
+     */
+    public function apply_coupon_action()
+    {
+        if (!isset($_POST['coupon_code'])) {
+            wp_send_json_error('Coupon code not provided.');
+        }
+
+        $coupon_code = sanitize_text_field($_POST['coupon_code']);
+        WC()->cart->add_discount($coupon_code);
+
+        if (wc_notice_count('error') > 0) {
+            $errors = wc_get_notices('error');
+            wc_clear_notices();
+            wp_send_json_error(join(', ', wp_list_pluck($errors, 'notice')));
+        }
+
+        wp_send_json_success();
+    }
+    
+    /**
+     * add_coupon_form_before_payment
+     */
+    public function add_coupon_form_before_payment()
+    {
+        echo '<div class="hello-theme-coupon-form">
+            <label for="coupon_code_field" style="display: block; margin-bottom: 15px;">If you have a coupon code, please apply it below.</label>
+            <div style="display: flex; align-items: center;">
+                <input type="text" id="coupon_code_field" name="coupon_code" placeholder="Apply Coupon Code"/>
+                <button type="button" id="apply_coupon_button">Apply Coupon</button>
+            </div>
+        </div>';
     }
 }
 
