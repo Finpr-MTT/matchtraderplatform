@@ -52,8 +52,12 @@ class MatchTrader_WooCommerce_Settings {
         }, 'matchtraderplatform-woo-settings', 'matchtrader_woo_section');
 
         add_settings_field('matchtrader_enable_mtt_checkout', 'Enable Match Trader Checkout', function() {
-            $value = get_option('matchtrader_enable_mtt_checkout', '');
-            echo '<input type="checkbox" name="matchtrader_enable_mtt_checkout" value="1" ' . checked(1, $value, false) . '>';
+            $value = get_option('matchtrader_enable_mtt_checkout', 'default'); // Default value
+
+            echo '<select name="matchtrader_enable_mtt_checkout">';
+            echo '<option value="default" ' . selected($value, 'default', false) . '>Default</option>';
+            echo '<option value="multi-step" ' . selected($value, 'multi-step', false) . '>Multi-Step</option>';
+            echo '</select>';
         }, 'matchtraderplatform-woo-settings', 'matchtrader_woo_section');
 
         add_settings_field('matchtrader_enable_checkout_selection', 'Enable Product Selection at Checkout', function() {

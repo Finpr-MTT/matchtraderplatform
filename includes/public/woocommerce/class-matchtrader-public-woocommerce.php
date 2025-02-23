@@ -103,18 +103,34 @@ class MatchTrader_Public_WooCommerce {
     }
 
     public function matchtrader_override_templates($template, $template_name, $template_path) {
-        $override_templates = [        
-            'checkout/form-checkout.php',
-            'checkout/form-billing.php',
-            'checkout/form-pay.php',
-        ];
+        // Get the selected checkout mode
+        $checkout_mode = get_option('matchtrader_enable_mtt_checkout', 'default');
+        
+        // Define override templates based on the selected mode
+        $override_templates = [];
 
-        if (in_array($template_name, $override_templates)) {
-            $plugin_template = MATCHTRADERPLUGIN_PATH . 'woocommerce/' . $template_name;
+        if ($checkout_mode === 'multi-step') {
+            $override_templates = [
+                'checkout/form-checkout.php' => 'checkout/multistep/form-checkout.php',
+                'checkout/form-billing.php'  => 'checkout/multistep/form-billing.php',
+                'checkout/form-pay.php'      => 'checkout/multistep/form-pay.php',
+            ];
+        } else {
+            $override_templates = [
+                'checkout/form-checkout.php' => 'checkout/default/form-checkout.php',
+                'checkout/form-billing.php'  => 'checkout/default/form-billing.php',
+                'checkout/form-pay.php'      => 'checkout/default/form-pay.php',
+            ];
+        }
+
+        // Check if the template should be overridden
+        if (array_key_exists($template_name, $override_templates)) {
+            $plugin_template = MATCHTRADERPLUGIN_PATH . 'woocommerce/' . $override_templates[$template_name];
             if (file_exists($plugin_template)) {
                 return $plugin_template;
             }
         }
+
         return $template;
     }
 
