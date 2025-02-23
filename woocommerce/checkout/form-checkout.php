@@ -33,7 +33,6 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 
             <!-- Step 1: Account Selection -->
             <fieldset">
-                <h2 class="fs-title">Select Account</h2>
                 <?php do_action('woocommerce_checkout_before_customer_details'); ?>  
                 <?php do_action('woocommerce_checkout_before_order_review'); ?>
 
@@ -42,7 +41,6 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 
             <!-- Step 2: Billing Details -->
             <fieldset>
-                <h2 class="fs-title">Billing Details</h2>
                 <div id="customer_details">
                     <div class="container">
                         <?php do_action( 'woocommerce_checkout_billing' ); ?>
@@ -55,10 +53,8 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 
             <!-- Step 3: Payment -->
             <fieldset>
-                <h2 class="fs-title">Make Payment</h2>
                 <?php do_action('woocommerce_checkout_payment'); ?>
                 <?php do_action('woocommerce_checkout_order_review'); ?>
-
                 <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
             </fieldset>
 
