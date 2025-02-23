@@ -20,12 +20,12 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 ?>
 
 <!-- MultiStep Form -->
-<div id="matchTraderCheckout" class="row">
+<div class="row">
     <div class="col-md-12">
-        <form name="checkout" method="post" class="checkout woocommerce-checkout hello-theme-checkout container" action="<?php echo esc_url( wc_get_checkout_url() ); ?>" enctype="multipart/form-data">
+        <form id="matchTraderCheckout" name="checkout" method="post" class="checkout woocommerce-checkout matchtrader-checkout container" action="<?php echo esc_url( wc_get_checkout_url() ); ?>" enctype="multipart/form-data">
             
             <!-- Multi-Step Navigation -->
-            <ul id="progressbar" class="nav nav-pills nav-justified checkout-steps">
+            <ul id="progressbar">
                 <li class="active">1. Select Account</li>
                 <li>Billing Details</li>
                 <li>Make Payment</li>
