@@ -102,7 +102,7 @@ class MatchTrader_Variation_Manager {
             $taxonomy = wc_attribute_taxonomy_name($attribute_name);
             
             if (taxonomy_exists($taxonomy)) {
-                // Get terms and sort them by name
+                // Get terms and preserve their original names
                 $terms = get_terms([
                     'taxonomy'   => $taxonomy,
                     'hide_empty' => false,
@@ -110,20 +110,18 @@ class MatchTrader_Variation_Manager {
                     'order'      => 'ASC'
                 ]);
                 
-                // Create an associative array of slug => formatted name for terms
+                // Create an associative array of slug => original name for terms
                 $term_options = [];
                 foreach ($terms as $term) {
-                    // Format the term name (capitalize first letter of each word)
-                    $formatted_name = ucwords(str_replace('-', ' ', $term->name));
-                    $term_options[$term->slug] = $formatted_name;
+                    // Use the original term name without formatting
+                    $term_options[$term->slug] = $term->name;
                 }
                 $options = $term_options;
             } else {
-                // For non-taxonomy attributes, format the values
+                // For non-taxonomy attributes, keep original values
                 $formatted_options = [];
                 foreach ($options as $option) {
-                    $formatted_name = ucwords(str_replace('-', ' ', $option));
-                    $formatted_options[$option] = $formatted_name;
+                    $formatted_options[$option] = $option;
                 }
                 $options = $formatted_options;
             }
@@ -137,11 +135,6 @@ class MatchTrader_Variation_Manager {
             foreach ($options as $value => $label) {
                 $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && 
                            $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $value) ? ' checked' : '';
-                
-                // Special formatting for numbers (like trading capital)
-                if (is_numeric($label)) {
-                    $label = number_format($label);
-                }
                 
                 echo '<div class="matchtrader-radio-option">';
                 echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($value) . '" class="matchtrader-switch"' . $selected . '>';
