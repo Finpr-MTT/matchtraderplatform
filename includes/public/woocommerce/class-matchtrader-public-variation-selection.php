@@ -102,18 +102,14 @@ class MatchTrader_Variation_Manager {
 
         echo '<div id="matchtrader-variant-switcher">';
 
-        foreach ($attributes as $attribute_slug => $options) {
-            // Get attribute name instead of slug
-            $taxonomy = wc_attribute_taxonomy_name($attribute_slug);
-            $attribute_label = wc_attribute_label($taxonomy); // Get attribute label (display name)
+        foreach ($attributes as $attribute_name => $options) {
+            // Convert attribute name to taxonomy format
+            $taxonomy = wc_attribute_taxonomy_name($attribute_name);
+            $attribute_label = wc_attribute_label($attribute_name);
 
-            if (empty($attribute_label)) {
-                // Fallback: Convert slug to a readable format if no label found
-                $attribute_label = ucwords(str_replace(['pa_', '_'], ['', ' '], $attribute_slug));
-            }
-
-            // Check if it's a taxonomy-based attribute
+            // Check if attribute is a taxonomy (global WooCommerce attribute)
             if (taxonomy_exists($taxonomy)) {
+                // Get terms associated with this taxonomy
                 $terms = get_terms([
                     'taxonomy'   => $taxonomy,
                     'hide_empty' => false,
@@ -121,21 +117,24 @@ class MatchTrader_Variation_Manager {
                     'order'      => 'ASC'
                 ]);
 
-                // Extract sorted term names
-                $options = wp_list_pluck($terms, 'name');
+                // Extract terms as key-value pairs (slug => name)
+                $options = [];
+                foreach ($terms as $term) {
+                    $options[$term->slug] = $term->name;
+                }
             } else {
-                natcasesort($options); // Sort case-insensitively
+                // Sort options normally if not a taxonomy
+                natcasesort($options);
             }
 
-            // Display attribute label instead of slug
             echo '<strong><label>' . esc_html($attribute_label) . '</label></strong>';
-            echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_slug) . '">';
+            echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
 
-            foreach ($options as $option) {
-                $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_slug)]) && $selected_attributes['attribute_' . sanitize_title($attribute_slug)] == $option) ? ' checked' : '';
+            foreach ($options as $slug => $name) {
+                $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $slug) ? ' checked' : '';
                 echo '<div class="matchtrader-radio-option">';
-                echo '<input type="radio" name="' . esc_attr($attribute_slug) . '" value="' . esc_attr($option) . '" class="matchtrader-switch"' . $selected . '>';
-                echo '<label class="matchtrader-radio-label">' . esc_html($option) . '</label>';
+                echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($slug) . '" class="matchtrader-switch"' . $selected . '>';
+                echo '<label class="matchtrader-radio-label">' . esc_html($name) . '</label>';
                 echo '</div>';
             }
 
