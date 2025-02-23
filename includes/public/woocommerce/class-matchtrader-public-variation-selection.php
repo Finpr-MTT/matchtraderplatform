@@ -134,12 +134,21 @@ class MatchTrader_Variation_Manager {
         echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
 
         foreach ($options as $slug => $name) {
-            $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $slug) ? ' checked' : '';
-            echo '<div class="matchtrader-radio-option">';
-            echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($slug) . '" class="matchtrader-switch"' . $selected . '>';
-            echo '<label class="matchtrader-radio-label">' . wc_attribute_label($name) . '</label>'; // Display exact term name
-            echo '</div>';
-        }
+    $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $slug) ? ' checked' : '';
+
+    // Get taxonomy name
+    $taxonomy = wc_attribute_taxonomy_name($attribute_name);
+
+    // Retrieve term object by slug
+    $term = get_term_by('slug', $slug, $taxonomy);
+    $term_name = ($term) ? $term->name : $name; // Use term name if found, fallback to existing name
+
+    echo '<div class="matchtrader-radio-option">';
+    echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($slug) . '" class="matchtrader-switch"' . $selected . '>';
+    echo '<label class="matchtrader-radio-label">' . esc_html($term_name) . '</label>'; // Display exact term name
+    echo '</div>';
+}
+
 
         echo '</div>';
     }
