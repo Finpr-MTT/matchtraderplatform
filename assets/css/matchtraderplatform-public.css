@@ -19,17 +19,17 @@ input:-webkit-autofill:active {
 }
 
 /*form styles*/
-#matchTraderCheckout #matchTraderCheckout .step-progress {
+#matchTraderCheckout .step-progress {
     display: flex;
     justify-content: space-between;
     margin-bottom: 2rem;
 }
-#matchTraderCheckout #matchTraderCheckout .step {
+#matchTraderCheckout .step {
     text-align: center;
     flex: 1;
     position: relative;
 }
-#matchTraderCheckout #matchTraderCheckout .step:not(:last-child)::before {
+#matchTraderCheckout .step:not(:last-child)::before {
     content: '';
     position: absolute;
     width: 100%;
