@@ -62,9 +62,9 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 					<div id="customer_details">
 						<?php do_action( 'woocommerce_checkout_billing' ); ?>
 					</div>
-					<div class="d-flex justify-content-between mt-4">
-						<button type="button" class="btn btn-secondary prev-step">Back</button>
-						<button type="button" class="btn btn-success next-step">Next</button>
+					<div class="d-flex justify-content-between mt-4 gap-3">
+						<button type="button" class="btn btn-secondary w-50 prev-step">Back</button>
+						<button type="button" class="btn btn-success w-50 next-step">Next</button>
 					</div>
 				</div>
 			</div>
@@ -80,7 +80,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 					<?php do_action('woocommerce_checkout_order_review'); ?>
 
 					<div class="text-center mt-4">
-						<button type="button" class="btn btn-secondary prev-step">Back</button>
+						<button type="button" class="btn btn-secondary w-100 prev-step">Back</button>
 					</div>
 				</div>
 			</div>
