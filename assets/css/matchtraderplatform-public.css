@@ -23,19 +23,20 @@ input:-webkit-autofill:active {
 .woocommerce-page form#matchTraderCheckout .form-row .input-text {
     height: 45px;
 }
-.step-progress {
+
+#matchTraderCheckout .step-progress {
     display: flex;
     justify-content: space-between;
     margin-bottom: 2rem;
 }
 
-.step {
+#matchTraderCheckout .step {
     text-align: center;
     flex: 1;
     position: relative;
 }
 
-.step:not(:last-child)::before {
+#matchTraderCheckout .step:not(:last-child)::before {
     content: '';
     position: absolute;
     width: 100%;
@@ -46,16 +47,16 @@ input:-webkit-autofill:active {
     z-index: -1;
 }
 
-.step.active .step-number {
+#matchTraderCheckout .step.active .step-number {
     background: #0d6efd; /* Active step number color */
     color: white;
 }
 
-.step.active.progress-active:not(:last-child)::before {
+#matchTraderCheckout .step.active.progress-active:not(:last-child)::before {
     background: #0d6efd; /* Active progress bar color */
 }
 
-.step-number {
+#matchTraderCheckout .step-number {
     width: 40px;
     height: 40px;
     line-height: 40px;
@@ -65,10 +66,10 @@ input:-webkit-autofill:active {
     margin-bottom: 0.5rem;
 }
 
-.step-content {
+#matchTraderCheckout .step-content {
     display: none;
 }
 
-.step-content.active {
+#matchTraderCheckout .step-content.active {
     display: block;
 }
