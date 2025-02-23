@@ -51,7 +51,7 @@ input:-webkit-autofill:active {
     display: inline-block;
     margin-bottom: 0.5rem;
 }
-#matchTraderCheckout .step.active #matchTraderCheckout .step-number {
+#matchTraderCheckout .step.active .step-number {
     background: #0d6efd;
     color: white;
 }
