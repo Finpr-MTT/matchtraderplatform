@@ -9,15 +9,22 @@
 
         let currentStep = 1;
 
+        // Initialize progress bar
+        updateProgress();
+
         function updateProgress() {
+            // Update progress bar steps
             steps.each(function(index) {
-                if (index + 1 <= currentStep) {
-                    $(this).addClass('active');
+                if (index + 1 < currentStep) {
+                    $(this).addClass('completed').removeClass('active');
+                } else if (index + 1 === currentStep) {
+                    $(this).addClass('active').removeClass('completed');
                 } else {
-                    $(this).removeClass('active');
+                    $(this).removeClass('active completed');
                 }
             });
 
+            // Update step content visibility
             stepContents.each(function() {
                 if (parseInt($(this).attr('data-step')) === currentStep) {
                     $(this).addClass('active');
@@ -27,6 +34,7 @@
             });
         }
 
+        // Next button click handler
         nextButtons.on('click', function() {
             if (currentStep < steps.length) {
                 currentStep++;
@@ -34,6 +42,7 @@
             }
         });
 
+        // Previous button click handler
         prevButtons.on('click', function() {
             if (currentStep > 1) {
                 currentStep--;
