@@ -55,6 +55,7 @@ class MatchTrader_WooCommerce_Settings {
             $value = get_option('matchtrader_enable_mtt_checkout', 'default'); // Default value
 
             echo '<select name="matchtrader_enable_mtt_checkout">';
+            echo '<option value="none" ' . selected($value, 'none', false) . '>None</option>';
             echo '<option value="default" ' . selected($value, 'default', false) . '>Default</option>';
             echo '<option value="multi-step" ' . selected($value, 'multi-step', false) . '>Multi-Step</option>';
             echo '</select>';
