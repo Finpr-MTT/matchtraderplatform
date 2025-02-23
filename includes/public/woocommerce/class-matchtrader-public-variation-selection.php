@@ -103,9 +103,9 @@ class MatchTrader_Variation_Manager {
     echo '<div id="matchtrader-variant-switcher">';
 
     foreach ($attributes as $attribute_name => $options) {
-        // Check if the attribute is a taxonomy
+        // Convert attribute name to taxonomy format
         $taxonomy = wc_attribute_taxonomy_name($attribute_name);
-        
+
         if (taxonomy_exists($taxonomy)) {
             // Get terms and sort them by name
             $terms = get_terms([
@@ -115,14 +115,14 @@ class MatchTrader_Variation_Manager {
                 'order'      => 'ASC'
             ]);
 
-            // Use $term->name instead of slug
+            // Ensure term slug is used as value, and term name is used as the label
             $options = [];
             foreach ($terms as $term) {
-                $options[$term->slug] = $term->name; // Store slug as value, but display name
+                $options[$term->slug] = $term->name; // Corrected: Slug as value, name as label
             }
         } else {
-            // If it's not a taxonomy, just sort normally
-            natcasesort($options); // Sort case-insensitively
+            // If not a taxonomy, just sort normally
+            natcasesort($options);
         }
 
         echo '<strong><label>' . wc_attribute_label($attribute_name) . '</label></strong>';
@@ -132,7 +132,7 @@ class MatchTrader_Variation_Manager {
             $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $slug) ? ' checked' : '';
             echo '<div class="matchtrader-radio-option">';
             echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($slug) . '" class="matchtrader-switch"' . $selected . '>';
-            echo '<label class="matchtrader-radio-label">' . esc_html($name) . '</label>'; // Display Name Instead of Slug
+            echo '<label class="matchtrader-radio-label">' . esc_html($name) . '</label>'; // Display term name instead of slug
             echo '</div>';
         }
 
