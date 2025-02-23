@@ -69,11 +69,11 @@ class MatchTrader_Variation_Manager {
 
     public function display_variant_selector() {
         if (WC()->cart->is_empty()) return;
-        
+
         $cart_items = WC()->cart->get_cart();
         $product_id = 0;
         $selected_variation_id = 0;
-        
+
         foreach ($cart_items as $cart_item) {
             $product_id = $cart_item['product_id'];
             if (isset($cart_item['variation_id']) && $cart_item['variation_id'] > 0) {
@@ -81,7 +81,7 @@ class MatchTrader_Variation_Manager {
             }
             break;
         }
-        
+
         if (!$product_id) return;
 
         $product = wc_get_product($product_id);
@@ -127,21 +127,25 @@ class MatchTrader_Variation_Manager {
                 natcasesort($options);
             }
 
+            // Display the attribute label
+            echo '<div class="matchtrader-attribute-group">';
             echo '<strong><label>' . esc_html($attribute_label) . '</label></strong>';
             echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
 
             foreach ($options as $slug => $name) {
                 $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $slug) ? ' checked' : '';
                 echo '<div class="matchtrader-radio-option">';
-                echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($slug) . '" class="matchtrader-switch"' . $selected . '>';
-                echo '<label class="matchtrader-radio-label">' . esc_html($name) . '</label>';
+                echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($slug) . '" id="radio-' . esc_attr($slug) . '" class="matchtrader-switch"' . $selected . '>';
+                echo '<label class="matchtrader-radio-label" for="radio-' . esc_attr($slug) . '">' . esc_html($name) . '</label>';
                 echo '</div>';
             }
 
             echo '</div>';
+            echo '</div>';
         }
         echo '</div>';
     }
+
 
 
     public function update_cart() {
