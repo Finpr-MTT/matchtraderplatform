@@ -83,11 +83,14 @@ class MatchTrader_Variation_Manager {
         }
         
         if (!$product_id) return;
+
         $product = wc_get_product($product_id);
         if (!$product->is_type('variable')) return;
+
         $variations = $product->get_available_variations();
         $attributes = $product->get_variation_attributes();
         $selected_attributes = [];
+
         if ($selected_variation_id) {
             foreach ($variations as $variation) {
                 if ($variation['variation_id'] == $selected_variation_id) {
@@ -96,58 +99,42 @@ class MatchTrader_Variation_Manager {
                 }
             }
         }
-        
+
         echo '<div id="matchtrader-variant-switcher">';
+        // echo '<h3>Select Account</h3>';
+
         foreach ($attributes as $attribute_name => $options) {
+            // Check if the attribute is a taxonomy
             $taxonomy = wc_attribute_taxonomy_name($attribute_name);
             
             if (taxonomy_exists($taxonomy)) {
-                // Get all terms for this attribute
+                // Get terms and sort them by name
                 $terms = get_terms([
-                    'taxonomy' => $taxonomy,
+                    'taxonomy'   => $taxonomy,
                     'hide_empty' => false,
-                    'include' => $options, // Include only the terms that are used in variations
-                    'orderby' => 'name',
-                    'order' => 'ASC'
+                    'orderby'    => 'name',
+                    'order'      => 'ASC'
                 ]);
-                
-                if (!is_wp_error($terms)) {
-                    $attribute_label = wc_attribute_label($attribute_name);
-                    echo '<strong><label>' . esc_html($attribute_label) . '</label></strong>';
-                    echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
-                    
-                    foreach ($terms as $term) {
-                        $selected = '';
-                        if (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)])) {
-                            $selected = ($selected_attributes['attribute_' . sanitize_title($attribute_name)] == $term->slug) ? ' checked' : '';
-                        }
-                        
-                        echo '<div class="matchtrader-radio-option">';
-                        echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($term->slug) . '" class="matchtrader-switch"' . $selected . '>';
-                        echo '<label class="matchtrader-radio-label">' . esc_html($term->name) . '</label>';
-                        echo '</div>';
-                    }
-                    
-                    echo '</div>';
-                }
+
+                // Extract sorted term names
+                $options = wp_list_pluck($terms, 'name');
             } else {
-                // Handle non-taxonomy attributes
-                $attribute_label = wc_attribute_label($attribute_name);
-                echo '<strong><label>' . esc_html($attribute_label) . '</label></strong>';
-                echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
-                
-                foreach ($options as $option) {
-                    $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && 
-                               $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $option) ? ' checked' : '';
-                    
-                    echo '<div class="matchtrader-radio-option">';
-                    echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($option) . '" class="matchtrader-switch"' . $selected . '>';
-                    echo '<label class="matchtrader-radio-label">' . esc_html($option) . '</label>';
-                    echo '</div>';
-                }
-                
+                // If it's not a taxonomy, just sort normally
+                natcasesort($options); // Sort case-insensitively
+            }
+
+            echo '<strong><label>' . wc_attribute_label($attribute_name) . '</label></strong>';
+            echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
+
+            foreach ($options as $option) {
+                $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $option) ? ' checked' : '';
+                echo '<div class="matchtrader-radio-option">';
+                echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($option) . '" class="matchtrader-switch"' . $selected . '>';
+                echo '<label class="matchtrader-radio-label">' . esc_html($option) . '</label>';
                 echo '</div>';
             }
+
+            echo '</div>';
         }
         echo '</div>';
     }
