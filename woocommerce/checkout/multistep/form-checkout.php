@@ -51,7 +51,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 		    		<?php do_action('matchtrader_checkout_after_order_review');?>
 		    	</div>
 		    	<div class="text-center p-3 mt-4">
-					<button type="button" class="w-100 btn btn-success next-step">Next</button>
+					<button type="button" class="w-100 btn btn-primary next-step">Next</button>
 				</div>
 		    </div>
 		    
@@ -69,7 +69,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 					</div>
 					<div class="d-flex justify-content-between mt-4 gap-3">
 						<button type="button" class="btn btn-secondary w-50 prev-step">Back</button>
-						<button type="button" class="btn btn-success w-50 next-step">Next</button>
+						<button type="button" class="btn btn-primary w-50 next-step">Next</button>
 					</div>
 				</div>
 			</div>
