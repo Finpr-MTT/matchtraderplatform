@@ -58,13 +58,18 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 	<div class="step-content" data-step="2">
 		<div id="customer_details">
 			<div class="container">
-				<?php do_action( 'woocommerce_checkout_billing' ); ?>
+				<div class="row justify-content-md-center">
+					<div class="col-sm-7 border">
+					<?php do_action( 'woocommerce_checkout_billing' ); ?>
+					</div>
+				</div>
+				<div class="d-flex justify-content-between mt-4">
+					<button type="button" class="btn btn-secondary prev-step">Back</button>
+					<button type="button" class="btn btn-success next-step">Next</button>
+				</div>
 			</div>
 
-			<div class="d-flex justify-content-between mt-4">
-				<button type="button" class="btn btn-secondary prev-step">Back</button>
-				<button type="button" class="btn btn-success next-step">Next</button>
-			</div>
+			
 		</div>
 	</div>
 
