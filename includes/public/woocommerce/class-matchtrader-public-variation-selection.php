@@ -101,45 +101,49 @@ class MatchTrader_Variation_Manager {
         }
 
         echo '<div id="matchtrader-variant-switcher">';
-        // echo '<h3>Select Account</h3>';
 
-        foreach ($attributes as $attribute_name => $options) {
-    // Check if the attribute is a taxonomy
-    $taxonomy = wc_attribute_taxonomy_name($attribute_name);
-    
-    if (taxonomy_exists($taxonomy)) {
-        // Get terms and sort them by name
-        $terms = get_terms([
-            'taxonomy'   => $taxonomy,
-            'hide_empty' => false,
-            'orderby'    => 'name',
-            'order'      => 'ASC'
-        ]);
+        foreach ($attributes as $attribute_slug => $options) {
+            // Get attribute name instead of slug
+            $taxonomy = wc_attribute_taxonomy_name($attribute_slug);
+            $attribute_label = wc_attribute_label($taxonomy); // Get attribute label (display name)
 
-        // Extract sorted term names
-        $options = wp_list_pluck($terms, 'name');
-    } else {
-        // If it's not a taxonomy, just sort normally
-        natcasesort($options); // Sort case-insensitively
-    }
+            if (empty($attribute_label)) {
+                // Fallback: Convert slug to a readable format if no label found
+                $attribute_label = ucwords(str_replace(['pa_', '_'], ['', ' '], $attribute_slug));
+            }
 
-    echo '<strong><label>' . wc_attribute_label($attribute_name) . '</label></strong>';
-    echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
+            // Check if it's a taxonomy-based attribute
+            if (taxonomy_exists($taxonomy)) {
+                $terms = get_terms([
+                    'taxonomy'   => $taxonomy,
+                    'hide_empty' => false,
+                    'orderby'    => 'name',
+                    'order'      => 'ASC'
+                ]);
 
-    foreach ($options as $option) {
-        $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $option) ? ' checked' : '';
-        echo '<div class="matchtrader-radio-option">';
-        echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($option) . '" class="matchtrader-switch"' . $selected . '>';
-        echo '<label class="matchtrader-radio-label">' . esc_html($option) . '</label>';
+                // Extract sorted term names
+                $options = wp_list_pluck($terms, 'name');
+            } else {
+                natcasesort($options); // Sort case-insensitively
+            }
+
+            // Display attribute label instead of slug
+            echo '<strong><label>' . esc_html($attribute_label) . '</label></strong>';
+            echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_slug) . '">';
+
+            foreach ($options as $option) {
+                $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_slug)]) && $selected_attributes['attribute_' . sanitize_title($attribute_slug)] == $option) ? ' checked' : '';
+                echo '<div class="matchtrader-radio-option">';
+                echo '<input type="radio" name="' . esc_attr($attribute_slug) . '" value="' . esc_attr($option) . '" class="matchtrader-switch"' . $selected . '>';
+                echo '<label class="matchtrader-radio-label">' . esc_html($option) . '</label>';
+                echo '</div>';
+            }
+
+            echo '</div>';
+        }
         echo '</div>';
     }
 
-    echo '</div>';
-}
-
-
-        echo '</div>';
-    }
 
     public function update_cart() {
         check_ajax_referer('matchtrader_nonce', 'security');
