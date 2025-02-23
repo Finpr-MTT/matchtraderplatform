@@ -19,159 +19,45 @@ input:-webkit-autofill:active {
 }
 
 /*form styles*/
-#matchTraderCheckout {
+#matchTraderCheckout #matchTraderCheckout .step-progress {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+#matchTraderCheckout #matchTraderCheckout .step {
     text-align: center;
-    position: relative;
-    margin-top: 30px;
-}
-
-#matchTraderCheckout fieldset {
-    background: white;
-    border: 0 none;
-    border-radius: 8px;
-    box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
-    padding: 20px 30px;
-    box-sizing: border-box;
-    width: 80%;
-    margin: 0 10%;
-
-    /*stacking fieldsets above each other*/
+    flex: 1;
     position: relative;
 }
-
-/*Hide all except first fieldset*/
-#matchTraderCheckout fieldset:not(:first-of-type) {
-    display: none;
-}
-
-/*inputs*/
-#matchTraderCheckout input, #matchTraderCheckout textarea {
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    width: 100%;
-    box-sizing: border-box;
-    font-family: montserrat;
-    color: #2C3E50;
-    font-size: 13px;
-}
-
-#matchTraderCheckout input:focus, #matchTraderCheckout textarea:focus {
-    -moz-box-shadow: none !important;
-    -webkit-box-shadow: none !important;
-    box-shadow: none !important;
-    border: 1px solid #2098ce;
-    outline-width: 0;
-    transition: All 0.5s ease-in;
-    -webkit-transition: All 0.5s ease-in;
-    -moz-transition: All 0.5s ease-in;
-    -o-transition: All 0.5s ease-in;
-}
-
-/*buttons*/
-#matchTraderCheckout .action-button {
-    width: 100px;
-    background: #2098ce;
-    font-weight: bold;
-    color: white;
-    border: 0 none;
-    border-radius: 25px;
-    cursor: pointer;
-    padding: 10px 5px;
-    margin: 10px 5px;
-}
-
-#matchTraderCheckout .action-button:hover, #matchTraderCheckout .action-button:focus {
-    box-shadow: 0 0 0 2px white, 0 0 0 3px #2098ce;
-}
-
-#matchTraderCheckout .action-button-previous {
-    width: 100px;
-    background: #aCbEd0;
-    font-weight: bold;
-    color: white;
-    border: 0 none;
-    border-radius: 25px;
-    cursor: pointer;
-    padding: 10px 5px;
-    margin: 10px 5px;
-}
-
-#matchTraderCheckout .action-button-previous:hover, #matchTraderCheckout .action-button-previous:focus {
-    box-shadow: 0 0 0 2px white, 0 0 0 3px #aCbEd0;
-}
-
-/*headings*/
-#matchTraderCheckout .fs-title {
-    font-size: 18px;
-    text-transform: uppercase;
-    color: #2C3E50;
-    margin-bottom: 10px;
-    letter-spacing: 2px;
-    font-weight: bold;
-}
-
-#matchTraderCheckout .fs-subtitle {
-    font-weight: normal;
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 20px;
-}
-
-/*progressbar*/
-#matchTraderCheckout #progressbar {
-    margin-bottom: 30px;
-    overflow: hidden;
-    /*CSS counters to number the steps*/
-    counter-reset: step;
-}
-
-#matchTraderCheckout #progressbar li {
-    list-style-type: none;
-    color: #666;
-    text-transform: uppercase;
-    font-size: 9px;
-    width: 33.33%;
-    float: left;
-    position: relative;
-    letter-spacing: 1px;
-}
-
-#matchTraderCheckout #progressbar li:before {
-    content: counter(step);
-    counter-increment: step;
-    width: 24px;
-    height: 24px;
-    line-height: 26px;
-    display: block;
-    font-size: 12px;
-    color: #333;
-    background: white;
-    border-radius: 25px;
-    margin: 0 auto 10px auto;
-}
-
-/*progressbar connectors*/
-#matchTraderCheckout #progressbar li:after {
+#matchTraderCheckout #matchTraderCheckout .step:not(:last-child)::before {
     content: '';
+    position: absolute;
     width: 100%;
     height: 2px;
-    background: white;
-    position: absolute;
-    left: -50%;
-    top: 9px;
-    z-index: -1; /*put it behind the numbers*/
+    background: #dee2e6;
+    top: 20px;
+    left: 50%;
+    z-index: -1;
 }
-
-#matchTraderCheckout #progressbar li:first-child:after {
-    /*connector not needed before the first step*/
-    content: none;
+#matchTraderCheckout .step.active:not(:last-child)::before {
+    background: #0d6efd;
 }
-
-/*marking active/completed steps blue*/
-/*The number of the step and the connector before it = blue*/
-#matchTraderCheckout #progressbar li.active:before, #matchTraderCheckout #progressbar li.active:after {
-    background: #2098ce;
+#matchTraderCheckout .step-number {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 50%;
+    background: #dee2e6;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+#matchTraderCheckout .step.active #matchTraderCheckout .step-number {
+    background: #0d6efd;
     color: white;
+}
+#matchTraderCheckout .step-content {
+    display: none;
+}
+#matchTraderCheckout .step-content.active {
+    display: block;
 }

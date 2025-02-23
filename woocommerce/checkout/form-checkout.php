@@ -20,7 +20,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 
 ?>
 
-<form name="checkout" method="post" class="checkout woocommerce-checkout hello-theme-checkout container" action="<?php echo esc_url( wc_get_checkout_url() ); ?>" enctype="multipart/form-data">
+<form id="matchTraderCheckout" name="checkout" method="post" class="checkout woocommerce-checkout hello-theme-checkout container" action="<?php echo esc_url( wc_get_checkout_url() ); ?>" enctype="multipart/form-data">
 
 	<!-- Multi-Step Navigation -->
 	<div class="step-progress">
@@ -76,103 +76,3 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 </form>
 
 <?php do_action( 'woocommerce_after_checkout_form', $checkout ); ?>
-
-<style>
-    .step-progress {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 2rem;
-    }
-    .step {
-        text-align: center;
-        flex: 1;
-        position: relative;
-    }
-    .step:not(:last-child)::before {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 2px;
-        background: #dee2e6;
-        top: 20px;
-        left: 50%;
-        z-index: -1;
-    }
-    .step.active:not(:last-child)::before {
-        background: #0d6efd;
-    }
-    .step-number {
-        width: 40px;
-        height: 40px;
-        line-height: 40px;
-        border-radius: 50%;
-        background: #dee2e6;
-        display: inline-block;
-        margin-bottom: 0.5rem;
-    }
-    .step.active .step-number {
-        background: #0d6efd;
-        color: white;
-    }
-    .step-content {
-        display: none;
-    }
-    .step-content.active {
-        display: block;
-    }
-</style>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const steps = document.querySelectorAll('.step');
-        const stepContents = document.querySelectorAll('.step-content');
-        const nextButtons = document.querySelectorAll('.next-step');
-        const prevButtons = document.querySelectorAll('.prev-step');
-
-        let currentStep = 1;
-
-        function updateProgress() {
-            steps.forEach((step, index) => {
-                if (index + 1 <= currentStep) {
-                    step.classList.add('active');
-                } else {
-                    step.classList.remove('active');
-                }
-            });
-
-            stepContents.forEach((content) => {
-                if (parseInt(content.getAttribute('data-step')) === currentStep) {
-                    content.classList.add('active');
-                } else {
-                    content.classList.remove('active');
-                }
-            });
-        }
-
-        nextButtons.forEach((button) => {
-            button.addEventListener('click', () => {
-                if (currentStep < steps.length) {
-                    currentStep++;
-                    updateProgress();
-                }
-            });
-        });
-
-        prevButtons.forEach((button) => {
-            button.addEventListener('click', () => {
-                if (currentStep > 1) {
-                    currentStep--;
-                    updateProgress();
-                }
-            });
-        });
-
-        // Handle WooCommerce form submission
-        document.querySelector('form.checkout').addEventListener('submit', function (e) {
-            if (currentStep !== steps.length) {
-                e.preventDefault();
-                alert('Please complete all steps before submitting the form.');
-            }
-        });
-    });
-</script>
