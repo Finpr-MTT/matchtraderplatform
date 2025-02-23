@@ -10,8 +10,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+do_action( 'woocommerce_before_checkout_form', $checkout );
+
+// If checkout registration is disabled and not logged in, the user cannot checkout.
+if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_required() && ! is_user_logged_in() ) {
+	echo esc_html( apply_filters( 'woocommerce_checkout_must_be_logged_in_message', __( 'You must be logged in to checkout.', 'woocommerce' ) ) );
+	return;
+}
+
 ?>
-<!-- Multi-Step Navigation -->
+
+<form name="checkout" method="post" class="checkout woocommerce-checkout hello-theme-checkout container" action="<?php echo esc_url( wc_get_checkout_url() ); ?>" enctype="multipart/form-data">
+
+	<!-- Multi-Step Navigation -->
 	<div class="step-progress">
 		<div class="step active" data-step="1">
 			<div class="step-number">1</div>
@@ -26,22 +37,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="step-title">Make Payment</div>
 		</div>
 	</div>
-
-<?php
-
-do_action( 'woocommerce_before_checkout_form', $checkout );
-
-// If checkout registration is disabled and not logged in, the user cannot checkout.
-if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_required() && ! is_user_logged_in() ) {
-	echo esc_html( apply_filters( 'woocommerce_checkout_must_be_logged_in_message', __( 'You must be logged in to checkout.', 'woocommerce' ) ) );
-	return;
-}
-
-?>
-
-<form name="checkout" method="post" class="checkout woocommerce-checkout hello-theme-checkout container" action="<?php echo esc_url( wc_get_checkout_url() ); ?>" enctype="multipart/form-data">
-
-	
 
 	<!-- Step 1: Account Selection -->
 	<div class="step-content active" data-step="1">
