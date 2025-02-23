@@ -116,7 +116,7 @@ class MatchTrader_Variation_Manager {
                 'order'      => 'ASC'
             ]);
 
-            // Extract sorted term slugs
+            // Use term slugs as options
             $options = wp_list_pluck($terms, 'slug');
         } else {
             // If it's not a taxonomy, just sort normally
@@ -134,7 +134,7 @@ class MatchTrader_Variation_Manager {
                 // Get term name for taxonomy attributes
                 $term = get_term_by('slug', $option, $taxonomy);
                 if ($term && !is_wp_error($term)) {
-                    $label = $term->name;
+                    $label = $term->name; // Use term name as label
                 }
             }
 
