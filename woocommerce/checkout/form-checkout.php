@@ -32,7 +32,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
             </ul>
 
             <!-- Step 1: Account Selection -->
-            <fieldset">
+            <fieldset>
                 <?php do_action('woocommerce_checkout_before_customer_details'); ?>  
                 <?php do_action('woocommerce_checkout_before_order_review'); ?>
 
