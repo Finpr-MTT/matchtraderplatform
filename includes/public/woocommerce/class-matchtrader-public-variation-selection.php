@@ -102,7 +102,7 @@ class MatchTrader_Variation_Manager {
             $taxonomy = wc_attribute_taxonomy_name($attribute_name);
             
             if (taxonomy_exists($taxonomy)) {
-                // Get terms and preserve their original names
+                // Get terms
                 $terms = get_terms([
                     'taxonomy'   => $taxonomy,
                     'hide_empty' => false,
@@ -110,23 +110,15 @@ class MatchTrader_Variation_Manager {
                     'order'      => 'ASC'
                 ]);
                 
-                // Create an associative array of slug => original name for terms
+                // Create an associative array of slug => name for terms
                 $term_options = [];
                 foreach ($terms as $term) {
-                    // Use the original term name without formatting
+                    // Use the actual term name without any formatting
                     $term_options[$term->slug] = $term->name;
                 }
                 $options = $term_options;
-            } else {
-                // For non-taxonomy attributes, keep original values
-                $formatted_options = [];
-                foreach ($options as $option) {
-                    $formatted_options[$option] = $option;
-                }
-                $options = $formatted_options;
             }
             
-            // Format the attribute label
             $attribute_label = wc_attribute_label($attribute_name);
             
             echo '<strong><label>' . esc_html($attribute_label) . '</label></strong>';
