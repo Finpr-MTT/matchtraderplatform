@@ -1,13 +1,12 @@
 #matchtrader-variant-switcher{
     margin: 20px auto;
-    text-align: center;
 }
 .matchtrader-radio-group {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     padding: 20px 0px 30px;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .matchtrader-radio-option {

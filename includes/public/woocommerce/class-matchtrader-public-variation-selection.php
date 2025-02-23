@@ -101,7 +101,7 @@ class MatchTrader_Variation_Manager {
         }
 
         echo '<div id="matchtrader-variant-switcher">';
-        echo '<h3>Select Account</h3>';
+        // echo '<h3>Select Account</h3>';
 
         foreach ($attributes as $attribute_name => $options) {
     // Check if the attribute is a taxonomy
