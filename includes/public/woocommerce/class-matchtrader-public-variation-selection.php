@@ -69,11 +69,11 @@ class MatchTrader_Variation_Manager {
 
     public function display_variant_selector() {
         if (WC()->cart->is_empty()) return;
-
+        
         $cart_items = WC()->cart->get_cart();
         $product_id = 0;
         $selected_variation_id = 0;
-
+        
         foreach ($cart_items as $cart_item) {
             $product_id = $cart_item['product_id'];
             if (isset($cart_item['variation_id']) && $cart_item['variation_id'] > 0) {
@@ -81,7 +81,7 @@ class MatchTrader_Variation_Manager {
             }
             break;
         }
-
+        
         if (!$product_id) return;
 
         $product = wc_get_product($product_id);
@@ -101,15 +101,14 @@ class MatchTrader_Variation_Manager {
         }
 
         echo '<div id="matchtrader-variant-switcher">';
+        // echo '<h3>Select Account</h3>';
 
         foreach ($attributes as $attribute_name => $options) {
-            // Convert attribute name to taxonomy format
+            // Check if the attribute is a taxonomy
             $taxonomy = wc_attribute_taxonomy_name($attribute_name);
-            $attribute_label = wc_attribute_label($attribute_name);
-
-            // Check if attribute is a taxonomy (global WooCommerce attribute)
+            
             if (taxonomy_exists($taxonomy)) {
-                // Get terms associated with this taxonomy
+                // Get terms and sort them by name
                 $terms = get_terms([
                     'taxonomy'   => $taxonomy,
                     'hide_empty' => false,
@@ -117,36 +116,28 @@ class MatchTrader_Variation_Manager {
                     'order'      => 'ASC'
                 ]);
 
-                // Extract terms as key-value pairs (slug => name)
-                $options = [];
-                foreach ($terms as $term) {
-                    $options[$term->slug] = $term->name;
-                }
+                // Extract sorted term names
+                $options = wp_list_pluck($terms, 'name');
             } else {
-                // Sort options normally if not a taxonomy
-                natcasesort($options);
+                // If it's not a taxonomy, just sort normally
+                natcasesort($options); // Sort case-insensitively
             }
 
-            // Display the attribute label
-            echo '<div class="matchtrader-attribute-group">';
-            echo '<strong><label>' . esc_html($attribute_label) . '</label></strong>';
+            echo '<strong><label>' . wc_attribute_label($attribute_name) . '</label></strong>';
             echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
 
-            foreach ($options as $slug => $name) {
-                $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $slug) ? ' checked' : '';
+            foreach ($options as $option) {
+                $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $option) ? ' checked' : '';
                 echo '<div class="matchtrader-radio-option">';
-                echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($slug) . '" id="radio-' . esc_attr($slug) . '" class="matchtrader-switch"' . $selected . '>';
-                echo '<label class="matchtrader-radio-label" for="radio-' . esc_attr($slug) . '">' . esc_html($name) . '</label>';
+                echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($option) . '" class="matchtrader-switch"' . $selected . '>';
+                echo '<label class="matchtrader-radio-label">' . esc_html($option) . '</label>';
                 echo '</div>';
             }
 
             echo '</div>';
-            echo '</div>';
         }
         echo '</div>';
     }
-
-
 
     public function update_cart() {
         check_ajax_referer('matchtrader_nonce', 'security');
