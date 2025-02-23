@@ -26,19 +26,13 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
             
             <!-- Multi-Step Navigation -->
             <ul id="progressbar" class="nav nav-pills nav-justified checkout-steps">
-                <li class="nav-item">
-                    <a class="nav-link active" data-step="1" href="#">1. Select Account</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-step="2" href="#">2. Billing Details</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-step="3" href="#">3. Make Payment</a>
-                </li>
+                <li class="active">1. Select Account</li>
+                <li>Billing Details</li>
+                <li>Make Payment</li>
             </ul>
 
             <!-- Step 1: Account Selection -->
-            <fieldset class="checkout-step-content step-1 active">
+            <fieldset">
                 <h2 class="fs-title">Select Account</h2>
                 <?php do_action('woocommerce_checkout_before_customer_details'); ?>  
                 <?php do_action('woocommerce_checkout_before_order_review'); ?>
@@ -47,7 +41,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
             </fieldset>
 
             <!-- Step 2: Billing Details -->
-            <fieldset class="checkout-step-content step-2">
+            <fieldset>
                 <h2 class="fs-title">Billing Details</h2>
                 <div id="customer_details">
                     <div class="container">
@@ -60,7 +54,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
             </fieldset>
 
             <!-- Step 3: Payment -->
-            <fieldset class="checkout-step-content step-3">
+            <fieldset>
                 <h2 class="fs-title">Make Payment</h2>
                 <?php do_action('woocommerce_checkout_payment'); ?>
                 <?php do_action('woocommerce_checkout_order_review'); ?>

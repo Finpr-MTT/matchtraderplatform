@@ -103,7 +103,7 @@ input:-webkit-autofill:active {
 }
 
 /*headings*/
-.fs-title {
+#matchTraderCheckout .fs-title {
     font-size: 18px;
     text-transform: uppercase;
     color: #2C3E50;
@@ -112,7 +112,7 @@ input:-webkit-autofill:active {
     font-weight: bold;
 }
 
-.fs-subtitle {
+#matchTraderCheckout .fs-subtitle {
     font-weight: normal;
     font-size: 13px;
     color: #666;
@@ -120,14 +120,14 @@ input:-webkit-autofill:active {
 }
 
 /*progressbar*/
-#progressbar {
+#matchTraderCheckout #progressbar {
     margin-bottom: 30px;
     overflow: hidden;
     /*CSS counters to number the steps*/
     counter-reset: step;
 }
 
-#progressbar li {
+#matchTraderCheckout #progressbar li {
     list-style-type: none;
     color: #666;
     text-transform: uppercase;
@@ -138,7 +138,7 @@ input:-webkit-autofill:active {
     letter-spacing: 1px;
 }
 
-#progressbar li:before {
+#matchTraderCheckout #progressbar li:before {
     content: counter(step);
     counter-increment: step;
     width: 24px;
@@ -153,7 +153,7 @@ input:-webkit-autofill:active {
 }
 
 /*progressbar connectors*/
-#progressbar li:after {
+#matchTraderCheckout #progressbar li:after {
     content: '';
     width: 100%;
     height: 2px;
@@ -164,14 +164,14 @@ input:-webkit-autofill:active {
     z-index: -1; /*put it behind the numbers*/
 }
 
-#progressbar li:first-child:after {
+#matchTraderCheckout #progressbar li:first-child:after {
     /*connector not needed before the first step*/
     content: none;
 }
 
 /*marking active/completed steps blue*/
 /*The number of the step and the connector before it = blue*/
-#progressbar li.active:before, #progressbar li.active:after {
+#matchTraderCheckout #progressbar li.active:before, #matchTraderCheckout #progressbar li.active:after {
     background: #2098ce;
     color: white;
 }
