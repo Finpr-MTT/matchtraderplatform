@@ -47,9 +47,10 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 		    </div>
 		    <div class="col-sm-5">
 		    	<?php do_action('woocommerce_checkout_before_order_review'); ?>
-		    	<div class="px-4 border mt-4">
-		    	<?php do_action('matchtrader_checkout_after_order_review');?>
-		    	<div class="text-center mt-4">
+		    	<div class="border p2 mt-4">
+		    		<?php do_action('matchtrader_checkout_after_order_review');?>
+		    	</div>
+		    	<div class="text-center p2 mt-4">
 					<button type="button" class="w-100 btn btn-success next-step">Next</button>
 				</div>
 		    </div>
