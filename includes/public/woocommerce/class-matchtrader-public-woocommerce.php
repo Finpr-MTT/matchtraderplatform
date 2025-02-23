@@ -319,7 +319,7 @@ class MatchTrader_Public_WooCommerce {
             <label class="mb-2" for="coupon_code_field">If you have a coupon code, please apply it below.</label>    
             <div class="input-group mb-3">                
                 <input type="text" id="coupon_code_field" class="form-control" placeholder="Apply Coupon Code" aria-label="Apply Coupon Code" aria-describedby="apply_coupon_button">
-                <button class="btn btn-outline-primary" type="button" id="apply_coupon_button">Apply Coupon</button>
+                <button class="btn btn-secondary" type="button" id="apply_coupon_button">Apply Coupon</button>
             </div>        
         </div>';
     }
