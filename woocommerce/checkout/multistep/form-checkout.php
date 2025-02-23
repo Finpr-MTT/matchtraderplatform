@@ -42,16 +42,19 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 	<div class="step-content active" data-step="1">
 		<div class="container">
 		<div class="row">
-		    <div class="col-sm-7 border"><?php do_action('woocommerce_checkout_before_customer_details'); ?> </div>
-		    <div class="col-sm-5"><?php do_action('woocommerce_checkout_before_order_review'); ?></div>
+		    <div class="col-sm-7 border px-4"><?php do_action('woocommerce_checkout_before_customer_details'); ?> </div>
+		    <div class="col-sm-5">
+		    	<?php do_action('woocommerce_checkout_before_order_review'); ?>
+		    </div>
+		    <div class="text-center mt-4">
+				<button type="button" class="btn btn-success next-step">Next</button>
+			</div>
 		</div>
 		</div>
 		 
 		
 
-		<div class="text-center mt-4">
-			<button type="button" class="btn btn-success next-step">Next</button>
-		</div>
+		
 	</div>
 
 	<!-- Step 2: Billing Details -->
@@ -59,14 +62,15 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 		<div id="customer_details">
 			<div class="container">
 				<div class="row justify-content-md-center">
-					<div class="col-sm-7 border">
+					<div class="col-sm-7 p-4 border">
 					<?php do_action( 'woocommerce_checkout_billing' ); ?>
 					</div>
+					<div class="d-flex justify-content-between mt-4">
+						<button type="button" class="btn btn-secondary prev-step">Back</button>
+						<button type="button" class="btn btn-success next-step">Next</button>
+					</div>
 				</div>
-				<div class="d-flex justify-content-between mt-4">
-					<button type="button" class="btn btn-secondary prev-step">Back</button>
-					<button type="button" class="btn btn-success next-step">Next</button>
-				</div>
+
 			</div>
 
 			
