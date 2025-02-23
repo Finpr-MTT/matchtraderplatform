@@ -102,36 +102,52 @@ class MatchTrader_Variation_Manager {
             $taxonomy = wc_attribute_taxonomy_name($attribute_name);
             
             if (taxonomy_exists($taxonomy)) {
-                // Get terms with their proper names
+                // Get all terms for this attribute
                 $terms = get_terms([
-                    'taxonomy'   => $taxonomy,
+                    'taxonomy' => $taxonomy,
                     'hide_empty' => false,
-                    'orderby'    => 'name',
-                    'order'      => 'ASC'
+                    'include' => $options, // Include only the terms that are used in variations
+                    'orderby' => 'name',
+                    'order' => 'ASC'
                 ]);
                 
-                // Create an associative array of slug => name
-                $term_options = [];
-                foreach ($terms as $term) {
-                    $term_options[$term->slug] = $term->name; // Use the exact term name which includes currency symbol
+                if (!is_wp_error($terms)) {
+                    $attribute_label = wc_attribute_label($attribute_name);
+                    echo '<strong><label>' . esc_html($attribute_label) . '</label></strong>';
+                    echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
+                    
+                    foreach ($terms as $term) {
+                        $selected = '';
+                        if (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)])) {
+                            $selected = ($selected_attributes['attribute_' . sanitize_title($attribute_name)] == $term->slug) ? ' checked' : '';
+                        }
+                        
+                        echo '<div class="matchtrader-radio-option">';
+                        echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($term->slug) . '" class="matchtrader-switch"' . $selected . '>';
+                        echo '<label class="matchtrader-radio-label">' . esc_html($term->name) . '</label>';
+                        echo '</div>';
+                    }
+                    
+                    echo '</div>';
                 }
-                $options = $term_options;
-            }
-            
-            $attribute_label = wc_attribute_label($attribute_name);
-            echo '<strong><label>' . esc_html($attribute_label) . '</label></strong>';
-            echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
-            
-            foreach ($options as $slug => $name) {
-                $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && 
-                           $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $slug) ? ' checked' : '';
+            } else {
+                // Handle non-taxonomy attributes
+                $attribute_label = wc_attribute_label($attribute_name);
+                echo '<strong><label>' . esc_html($attribute_label) . '</label></strong>';
+                echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
                 
-                echo '<div class="matchtrader-radio-option">';
-                echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($slug) . '" class="matchtrader-switch"' . $selected . '>';
-                echo '<label class="matchtrader-radio-label">' . esc_html($name) . '</label>';
+                foreach ($options as $option) {
+                    $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && 
+                               $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $option) ? ' checked' : '';
+                    
+                    echo '<div class="matchtrader-radio-option">';
+                    echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($option) . '" class="matchtrader-switch"' . $selected . '>';
+                    echo '<label class="matchtrader-radio-label">' . esc_html($option) . '</label>';
+                    echo '</div>';
+                }
+                
                 echo '</div>';
             }
-            echo '</div>';
         }
         echo '</div>';
     }
