@@ -68,42 +68,74 @@ class MatchTrader_Variation_Manager {
     }
 
     public function display_variant_selector() {
-        $taxonomy = 'pa_trading-capital';
+    if (WC()->cart->is_empty()) return;
+    
+    $cart_items = WC()->cart->get_cart();
+    $product_id = 0;
+    $selected_variation_id = 0;
 
-if (taxonomy_exists($taxonomy)) {
-    $terms = get_terms([
-        'taxonomy'   => $taxonomy,
-        'hide_empty' => false, // Show all terms
-        'orderby'    => 'name',
-        'order'      => 'ASC'
-    ]);
-
-    if (!empty($terms) && !is_wp_error($terms)) {
-        echo '<h3>Attribute Terms for pa_trading-capital:</h3>';
-        echo '<ul>';
-        foreach ($terms as $term) {
-            $term_name = $term->name; // Name
-            $term_slug = $term->slug; // Slug
-            $term_id   = $term->term_id; // ID
-            $term_link = get_term_link($term); // Term Link
-
-            // Print the details
-            echo '<li>';
-            echo '<strong>Name:</strong> ' . esc_html($term_name) . '<br>';
-            echo '<strong>Slug:</strong> ' . esc_html($term_slug) . '<br>';
-            echo '<strong>ID:</strong> ' . esc_html($term_id) . '<br>';
-            echo '<strong>Link:</strong> <a href="' . esc_url($term_link) . '" target="_blank">' . esc_html($term_link) . '</a>';
-            echo '</li>';
+    foreach ($cart_items as $cart_item) {
+        $product_id = $cart_item['product_id'];
+        if (isset($cart_item['variation_id']) && $cart_item['variation_id'] > 0) {
+            $selected_variation_id = $cart_item['variation_id'];
         }
-        echo '</ul>';
-    } else {
-        echo '<p>No terms found for pa_trading-capital.</p>';
+        break;
     }
-} else {
-    echo '<p>Taxonomy pa_trading-capital does not exist.</p>';
+
+    if (!$product_id) return;
+
+    $product = wc_get_product($product_id);
+    if (!$product->is_type('variable')) return;
+
+    $variations = $product->get_available_variations();
+    $attributes = $product->get_variation_attributes();
+    $selected_attributes = [];
+
+    if ($selected_variation_id) {
+        foreach ($variations as $variation) {
+            if ($variation['variation_id'] == $selected_variation_id) {
+                $selected_attributes = $variation['attributes'];
+                break;
+            }
+        }
+    }
+
+    echo '<div id="matchtrader-variant-switcher">';
+
+    foreach ($attributes as $attribute_name => $options) {
+        $taxonomy = wc_attribute_taxonomy_name($attribute_name);
+
+        if ($attribute_name === 'pa_trading-capital' && taxonomy_exists($taxonomy)) {
+            $terms = get_terms([
+                'taxonomy'   => $taxonomy,
+                'hide_empty' => false,
+                'orderby'    => 'name',
+                'order'      => 'ASC'
+            ]);
+
+            if (!empty($terms) && !is_wp_error($terms)) {
+                echo '<strong><label>' . wc_attribute_label($attribute_name) . '</label></strong>';
+                echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
+
+                foreach ($terms as $term) {
+                    $term_name = $term->name; // Displayed Name
+                    $term_slug = $term->slug; // Slug (value)
+                    $selected  = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $term_slug) ? ' checked' : '';
+
+                    echo '<div class="matchtrader-radio-option">';
+                    echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($term_slug) . '" class="matchtrader-switch"' . $selected . '>';
+                    echo '<label class="matchtrader-radio-label">' . esc_html($term_name) . '</label>';
+                    echo '</div>';
+                }
+
+                echo '</div>';
+            }
+        }
+    }
+
+    echo '</div>';
 }
 
-    }
 
     public function update_cart() {
         check_ajax_referer('matchtrader_nonce', 'security');
