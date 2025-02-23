@@ -101,13 +101,13 @@ class MatchTrader_Variation_Manager {
     }
 
     echo '<div id="matchtrader-variant-switcher">';
-    // echo '<h3>Select Account</h3>';
 
     foreach ($attributes as $attribute_name => $options) {
         // Check if the attribute is a taxonomy
         $taxonomy = wc_attribute_taxonomy_name($attribute_name);
-        
-        if (taxonomy_exists($taxonomy)) {
+        $is_taxonomy = taxonomy_exists($taxonomy);
+
+        if ($is_taxonomy) {
             // Get terms and sort them by name
             $terms = get_terms([
                 'taxonomy'   => $taxonomy,
@@ -116,7 +116,7 @@ class MatchTrader_Variation_Manager {
                 'order'      => 'ASC'
             ]);
 
-            // Extract sorted term names
+            // Extract sorted term slugs
             $options = wp_list_pluck($terms, 'slug');
         } else {
             // If it's not a taxonomy, just sort normally
@@ -128,9 +128,19 @@ class MatchTrader_Variation_Manager {
 
         foreach ($options as $option) {
             $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $option) ? ' checked' : '';
+            $label = $option; // Default label is the option itself
+
+            if ($is_taxonomy) {
+                // Get term name for taxonomy attributes
+                $term = get_term_by('slug', $option, $taxonomy);
+                if ($term && !is_wp_error($term)) {
+                    $label = $term->name;
+                }
+            }
+
             echo '<div class="matchtrader-radio-option">';
             echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($option) . '" class="matchtrader-switch"' . $selected . '>';
-            echo '<label class="matchtrader-radio-label">' . esc_html(get_term_by('slug', $option, $taxonomy)->name) . '</label>';
+            echo '<label class="matchtrader-radio-label">' . esc_html($label) . '</label>';
             echo '</div>';
         }
 
