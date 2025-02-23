@@ -315,11 +315,11 @@ class MatchTrader_Public_WooCommerce {
      */
     public function add_coupon_form_before_payment()
     {
-        echo '<div class="hello-theme-coupon-form">
+        echo '<div class="matchtrader-coupon-form">
             <label for="coupon_code_field" style="display: block; margin-bottom: 15px;">If you have a coupon code, please apply it below.</label>
-            <div style="display: flex; align-items: center;">
-                <input type="text" id="coupon_code_field" name="coupon_code" placeholder="Apply Coupon Code"/>
-                <button type="button" id="apply_coupon_button">Apply Coupon</button>
+            <div class="d-flex justify-content-between mt-4 gap-3">
+                <input type="text" id="coupon_code_field" class="w-50" name="coupon_code" placeholder="Apply Coupon Code"/>
+                <button type="button" id="apply_coupon_button" class="w-50">Apply Coupon</button>
             </div>
         </div>';
     }
