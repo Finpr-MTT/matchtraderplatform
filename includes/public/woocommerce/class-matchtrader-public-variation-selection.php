@@ -101,6 +101,7 @@ if ($selected_variation_id) {
 }
 
 echo '<div id="matchtrader-variant-switcher">';
+// echo '<h3>Select Account</h3>';
 
 foreach ($attributes as $attribute_name => $options) {
     // Check if the attribute is a taxonomy
@@ -116,7 +117,7 @@ foreach ($attributes as $attribute_name => $options) {
         ]);
 
         // Extract sorted term names
-        $options = wp_list_pluck($terms, 'slug'); // Use slugs for consistency
+        $options = wp_list_pluck($terms, 'slug'); // Use slugs to fetch term names later
     } else {
         // If it's not a taxonomy, just sort normally
         natcasesort($options); // Sort case-insensitively
@@ -126,50 +127,19 @@ foreach ($attributes as $attribute_name => $options) {
     echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
 
     foreach ($options as $option) {
-        $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $option) ? ' checked' : '';
-        echo '<div class="matchtrader-radio-option">';
-        echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($option) . '" class="matchtrader-switch"' . $selected . '>';
+        $term_name = $option; // Default to the option value if it's not a taxonomy
 
-        // Get term name by slug if it's a taxonomy
         if (taxonomy_exists($taxonomy)) {
             $term = get_term_by('slug', $option, $taxonomy);
             if ($term) {
-                // Prepare term data in JSON-like structure
-                $term_data = [
-                    'id'          => $term->term_id,
-                    'name'        => $term->name,
-                    'slug'        => $term->slug,
-                    'description' => $term->description,
-                    'menu_order'  => $term->menu_order,
-                    'count'       => $term->count,
-                    '_links'      => [
-                        'self' => [
-                            [
-                                'href'         => get_rest_url(null, 'wc/v3/products/attributes/' . $term->term_id . '/terms/' . $term->term_id),
-                                'targetHints' => [
-                                    'allow' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
-                                ]
-                            ]
-                        ],
-                        'collection' => [
-                            [
-                                'href' => get_rest_url(null, 'wc/v3/products/attributes/' . $term->term_id . '/terms')
-                            ]
-                        ]
-                    ]
-                ];
-
-                // Output term data for debugging
-                echo '<pre>';
-                print_r($term_data);
-                echo '</pre>';
+                $term_name = $term->name;
             }
-            $option_label = $term ? $term->name : $option; // Fallback to slug if term not found
-        } else {
-            $option_label = $option;
         }
 
-        echo '<label class="matchtrader-radio-label">' . esc_html($option_label) . '</label>';
+        $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $option) ? ' checked' : '';
+        echo '<div class="matchtrader-radio-option">';
+        echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($option) . '" class="matchtrader-switch"' . $selected . '>';
+        echo '<label class="matchtrader-radio-label">' . esc_html($term_name) . '</label>';
         echo '</div>';
     }
 
