@@ -1,22 +1,22 @@
 (function ($) {
     'use strict';
-
     $(document).ready(function () {
         const countryField = $('#billing_country');
         const stateFieldContainer = $('#billing_state_field');
         const states = wc_country_states.states;
-
-        // Get prefilled state from WooCommerce session
-        const prefilledState = $('#billing_state').val(); // Get existing value
+        const prefilledState = $('#billing_state').val();
+        
+        // Make country field read-only
+        countryField.attr('readonly', 'readonly')
+                   .addClass('matchtrader-readonly')
+                   .css('pointer-events', 'none'); // Prevents dropdown interaction
 
         function updateStateField(clearState = true) {
             const selectedCountry = countryField.val();
-            const currentState = clearState ? '' : prefilledState; // Keep prefilled state if not clearing
-
-            // ❌ Remove existing state field before adding a new one
+            const currentState = clearState ? '' : prefilledState;
+            
             $('#billing_state').remove();
-
-            // Add label for State/Region (if not already added)
+            
             if (stateFieldContainer.find('label[for="billing_state"]').length === 0) {
                 stateFieldContainer.append(
                     $('<label>', {
@@ -28,52 +28,47 @@
             }
 
             if (states[selectedCountry] && Object.keys(states[selectedCountry]).length > 0) {
-                // Create a select dropdown for states
+                // Create read-only select dropdown for states
                 const stateSelect = $('<select>', {
                     id: 'billing_state',
                     name: 'billing_state',
-                    class: 'state_select input-text',
+                    class: 'state_select input-text matchtrader-readonly',
                     required: true,
-                });
+                    readonly: 'readonly'
+                }).css('pointer-events', 'none'); // Prevents dropdown interaction
 
-                // Add a placeholder option
                 stateSelect.append($('<option>', { value: '', text: 'Select State/Region' }));
-
-                // Add state options
+                
                 $.each(states[selectedCountry], function (code, name) {
                     const option = $('<option>', { value: code, text: name });
-
-                    // If the prefilled state matches, select it
                     if (code === currentState) {
                         option.attr('selected', 'selected');
                     }
-
                     stateSelect.append(option);
                 });
-
                 stateFieldContainer.append(stateSelect);
             } else {
-                // Create a text input for states
+                // Create read-only text input for states
                 const stateInput = $('<input>', {
                     type: 'text',
                     id: 'billing_state',
                     name: 'billing_state',
-                    class: 'input-text',
+                    class: 'input-text matchtrader-readonly',
                     required: true,
                     placeholder: 'Enter State/Region',
-                    value: currentState, // Keep prefilled state
+                    value: currentState,
+                    readonly: 'readonly'
                 });
-
                 stateFieldContainer.append(stateInput);
             }
         }
 
-        // Handle country change event
-        countryField.on('change', function () {
-            updateStateField(true); // Clear state only on manual country change
-        });
+        // Since fields are read-only, we can remove the change event handler
+        // countryField.on('change', function () {
+        //     updateStateField(true);
+        // });
 
-        // Initialize the state field (keep prefilled data if available)
+        // Initialize the state field with prefilled data
         updateStateField(false);
     });
 })(jQuery);
