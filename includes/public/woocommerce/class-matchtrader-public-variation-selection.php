@@ -116,8 +116,16 @@ class MatchTrader_Variation_Manager {
 
                 // Extract sorted term slugs
                 $options = wp_list_pluck($terms, 'slug'); // Use slugs to fetch term names later
+                // Debug: var_dump $options after wp_list_pluck
+                echo '<pre>Debug: $options after wp_list_pluck: ';
+                var_dump($options);
+                echo '</pre>';
             } else {
                 natcasesort($options); // Sort case-insensitively
+                // Debug: var_dump $options after natcasesort
+                echo '<pre>Debug: $options after natcasesort: ';
+                var_dump($options);
+                echo '</pre>';
             }
 
             echo '<strong><label>' . wc_attribute_label($attribute_name) . '</label></strong>';
