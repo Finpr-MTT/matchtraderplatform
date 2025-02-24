@@ -67,6 +67,10 @@ class MatchTrader_Public_WooCommerce {
     public function add_to_cart_by_url() {
         // Check if the required parameters are set in the URL
         if (isset($_GET['add-to-cart']) && isset($_GET['variation_id'])) {
+            // Clear the cart before adding the new product
+            WC()->cart->empty_cart();
+
+            // Get the product and variation details from the URL
             $product_id = intval($_GET['add-to-cart']);
             $variation_id = intval($_GET['variation_id']);
             $quantity = isset($_GET['quantity']) ? intval($_GET['quantity']) : 1;
@@ -82,7 +86,13 @@ class MatchTrader_Public_WooCommerce {
             // Add the product to the cart
             $cart_item_key = WC()->cart->add_to_cart($product_id, $quantity, $variation_id, $variation_attributes);
 
-            // Optional: Redirect to the cart page after adding the product
+            // If on the checkout page, refresh the order review section
+            if (is_checkout() && $cart_item_key) {
+                // Trigger an update of the checkout order review
+                echo '<script>jQuery(document.body).trigger("update_checkout");</script>';
+            }
+
+            // Redirect to the cart page after adding the product
             if ($cart_item_key) {
                 wp_redirect(wc_get_cart_url());
                 exit;
