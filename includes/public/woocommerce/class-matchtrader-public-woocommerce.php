@@ -42,7 +42,7 @@ class MatchTrader_Public_WooCommerce {
 
         if (get_option('matchtrader_enable_mtt_checkout', 'default') === 'default') {
             add_action('woocommerce_review_order_before_payment', [$this, 'add_coupon_form_before_payment']);
-            remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 5 ); 
+            remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 99 ); 
         }
 
         if (get_option('matchtrader_enable_mtt_checkout', 'default') === 'multi-step') {
