@@ -110,7 +110,7 @@ class MatchTrader_Variation_Manager {
                 $terms = get_terms([
                     'taxonomy'   => $taxonomy,
                     'hide_empty' => false,
-                    'orderby'    => 'name',
+                    'orderby'    => 'menu_order',
                     'order'      => 'ASC'
                 ]);
 
