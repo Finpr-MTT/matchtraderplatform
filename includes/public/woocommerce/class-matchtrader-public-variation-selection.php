@@ -30,58 +30,58 @@ class MatchTrader_Variation_Manager {
     }
 
     public function add_default_variation_to_cart() {
-    // Check if we are on the checkout page
-    if (!is_checkout()) {
-        return;
-    }
-
-    // Get the current endpoint
-    $current_endpoint = WC()->query->get_current_endpoint();
-
-    // Exclude 'order-received' and 'order-pay' from triggering this function
-    if (in_array($current_endpoint, ['order-received', 'order-pay'])) {
-        return;
-    }
-
-    // Check if the cart is empty
-    if (WC()->cart->is_empty()) {
-        // Get the product ID from the URL parameter
-        $product_id = isset($_GET['add-to-cart']) ? absint($_GET['add-to-cart']) : 0;
-
-        // If no product ID is provided, use the default product ID
-        if (!$product_id) {
-            $product_id = $this->default_product_id;
+        // Check if we are on the checkout page
+        if (!is_checkout()) {
+            return;
         }
 
-        // Get the product object
-        $product = wc_get_product($product_id);
+        // Get the current endpoint
+        $current_endpoint = WC()->query->get_current_endpoint();
 
-        // Check if the product is a variable product
-        if ($product && $product->is_type('variable')) {
-            // Get the default attributes for the product
-            $default_attributes = $product->get_default_attributes();
+        // Exclude 'order-received' and 'order-pay' from triggering this function
+        if (in_array($current_endpoint, ['order-received', 'order-pay'])) {
+            return;
+        }
 
-            // Format attributes correctly for WooCommerce
-            $formatted_attributes = [];
-            foreach ($default_attributes as $key => $value) {
-                $formatted_attributes['attribute_' . $key] = $value;
+        // Check if the cart is empty
+        if (WC()->cart->is_empty()) {
+            // Get the product ID from the URL parameter
+            $product_id = isset($_GET['add-to-cart']) ? absint($_GET['add-to-cart']) : 0;
+
+            // If no product ID is provided, use the default product ID
+            if (!$product_id) {
+                $product_id = $this->default_product_id;
             }
 
-            // Use the product data store to find the matching variation
-            $data_store = WC_Data_Store::load('product');
-            $variation_id = $data_store->find_matching_product_variation($product, $formatted_attributes);
+            // Get the product object
+            $product = wc_get_product($product_id);
 
-            // If a matching variation is found, add it to the cart
-            if ($variation_id) {
-                WC()->cart->add_to_cart($product_id, 1, $variation_id, $formatted_attributes);
+            // Check if the product is a variable product
+            if ($product && $product->is_type('variable')) {
+                // Get the default attributes for the product
+                $default_attributes = $product->get_default_attributes();
 
-                // Redirect to the checkout page to prevent duplicate items
-                wp_safe_redirect(wc_get_checkout_url());
-                exit;
+                // Format attributes correctly for WooCommerce
+                $formatted_attributes = [];
+                foreach ($default_attributes as $key => $value) {
+                    $formatted_attributes['attribute_' . $key] = $value;
+                }
+
+                // Use the product data store to find the matching variation
+                $data_store = WC_Data_Store::load('product');
+                $variation_id = $data_store->find_matching_product_variation($product, $formatted_attributes);
+
+                // If a matching variation is found, add it to the cart
+                if ($variation_id) {
+                    WC()->cart->add_to_cart($product_id, 1, $variation_id, $formatted_attributes);
+
+                    // Redirect to the checkout page to prevent duplicate items
+                    wp_safe_redirect(wc_get_checkout_url());
+                    exit;
+                }
             }
         }
     }
-}
 
     public function display_variant_selector() {
         if (WC()->cart->is_empty()) return;
