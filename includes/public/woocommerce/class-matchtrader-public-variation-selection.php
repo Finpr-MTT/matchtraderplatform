@@ -103,17 +103,8 @@ if ($selected_variation_id) {
 echo '<div id="matchtrader-variant-switcher">';
 
 foreach ($attributes as $attribute_name => $options) {
-    // Remove the 'pa_' prefix if it exists
     $raw_attribute_name = str_replace('pa_', '', $attribute_name);
-
-    // Generate the correct taxonomy name
     $taxonomy = wc_attribute_taxonomy_name($raw_attribute_name);
-
-    // Debug: var_dump the taxonomy name
-    echo '<pre>Debug: $taxonomy for attribute ' . esc_html($attribute_name) . ': ';
-    var_dump($taxonomy);
-    echo '</pre>';
-
     if (taxonomy_exists($taxonomy)) {
         // Get terms and sort them by name
         $terms = get_terms([
@@ -125,19 +116,8 @@ foreach ($attributes as $attribute_name => $options) {
 
         // Extract sorted term slugs
         $options = wp_list_pluck($terms, 'slug'); // Use slugs to fetch term names later
-
-        // Debug: var_dump $options after wp_list_pluck
-        echo '<pre>Debug: $options after wp_list_pluck: ';
-        var_dump($options);
-        echo '</pre>';
     } else {
-        // If it's not a taxonomy, just sort normally
         natcasesort($options); // Sort case-insensitively
-
-        // Debug: var_dump $options after natcasesort
-        echo '<pre>Debug: $options after natcasesort: ';
-        var_dump($options);
-        echo '</pre>';
     }
 
     echo '<strong><label>' . wc_attribute_label($attribute_name) . '</label></strong>';
@@ -155,15 +135,6 @@ foreach ($attributes as $attribute_name => $options) {
                 $term_description = $term->description; // Use the term description if it exists
             }
         }
-
-        // Debug: var_dump $term_name and $term_description
-        echo '<pre>Debug: $term_name for option ' . esc_html($option) . ': ';
-        var_dump($term_name);
-        echo '</pre>';
-
-        echo '<pre>Debug: $term_description for option ' . esc_html($option) . ': ';
-        var_dump($term_description);
-        echo '</pre>';
 
         $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $option) ? ' checked' : '';
         echo '<div class="matchtrader-radio-option">';
