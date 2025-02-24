@@ -74,7 +74,7 @@ class MatchTrader_Variation_Manager {
                 // If a matching variation is found, add it to the cart
                 if ($variation_id) {
                     WC()->cart->add_to_cart($product_id, 1, $variation_id, $formatted_attributes);
-
+                    wc_clear_notices();
                     // Redirect to the checkout page to prevent duplicate items
                     wp_safe_redirect(wc_get_checkout_url());
                     exit;
