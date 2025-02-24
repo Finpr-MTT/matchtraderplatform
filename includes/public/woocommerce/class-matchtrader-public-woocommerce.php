@@ -276,7 +276,6 @@ class MatchTrader_Public_WooCommerce {
      * Adjust WooCommerce Checkout Layout by Removing Default Sections
      */
     public function matchtrader_remove_default_order_review_checkout() {
-        remove_action('woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10);
         remove_action('woocommerce_checkout_order_review', 'woocommerce_order_review', 10);
 
         add_action('woocommerce_checkout_before_order_review', 'woocommerce_order_review', 10);
@@ -319,6 +318,7 @@ class MatchTrader_Public_WooCommerce {
      */
     public function add_coupon_form_before_payment()
     {
+        remove_action('woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10);
         echo '<div class="matchtrader-coupon-form p-1">
             <label class="mb-2" for="coupon_code_field">If you have a coupon code, please apply it below.</label>    
             <div class="input-group mb-3">                
