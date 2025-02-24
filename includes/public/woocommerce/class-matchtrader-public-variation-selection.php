@@ -101,7 +101,6 @@ if ($selected_variation_id) {
 }
 
 echo '<div id="matchtrader-variant-switcher">';
-// echo '<h3>Select Account</h3>';
 
 foreach ($attributes as $attribute_name => $options) {
     // Check if the attribute is a taxonomy
@@ -116,8 +115,8 @@ foreach ($attributes as $attribute_name => $options) {
             'order'      => 'ASC'
         ]);
 
-        // Use term objects directly instead of extracting slugs
-        $options = $terms; // $options now contains term objects
+        // Extract sorted term slugs
+        $options = wp_list_pluck($terms, 'slug'); // Use slugs to fetch term names later
     } else {
         // If it's not a taxonomy, just sort normally
         natcasesort($options); // Sort case-insensitively
@@ -127,20 +126,28 @@ foreach ($attributes as $attribute_name => $options) {
     echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
 
     foreach ($options as $option) {
-        // For taxonomy attributes, $option is a term object
+        $term_name = $option; // Default to the option value if it's not a taxonomy
+        $term_description = ''; // Initialize term description as empty
+
         if (taxonomy_exists($taxonomy)) {
-            $term_slug = $option->slug; // Use the slug for the value attribute
-            $term_name = $option->name; // Use the name for the label
-        } else {
-            // For non-taxonomy attributes, $option is a string (slug)
-            $term_slug = $option;
-            $term_name = ""; // Use the slug as the name if it's not a taxonomy
+            $term = get_term_by('slug', $option, $taxonomy);
+            if ($term) {
+                $term_name = $term->name; // Use the term name
+                $term_description = $term->description; // Use the term description if it exists
+            }
         }
 
-        $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $term_slug) ? ' checked' : '';
+        $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $option) ? ' checked' : '';
         echo '<div class="matchtrader-radio-option">';
-        echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($term_slug) . '" class="matchtrader-switch"' . $selected . '>';
-        echo '<label class="matchtrader-radio-label">' . esc_html($term_name) . '</label>';
+        echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($option) . '" class="matchtrader-switch"' . $selected . '>';
+        echo '<label class="matchtrader-radio-label">' . esc_html($term_name);
+        
+        // Add term description if it exists
+        if (!empty($term_description)) {
+            echo '<span class="term-description">' . esc_html($term_description) . '</span>';
+        }
+        
+        echo '</label>';
         echo '</div>';
     }
 
