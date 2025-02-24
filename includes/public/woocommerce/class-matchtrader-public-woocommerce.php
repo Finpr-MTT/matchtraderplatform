@@ -33,16 +33,14 @@ class MatchTrader_Public_WooCommerce {
 
         $checkout_mode = get_option('matchtrader_enable_mtt_checkout', 'default');
 
-        if ($checkout_mode !== 'none') {
-            remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10 ); 
+        if ($checkout_mode !== 'none') { 
             add_filter('woocommerce_locate_template', [$this, 'matchtrader_override_templates'], 10, 3);            
             add_action('wp_ajax_apply_coupon_action', [$this, 'apply_coupon_action']);
             add_action('wp_ajax_nopriv_apply_coupon_action', [$this, 'apply_coupon_action']);
         }
 
-        if (get_option('matchtrader_enable_mtt_checkout', 'default') === 'default') {
+        if (get_option('matchtrader_enable_mtt_checkout', 'default') === 'default') {remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10 );
             add_action('woocommerce_review_order_before_payment', [$this, 'add_coupon_form_before_payment']);
-            remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 99 ); 
         }
 
         if (get_option('matchtrader_enable_mtt_checkout', 'default') === 'multi-step') {
