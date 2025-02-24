@@ -80,39 +80,3 @@ class MatchTraderPlatform {
 
 // Initialize the plugin
 new MatchTraderPlatform();
-
-function debug_get_term_names_from_attribute() {
-    // Define the attribute taxonomy (e.g., 'pa_platform')
-    $attribute_taxonomy = 'pa_trading-capital';
-
-    // Check if the taxonomy exists
-    if (!taxonomy_exists($attribute_taxonomy)) {
-        echo 'Taxonomy ' . esc_html($attribute_taxonomy) . ' does not exist.';
-        return;
-    }
-
-    // Get all terms for the attribute taxonomy
-    $terms = get_terms([
-        'taxonomy'   => $attribute_taxonomy,
-        'hide_empty' => false, // Include terms even if they have no associated products
-    ]);
-
-    // Check if terms were found
-    if (is_wp_error($terms)) {
-        echo 'Error retrieving terms: ' . esc_html($terms->get_error_message());
-        return;
-    }
-
-    if (empty($terms)) {
-        echo 'No terms found for taxonomy ' . esc_html($attribute_taxonomy);
-        return;
-    }
-
-    // Debug output: var_dump term names
-    echo '<pre>';
-    var_dump(wp_list_pluck($terms, 'name')); // Extract and display term names
-    echo '</pre>';
-}
-
-// Hook the function into the checkout page
-add_action('woocommerce_before_checkout_form', 'debug_get_term_names_from_attribute');
