@@ -84,87 +84,60 @@ class MatchTrader_Variation_Manager {
         
         if (!$product_id) return;
 
-if (!$product_id) return;
+        $product = wc_get_product($product_id);
+        if (!$product->is_type('variable')) return;
 
-$product = wc_get_product($product_id);
-if (!$product->is_type('variable')) return;
+        $variations = $product->get_available_variations();
+        $attributes = $product->get_variation_attributes();
+        $selected_attributes = [];
 
-$variations = $product->get_available_variations();
-$attributes = $product->get_variation_attributes();
-$selected_attributes = [];
-
-if ($selected_variation_id) {
-    foreach ($variations as $variation) {
-        if ($variation['variation_id'] == $selected_variation_id) {
-            $selected_attributes = $variation['attributes'];
-            break;
-        }
-    }
-}
-
-echo '<div id="matchtrader-variant-switcher">';
-
-foreach ($attributes as $attribute_name => $options) {
-    // Check if the attribute is a taxonomy
-    $taxonomy = $attribute_name;
-    var_dump($taxonomy);
-    
-    if (taxonomy_exists($taxonomy)) {
-        // Get terms and sort them by name
-        $terms = get_terms([
-            'taxonomy'   => $taxonomy,
-            'hide_empty' => false,
-            'orderby'    => 'name',
-            'order'      => 'ASC'
-        ]);
-
-        // Extract sorted term slugs
-        $options = wp_list_pluck($terms, 'slug'); // Use slugs to fetch term names later
-
-        // Debug: var_dump $options after wp_list_pluck
-        echo '<pre>Debug: $options after wp_list_pluck: ';
-        var_dump($options);
-        echo '</pre>';
-    } else {
-        // If it's not a taxonomy, just sort normally
-        natcasesort($options); // Sort case-insensitively
-
-        // Debug: var_dump $options after natcasesort
-        echo '<pre>Debug: $options after natcasesort: ';
-        var_dump($options);
-        echo '</pre>';
-    }
-
-    echo '<strong><label>' . wc_attribute_label($attribute_name) . '</label></strong>';
-    echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
-
-    foreach ($options as $option) {
-        $term_name = $option; // Default to the option value if it's not a taxonomy
-        $term_description = ''; // Initialize term description as empty
-
-        if (taxonomy_exists($taxonomy)) {
-            // Fetch the term object by slug
-            $term = get_term_by('slug', $option, $taxonomy);
-            if ($term) {
-                $term_name = $term->name; // Use the term name
-                $term_description = $term->description; // Use the term description if it exists
+        if ($selected_variation_id) {
+            foreach ($variations as $variation) {
+                if ($variation['variation_id'] == $selected_variation_id) {
+                    $selected_attributes = $variation['attributes'];
+                    break;
+                }
             }
         }
 
-        // Debug: var_dump $term_name and $term_description
-        echo '<pre>Debug: $term_name for option ' . esc_html($option) . ': ';
-        var_dump($term_name);
-        echo '</pre>';
+        echo '<div id="matchtrader-variant-switcher">';
+        // echo '<h3>Select Account</h3>';
 
-        echo '<pre>Debug: $term_description for option ' . esc_html($option) . ': ';
-        var_dump($term_description);
-        echo '</pre>';
+        foreach ($attributes as $attribute_name => $options) {
+            // Check if the attribute is a taxonomy
+            $raw_attribute_name = str_replace('pa_', '', $attribute_name);
+            $taxonomy = wc_attribute_taxonomy_name($raw_attribute_name);
+            
+            if (taxonomy_exists($taxonomy)) {
+                // Get terms and sort them by name
+                $terms = get_terms([
+                    'taxonomy'   => $taxonomy,
+                    'hide_empty' => false,
+                    'orderby'    => 'name',
+                    'order'      => 'ASC'
+                ]);
 
-    }
+                // Extract sorted term names
+                $options = wp_list_pluck($terms, 'name');
+            } else {
+                // If it's not a taxonomy, just sort normally
+                natcasesort($options); // Sort case-insensitively
+            }
 
-    echo '</div>';
-}
-echo '</div>';
+            echo '<strong><label>' . wc_attribute_label($attribute_name) . '</label></strong>';
+            echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
+
+            foreach ($options as $option) {
+                $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $option) ? ' checked' : '';
+                echo '<div class="matchtrader-radio-option">';
+                echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($option) . '" class="matchtrader-switch"' . $selected . '>';
+                echo '<label class="matchtrader-radio-label">' . esc_html($option) . '</label>';
+                echo '</div>';
+            }
+
+            echo '</div>';
+        }
+        echo '</div>';
     }
 
     public function update_cart() {
