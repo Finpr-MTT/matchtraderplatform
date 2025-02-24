@@ -6,21 +6,19 @@
         const states = wc_country_states.states;
         const prefilledState = $('#billing_state').val();
 
-        // Make country field read-only using Select2
-        if (countryField.hasClass('select2-hidden-accessible')) {
-            countryField.select2('destroy');
+        // Make country field read-only only if it has a value
+        if (countryField.val()) {
+            countryField.select2({
+                disabled: true,
+                minimumResultsForSearch: Infinity
+            });
+            countryField.addClass('matchtrader-readonly');
         }
-        countryField.select2({
-            disabled: true,
-            minimumResultsForSearch: Infinity // Hide search box
-        });
-        countryField.addClass('matchtrader-readonly');
 
         function updateStateField(clearState = true) {
             const selectedCountry = countryField.val();
             const currentState = clearState ? '' : prefilledState;
             
-            // Remove existing state field and select2 instance
             const existingState = $('#billing_state');
             if (existingState.length && existingState.hasClass('select2-hidden-accessible')) {
                 existingState.select2('destroy');
@@ -42,7 +40,7 @@
                 const stateSelect = $('<select>', {
                     id: 'billing_state',
                     name: 'billing_state',
-                    class: 'state_select input-text matchtrader-readonly',
+                    class: 'state_select input-text',
                     required: true
                 });
 
@@ -57,23 +55,35 @@
                 });
                 stateFieldContainer.append(stateSelect);
 
-                // Initialize select2 for state field as disabled
-                stateSelect.select2({
-                    disabled: true,
-                    minimumResultsForSearch: Infinity // Hide search box
-                });
+                // Make state field read-only only if it has a value
+                if (currentState) {
+                    stateSelect.select2({
+                        disabled: true,
+                        minimumResultsForSearch: Infinity
+                    });
+                    stateSelect.addClass('matchtrader-readonly');
+                } else {
+                    stateSelect.select2({
+                        minimumResultsForSearch: Infinity
+                    });
+                }
             } else {
-                // Create read-only text input for states
+                // Create text input for states
                 const stateInput = $('<input>', {
                     type: 'text',
                     id: 'billing_state',
                     name: 'billing_state',
-                    class: 'input-text matchtrader-readonly',
+                    class: 'input-text',
                     required: true,
                     placeholder: 'Enter State/Region',
                     value: currentState,
-                    readonly: 'readonly'
                 });
+
+                // Make input read-only only if it has a value
+                if (currentState) {
+                    stateInput.attr('readonly', 'readonly')
+                             .addClass('matchtrader-readonly');
+                }
                 stateFieldContainer.append(stateInput);
             }
         }
