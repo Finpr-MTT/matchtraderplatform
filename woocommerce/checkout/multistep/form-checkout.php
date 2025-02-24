@@ -23,7 +23,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 <form id="matchTraderCheckout" name="checkout" method="post" class="checkout woocommerce-checkout hello-theme-checkout container" action="<?php echo esc_url( wc_get_checkout_url() ); ?>" enctype="multipart/form-data">
 
 	<!-- Multi-Step Navigation -->
-	<div class="step-progress">
+	<div class="step-progress mb-4">
 		<div class="step active" data-step="1">
 			<div class="step-number">1</div>
 			<div class="step-title">Select Account</div>
@@ -41,7 +41,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 	<!-- Step 1: Account Selection -->
 	<div class="step-content active" data-step="1">
 		<div class="container">
-		<div class="row justify-content-md-center">
+		<div class="row justify-content-md-center gap-3">
 		    <div class="col-sm-6 border px-4">
 		    	<?php do_action('woocommerce_checkout_before_customer_details'); ?>
 		    </div>
