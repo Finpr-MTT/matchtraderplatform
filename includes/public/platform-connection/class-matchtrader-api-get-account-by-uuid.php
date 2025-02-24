@@ -153,58 +153,58 @@ class MatchTrader_Get_Account_By_UUID {
     }
 
     /**
-     * Prefill WooCommerce checkout fields with API response data.
-     *
-     * @param array $fields
-     * @return array
-     */
-    public function prefill_checkout_fields($fields) {
-        $account_data = WC()->session->get('matchtrader_account_data');
-        if (!$account_data || !isset($account_data['personalDetails'])) {
-            return $fields;
-        }
-
-        // Define custom attributes for read-only fields
-        $readonly_attrs = ['readonly' => 'readonly', 'class' => 'matchtrader-readonly'];
-
-        // Field mappings
-        $field_mappings = [
-            'billing_first_name' => ['personalDetails', 'firstname'],
-            'billing_last_name' => ['personalDetails', 'lastname'],
-            'billing_email' => ['email'],
-            'billing_phone' => ['contactDetails', 'phoneNumber'],
-            'billing_country' => ['addressDetails', 'country'],
-            'billing_state' => ['addressDetails', 'state'],
-            'billing_city' => ['addressDetails', 'city'],
-            'billing_postcode' => ['addressDetails', 'postCode'],
-            'billing_address_1' => ['addressDetails', 'address']
-        ];
-
-        // Process each field
-        foreach ($field_mappings as $field_key => $data_path) {
-            $value = $account_data;
-            foreach ($data_path as $path) {
-                if (!isset($value[$path])) {
-                    continue 2;
-                }
-                $value = $value[$path];
-            }
-
-            if (!empty($value)) {
-                $fields['billing'][$field_key]['default'] = sanitize_text_field($value);
-                // Add readonly attributes if value exists
-                $fields['billing'][$field_key]['custom_attributes'] = $readonly_attrs;
-            }
-        }
-
-        // Handle email separately due to different sanitization
-        if (!empty($account_data['email'])) {
-            $fields['billing']['billing_email']['default'] = sanitize_email($account_data['email']);
-            $fields['billing']['billing_email']['custom_attributes'] = $readonly_attrs;
-        }
-
+ * Prefill WooCommerce checkout fields with API response data.
+ *
+ * @param array $fields
+ * @return array
+ */
+public function prefill_checkout_fields($fields) {
+    $account_data = WC()->session->get('matchtrader_account_data');
+    if (!$account_data || !isset($account_data['personalDetails'])) {
         return $fields;
     }
+
+    // Define custom attributes for read-only fields
+    $readonly_attrs = ['readonly' => 'readonly', 'class' => 'matchtrader-readonly'];
+
+    // Field mappings
+    $field_mappings = [
+        'billing_first_name' => ['personalDetails', 'firstname'],
+        'billing_last_name' => ['personalDetails', 'lastname'],
+        'billing_email' => ['email'],
+        'billing_phone' => ['contactDetails', 'phoneNumber'],
+        'billing_country' => ['addressDetails', 'country'],
+        'billing_state' => ['addressDetails', 'state'],
+        'billing_city' => ['addressDetails', 'city'],
+        'billing_postcode' => ['addressDetails', 'postCode'],
+        'billing_address_1' => ['addressDetails', 'address']
+    ];
+
+    // Process each field
+    foreach ($field_mappings as $field_key => $data_path) {
+        $value = $account_data;
+        foreach ($data_path as $path) {
+            if (!isset($value[$path])) {
+                continue 2;
+            }
+            $value = $value[$path];
+        }
+
+        if (!empty($value)) {
+            $fields['billing'][$field_key]['default'] = sanitize_text_field($value);
+            // Add readonly attributes if value exists
+            $fields['billing'][$field_key]['custom_attributes'] = $readonly_attrs;
+        }
+    }
+
+    // Handle email separately due to different sanitization
+    if (!empty($account_data['email'])) {
+        $fields['billing']['billing_email']['default'] = sanitize_email($account_data['email']);
+        $fields['billing']['billing_email']['custom_attributes'] = $readonly_attrs;
+    }
+
+    return $fields;
+}
 }
 
 // Initialize the class
