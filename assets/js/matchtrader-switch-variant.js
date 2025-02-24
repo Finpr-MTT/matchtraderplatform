@@ -49,43 +49,39 @@
         });
 
         // Function to disable billing country and state fields
-        function disableFields() {
-            // Disable normal <select> elements
-            $('#billing_country').prop('disabled', true);
-            $('#billing_state').prop('disabled', true);
+        // function disableFields() {
+        //     // Disable normal <select> elements
+        //     $('#billing_country').prop('disabled', true);
+        //     $('#billing_state').prop('disabled', true);
 
-            // Disable Select2-enhanced dropdowns
-            if ($('#billing_country').hasClass('select2-hidden-accessible')) {
-                $('#billing_country').prop('disabled', true);
-                $('#billing_state').prop('disabled', true);
-            }
-        }
+        //     if ($('#billing_country').hasClass('select2-hidden-accessible')) {
+        //         $('#billing_country').prop('disabled', true);
+        //         $('#billing_state').prop('disabled', true);
+        //     }
+        // }
 
-        // Check if session data exists and is not empty
-        function checkSessionData() {
-            $.ajax({
-                type: 'POST',
-                url: matchtraderAjax.ajaxurl,
-                data: {
-                    action: 'check_matchtrader_session',
-                    security: matchtraderAjax.nonce
-                },
-                success: function(response) {
-                    if (response.success && response.data.has_session) {
-                        // If session data exists, disable the fields
-                        disableFields();
+       
+        // function checkSessionData() {
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: matchtraderAjax.ajaxurl,
+        //         data: {
+        //             action: 'check_matchtrader_session',
+        //             security: matchtraderAjax.nonce
+        //         },
+        //         success: function(response) {
+        //             if (response.success && response.data.has_session) {
+        //                 disableFields();
 
-                        // Listen for Select2 initialization events
-                        $(document).on('select2:open', function() {
-                            disableFields();
-                        });
-                    }
-                }
-            });
-        }
+        //                 $(document).on('select2:open', function() {
+        //                     disableFields();
+        //                 });
+        //             }
+        //         }
+        //     });
+        // }
 
-        // Check session data on page load
-        checkSessionData();
+        // checkSessionData();
     });
 
 })(jQuery);
