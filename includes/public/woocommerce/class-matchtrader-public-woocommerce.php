@@ -35,6 +35,7 @@ class MatchTrader_Public_WooCommerce {
 
         if ($checkout_mode !== 'none') {
             add_filter('woocommerce_locate_template', [$this, 'matchtrader_override_templates'], 10, 3);
+            remove_action('woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10);
             add_action('wp', [$this, 'matchtrader_remove_default_order_review_checkout']);
             add_action('wp_ajax_apply_coupon_action', [$this, 'apply_coupon_action']);
             add_action('wp_ajax_nopriv_apply_coupon_action', [$this, 'apply_coupon_action']);
@@ -276,7 +277,6 @@ class MatchTrader_Public_WooCommerce {
      * Adjust WooCommerce Checkout Layout by Removing Default Sections
      */
     public function matchtrader_remove_default_order_review_checkout() {
-        remove_action('woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10);
         remove_action('woocommerce_checkout_order_review', 'woocommerce_order_review', 10);
 
         add_action('woocommerce_checkout_before_order_review', 'woocommerce_order_review', 10);
