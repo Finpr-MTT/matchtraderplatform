@@ -106,7 +106,7 @@ echo '<div id="matchtrader-variant-switcher">';
 
 foreach ($attributes as $attribute_name => $options) {
     // Check if the attribute is a taxonomy
-    $taxonomy = 'pa_trading-capital';
+    $taxonomy = $attribute_name;
     var_dump($taxonomy);
     
     if (taxonomy_exists($taxonomy)) {
