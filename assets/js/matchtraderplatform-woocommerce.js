@@ -1,30 +1,22 @@
 (function ($) {
     'use strict';
+
     $(document).ready(function () {
         const countryField = $('#billing_country');
         const stateFieldContainer = $('#billing_state_field');
         const states = wc_country_states.states;
-        const prefilledState = $('#billing_state').val();
 
-        // Make country field read-only only if it has a value
-        if (countryField.val()) {
-            countryField.select2({
-                disabled: true,
-                minimumResultsForSearch: Infinity
-            });
-            countryField.addClass('matchtrader-readonly');
-        }
+        // Get prefilled state from WooCommerce session
+        const prefilledState = $('#billing_state').val(); // Get existing value
 
         function updateStateField(clearState = true) {
             const selectedCountry = countryField.val();
-            const currentState = clearState ? '' : prefilledState;
-            
-            const existingState = $('#billing_state');
-            if (existingState.length && existingState.hasClass('select2-hidden-accessible')) {
-                existingState.select2('destroy');
-            }
-            existingState.remove();
-            
+            const currentState = clearState ? '' : prefilledState; // Keep prefilled state if not clearing
+
+            // ❌ Remove existing state field before adding a new one
+            $('#billing_state').remove();
+
+            // Add label for State/Region (if not already added)
             if (stateFieldContainer.find('label[for="billing_state"]').length === 0) {
                 stateFieldContainer.append(
                     $('<label>', {
@@ -36,39 +28,32 @@
             }
 
             if (states[selectedCountry] && Object.keys(states[selectedCountry]).length > 0) {
-                // Create select dropdown for states
+                // Create a select dropdown for states
                 const stateSelect = $('<select>', {
                     id: 'billing_state',
                     name: 'billing_state',
                     class: 'state_select input-text',
-                    required: true
+                    required: true,
                 });
 
+                // Add a placeholder option
                 stateSelect.append($('<option>', { value: '', text: 'Select State/Region' }));
-                
+
+                // Add state options
                 $.each(states[selectedCountry], function (code, name) {
                     const option = $('<option>', { value: code, text: name });
+
+                    // If the prefilled state matches, select it
                     if (code === currentState) {
                         option.attr('selected', 'selected');
                     }
+
                     stateSelect.append(option);
                 });
-                stateFieldContainer.append(stateSelect);
 
-                // Make state field read-only only if it has a value
-                if (currentState) {
-                    stateSelect.select2({
-                        disabled: true,
-                        minimumResultsForSearch: Infinity
-                    });
-                    stateSelect.addClass('matchtrader-readonly');
-                } else {
-                    stateSelect.select2({
-                        minimumResultsForSearch: Infinity
-                    });
-                }
+                stateFieldContainer.append(stateSelect);
             } else {
-                // Create text input for states
+                // Create a text input for states
                 const stateInput = $('<input>', {
                     type: 'text',
                     id: 'billing_state',
@@ -76,19 +61,19 @@
                     class: 'input-text',
                     required: true,
                     placeholder: 'Enter State/Region',
-                    value: currentState,
+                    value: currentState, // Keep prefilled state
                 });
 
-                // Make input read-only only if it has a value
-                if (currentState) {
-                    stateInput.attr('readonly', 'readonly')
-                             .addClass('matchtrader-readonly');
-                }
                 stateFieldContainer.append(stateInput);
             }
         }
 
-        // Initialize the state field with prefilled data
+        // Handle country change event
+        countryField.on('change', function () {
+            updateStateField(true); // Clear state only on manual country change
+        });
+
+        // Initialize the state field (keep prefilled data if available)
         updateStateField(false);
     });
 })(jQuery);
