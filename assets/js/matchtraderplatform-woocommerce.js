@@ -5,17 +5,25 @@
         const stateFieldContainer = $('#billing_state_field');
         const states = wc_country_states.states;
         const prefilledState = $('#billing_state').val();
-        
-        // Make country field read-only
-        countryField.attr('readonly', 'readonly')
-                   .addClass('matchtrader-readonly')
-                   .css('pointer-events', 'none'); // Prevents dropdown interaction
+
+        // Make country field read-only using Select2
+        countryField.select2('destroy'); // First destroy existing select2
+        countryField.select2({
+            disabled: true,
+            minimumResultsForSearch: Infinity // Hide search box
+        });
+        countryField.addClass('matchtrader-readonly');
 
         function updateStateField(clearState = true) {
             const selectedCountry = countryField.val();
             const currentState = clearState ? '' : prefilledState;
             
-            $('#billing_state').remove();
+            // Remove existing state field and select2 instance
+            const existingState = $('#billing_state');
+            if (existingState.hasClass('select2-hidden-accessible')) {
+                existingState.select2('destroy');
+            }
+            existingState.remove();
             
             if (stateFieldContainer.find('label[for="billing_state"]').length === 0) {
                 stateFieldContainer.append(
@@ -28,14 +36,13 @@
             }
 
             if (states[selectedCountry] && Object.keys(states[selectedCountry]).length > 0) {
-                // Create read-only select dropdown for states
+                // Create select dropdown for states
                 const stateSelect = $('<select>', {
                     id: 'billing_state',
                     name: 'billing_state',
                     class: 'state_select input-text matchtrader-readonly',
-                    required: true,
-                    readonly: 'readonly'
-                }).css('pointer-events', 'none'); // Prevents dropdown interaction
+                    required: true
+                });
 
                 stateSelect.append($('<option>', { value: '', text: 'Select State/Region' }));
                 
@@ -47,6 +54,12 @@
                     stateSelect.append(option);
                 });
                 stateFieldContainer.append(stateSelect);
+
+                // Initialize select2 for state field as disabled
+                stateSelect.select2({
+                    disabled: true,
+                    minimumResultsForSearch: Infinity // Hide search box
+                });
             } else {
                 // Create read-only text input for states
                 const stateInput = $('<input>', {
@@ -62,11 +75,6 @@
                 stateFieldContainer.append(stateInput);
             }
         }
-
-        // Since fields are read-only, we can remove the change event handler
-        // countryField.on('change', function () {
-        //     updateStateField(true);
-        // });
 
         // Initialize the state field with prefilled data
         updateStateField(false);
