@@ -158,18 +158,7 @@ foreach ($attributes as $attribute_name => $options) {
         var_dump($term_description);
         echo '</pre>';
 
-        $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $option) ? ' checked' : '';
-        echo '<div class="matchtrader-radio-option">';
-        echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($option) . '" class="matchtrader-switch"' . $selected . '>';
-        echo '<label class="matchtrader-radio-label">' . esc_html($term_name);
-        
-        // Add term description if it exists
-        if (!empty($term_description)) {
-            echo '<span class="term-description">' . esc_html($term_description) . '</span>';
-        }
-        
-        echo '</label>';
-        echo '</div>';
+
     }
 
     echo '</div>';
