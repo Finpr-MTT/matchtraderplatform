@@ -134,7 +134,7 @@ foreach ($attributes as $attribute_name => $options) {
         // Get term name by slug if it's a taxonomy
         if (taxonomy_exists($taxonomy)) {
             $term = get_term_by('slug', $option, $taxonomy);
-            $option_label = $term ? $term->name : $option; // Fallback to slug if term not found
+            $option_label = $term->name; // Fallback to slug if term not found
         }
 
         echo '<label class="matchtrader-radio-label">' . esc_html($option_label) . '</label>';
