@@ -142,6 +142,7 @@ foreach ($attributes as $attribute_name => $options) {
         $term_description = ''; // Initialize term description as empty
 
         if (taxonomy_exists($taxonomy)) {
+            // Fetch the term object by slug
             $term = get_term_by('slug', $option, $taxonomy);
             if ($term) {
                 $term_name = $term->name; // Use the term name
@@ -157,7 +158,6 @@ foreach ($attributes as $attribute_name => $options) {
         echo '<pre>Debug: $term_description for option ' . esc_html($option) . ': ';
         var_dump($term_description);
         echo '</pre>';
-
 
     }
 
