@@ -160,38 +160,47 @@ class MatchTrader_Get_Account_By_UUID {
      */
     public function prefill_checkout_fields($fields) {
         $account_data = WC()->session->get('matchtrader_account_data');
-
         if (!$account_data || !isset($account_data['personalDetails'])) {
             return $fields;
         }
 
-        // Prefill checkout fields from API response
-        if (!empty($account_data['personalDetails']['firstname'])) {
-            $fields['billing']['billing_first_name']['default'] = sanitize_text_field($account_data['personalDetails']['firstname']);
+        // Define custom attributes for read-only fields
+        $readonly_attrs = ['readonly' => 'readonly', 'class' => 'matchtrader-readonly'];
+
+        // Field mappings
+        $field_mappings = [
+            'billing_first_name' => ['personalDetails', 'firstname'],
+            'billing_last_name' => ['personalDetails', 'lastname'],
+            'billing_email' => ['email'],
+            'billing_phone' => ['contactDetails', 'phoneNumber'],
+            'billing_country' => ['addressDetails', 'country'],
+            'billing_state' => ['addressDetails', 'state'],
+            'billing_city' => ['addressDetails', 'city'],
+            'billing_postcode' => ['addressDetails', 'postCode'],
+            'billing_address_1' => ['addressDetails', 'address']
+        ];
+
+        // Process each field
+        foreach ($field_mappings as $field_key => $data_path) {
+            $value = $account_data;
+            foreach ($data_path as $path) {
+                if (!isset($value[$path])) {
+                    continue 2;
+                }
+                $value = $value[$path];
+            }
+
+            if (!empty($value)) {
+                $fields['billing'][$field_key]['default'] = sanitize_text_field($value);
+                // Add readonly attributes if value exists
+                $fields['billing'][$field_key]['custom_attributes'] = $readonly_attrs;
+            }
         }
-        if (!empty($account_data['personalDetails']['lastname'])) {
-            $fields['billing']['billing_last_name']['default'] = sanitize_text_field($account_data['personalDetails']['lastname']);
-        }
+
+        // Handle email separately due to different sanitization
         if (!empty($account_data['email'])) {
             $fields['billing']['billing_email']['default'] = sanitize_email($account_data['email']);
-        }
-        if (!empty($account_data['contactDetails']['phoneNumber'])) {
-            $fields['billing']['billing_phone']['default'] = sanitize_text_field($account_data['contactDetails']['phoneNumber']);
-        }
-        if (!empty($account_data['addressDetails']['country'])) {
-            $fields['billing']['billing_country']['default'] = sanitize_text_field($account_data['addressDetails']['country']);
-        }
-        if (!empty($account_data['addressDetails']['state'])) {
-            $fields['billing']['billing_state']['default'] = sanitize_text_field($account_data['addressDetails']['state']);
-        }
-        if (!empty($account_data['addressDetails']['city'])) {
-            $fields['billing']['billing_city']['default'] = sanitize_text_field($account_data['addressDetails']['city']);
-        }
-        if (!empty($account_data['addressDetails']['postCode'])) {
-            $fields['billing']['billing_postcode']['default'] = sanitize_text_field($account_data['addressDetails']['postCode']);
-        }
-        if (!empty($account_data['addressDetails']['address'])) {
-            $fields['billing']['billing_address_1']['default'] = sanitize_text_field($account_data['addressDetails']['address']);
+            $fields['billing']['billing_email']['custom_attributes'] = $readonly_attrs;
         }
 
         return $fields;
