@@ -83,7 +83,7 @@ new MatchTraderPlatform();
 
 function debug_get_term_names_from_attribute() {
     // Define the attribute taxonomy (e.g., 'pa_platform')
-    $attribute_taxonomy = 'pa_platform';
+    $attribute_taxonomy = 'pa_trading-capital';
 
     // Check if the taxonomy exists
     if (!taxonomy_exists($attribute_taxonomy)) {
