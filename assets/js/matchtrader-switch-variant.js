@@ -1,7 +1,8 @@
-(function( $ ) {
+(function($) {
     'use strict';
 
     jQuery(document).ready(function($) {
+        // Function to update the cart
         function updateCart() {
             let selectedAttributes = {};
             $('.matchtrader-radio-group input[type="radio"]:checked').each(function() {
@@ -36,14 +37,32 @@
             });
         }
 
+        // Event listener for radio button changes
         $('.matchtrader-radio-group input[type="radio"]').on('change', function() {
             updateCart();
         });
 
+        // Event listener for the "Update Cart" button
         $('#matchtrader-update-cart').on('click', function(e) {
             e.preventDefault();
             updateCart();
         });
+
+        // Function to disable billing country and state fields
+        function disableSelect2Fields() {
+            $('#billing_country').prop('disabled', true);
+            $('#billing_state').prop('disabled', true);
+        }
+
+        // Check if Select2 is initialized on page load
+        if ($('#billing_country').hasClass('select2-hidden-accessible')) {
+            disableSelect2Fields();
+        }
+
+        // Listen for Select2 initialization events
+        $(document).on('select2:open', function() {
+            disableSelect2Fields();
+        });
     });
 
-})( jQuery );
+})(jQuery);
