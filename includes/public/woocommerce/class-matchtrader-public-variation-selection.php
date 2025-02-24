@@ -117,10 +117,7 @@ foreach ($attributes as $attribute_name => $options) {
 
         // Extract sorted term slugs
         $options = wp_list_pluck($terms, 'slug'); // Use slugs to fetch term names later
-    } else {
-        // If it's not a taxonomy, just sort normally
-        natcasesort($options); // Sort case-insensitively
-    }
+    } 
 
     echo '<strong><label>' . wc_attribute_label($attribute_name) . '</label></strong>';
     echo '<div class="matchtrader-radio-group" data-attribute="' . esc_attr($attribute_name) . '">';
