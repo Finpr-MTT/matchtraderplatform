@@ -49,9 +49,16 @@
         });
 
         // Function to disable billing country and state fields
-        function disableSelect2Fields() {
+        function disableFields() {
+            // Disable normal <select> elements
             $('#billing_country').prop('disabled', true);
             $('#billing_state').prop('disabled', true);
+
+            // Disable Select2-enhanced dropdowns
+            if ($('#billing_country').hasClass('select2-hidden-accessible')) {
+                $('#billing_country').prop('disabled', true);
+                $('#billing_state').prop('disabled', true);
+            }
         }
 
         // Check if session data exists and is not empty
@@ -66,11 +73,11 @@
                 success: function(response) {
                     if (response.success && response.data.has_session) {
                         // If session data exists, disable the fields
-                        if ($('#billing_country').hasClass('select2-hidden-accessible')) {
-                            disableSelect2Fields();
-                        }
+                        disableFields();
+
+                        // Listen for Select2 initialization events
                         $(document).on('select2:open', function() {
-                            disableSelect2Fields();
+                            disableFields();
                         });
                     }
                 }
