@@ -20,7 +20,8 @@ class MatchTrader_Get_Account_By_UUID {
     public function __construct() {
         // Hook into WooCommerce Checkout process
         add_action('template_redirect', [$this, 'handle_uuid_param'], 3);
-        //add_filter('woocommerce_checkout_fields', [$this, 'prefill_checkout_fields']);
+        if (get_option('matchtrader_enable_mtt_checkout', 'default') === 'default') {add_filter('woocommerce_checkout_fields', [$this, 'prefill_checkout_fields']);
+        }        
 
         // Hook into order update to save UUID
         add_action('woocommerce_checkout_update_order_meta', [$this, 'save_uuid_challenge_id_to_order_meta'], 10, 2);
