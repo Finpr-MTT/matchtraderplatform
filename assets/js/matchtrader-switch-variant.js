@@ -54,15 +54,31 @@
             $('#billing_state').prop('disabled', true);
         }
 
-        // Check if Select2 is initialized on page load
-        if ($('#billing_country').hasClass('select2-hidden-accessible')) {
-            disableSelect2Fields();
+        // Check if session data exists and is not empty
+        function checkSessionData() {
+            $.ajax({
+                type: 'POST',
+                url: matchtraderAjax.ajaxurl,
+                data: {
+                    action: 'check_matchtrader_session',
+                    security: matchtraderAjax.nonce
+                },
+                success: function(response) {
+                    if (response.success && response.data.has_session) {
+                        // If session data exists, disable the fields
+                        if ($('#billing_country').hasClass('select2-hidden-accessible')) {
+                            disableSelect2Fields();
+                        }
+                        $(document).on('select2:open', function() {
+                            disableSelect2Fields();
+                        });
+                    }
+                }
+            });
         }
 
-        // Listen for Select2 initialization events
-        $(document).on('select2:open', function() {
-            disableSelect2Fields();
-        });
+        // Check session data on page load
+        checkSessionData();
     });
 
 })(jQuery);

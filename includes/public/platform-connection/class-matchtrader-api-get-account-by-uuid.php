@@ -23,9 +23,23 @@ class MatchTrader_Get_Account_By_UUID {
         if (get_option('matchtrader_enable_mtt_checkout', 'default') === 'default') {add_filter('woocommerce_checkout_fields', [$this, 'prefill_checkout_fields']);
         }        
 
+        add_action('wp_ajax_check_matchtrader_session', [$this, 'check_matchtrader_session']);
+        add_action('wp_ajax_nopriv_check_matchtrader_session', [$this, 'check_matchtrader_session']);
+
         // Hook into order update to save UUID
         add_action('woocommerce_checkout_update_order_meta', [$this, 'save_uuid_challenge_id_to_order_meta'], 10, 2);
     }
+
+
+
+public function check_matchtrader_session() {
+    check_ajax_referer('matchtrader_nonce', 'security'); // Verify nonce for security
+
+    $account_data = WC()->session->get('matchtrader_account_data');
+    $has_session = !empty($account_data);
+
+    wp_send_json_success(['has_session' => $has_session]);
+}
 
     /**
      * Handle the UUID parameter in URL and fetch account details.
