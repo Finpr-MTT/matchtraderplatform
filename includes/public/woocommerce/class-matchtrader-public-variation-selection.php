@@ -101,7 +101,6 @@ if ($selected_variation_id) {
 }
 
 echo '<div id="matchtrader-variant-switcher">';
-// echo '<h3>Select Account</h3>';
 
 foreach ($attributes as $attribute_name => $options) {
     // Check if the attribute is a taxonomy
@@ -134,13 +133,41 @@ foreach ($attributes as $attribute_name => $options) {
         // Get term name by slug if it's a taxonomy
         if (taxonomy_exists($taxonomy)) {
             $term = get_term_by('slug', $option, $taxonomy);
+            if ($term) {
+                // Prepare term data in JSON-like structure
+                $term_data = [
+                    'id'          => $term->term_id,
+                    'name'        => $term->name,
+                    'slug'        => $term->slug,
+                    'description' => $term->description,
+                    'menu_order'  => $term->menu_order,
+                    'count'       => $term->count,
+                    '_links'      => [
+                        'self' => [
+                            [
+                                'href'         => get_rest_url(null, 'wc/v3/products/attributes/' . $term->term_id . '/terms/' . $term->term_id),
+                                'targetHints' => [
+                                    'allow' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+                                ]
+                            ]
+                        ],
+                        'collection' => [
+                            [
+                                'href' => get_rest_url(null, 'wc/v3/products/attributes/' . $term->term_id . '/terms')
+                            ]
+                        ]
+                    ]
+                ];
+
+                // Output term data for debugging
+                echo '<pre>';
+                print_r($term_data);
+                echo '</pre>';
+            }
             $option_label = $term ? $term->name : $option; // Fallback to slug if term not found
         } else {
             $option_label = $option;
         }
-
-        // Debugging: Output the value of $option_label
-        var_dump($option_label);
 
         echo '<label class="matchtrader-radio-label">' . esc_html($option_label) . '</label>';
         echo '</div>';
