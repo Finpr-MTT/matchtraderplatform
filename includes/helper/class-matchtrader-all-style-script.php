@@ -44,7 +44,7 @@ class MatchTrader_Enqueue_Manager {
                 'ajaxurl' => admin_url('admin-ajax.php'),
                 'nonce' => wp_create_nonce('matchtrader_nonce'),
             ]);
-            wp_localize_script('hello-theme-coupon-ajax', 'ajax_object', [
+            wp_localize_script('matchtrader-coupon-ajax', 'ajax_object', [
                 'ajax_url' => admin_url('admin-ajax.php'),
             ]);            
         }
