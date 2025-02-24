@@ -177,7 +177,7 @@ class MatchTrader_Public_WooCommerce {
 
          // Helper function to set custom attributes
         function get_custom_attributes($field_name, $is_prefilled) {
-            return $is_prefilled ? ['class' => 'matchtrader-readonly'] : [];
+            return $is_prefilled ? ['readonly' => 'readonly', 'class' => 'matchtrader-readonly'] : [];
         }
 
         // Get country and state from session
