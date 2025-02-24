@@ -7,7 +7,9 @@
         const prefilledState = $('#billing_state').val();
 
         // Make country field read-only using Select2
-        countryField.select2('destroy'); // First destroy existing select2
+        if (countryField.hasClass('select2-hidden-accessible')) {
+            countryField.select2('destroy');
+        }
         countryField.select2({
             disabled: true,
             minimumResultsForSearch: Infinity // Hide search box
@@ -20,7 +22,7 @@
             
             // Remove existing state field and select2 instance
             const existingState = $('#billing_state');
-            if (existingState.hasClass('select2-hidden-accessible')) {
+            if (existingState.length && existingState.hasClass('select2-hidden-accessible')) {
                 existingState.select2('destroy');
             }
             existingState.remove();
