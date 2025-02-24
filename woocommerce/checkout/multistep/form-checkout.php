@@ -50,7 +50,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 		    	<div class="border p-3 mt-4">
 		    		<?php do_action('matchtrader_checkout_after_order_review');?>
 		    	</div>
-		    	<div class="text-center p-3 mt-4">
+		    	<div class="mt-4">
 					<button type="button" class="w-100 btn btn-primary next-step">Next</button>
 				</div>
 		    </div>
