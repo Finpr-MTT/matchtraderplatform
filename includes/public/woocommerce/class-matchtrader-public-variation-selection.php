@@ -123,9 +123,9 @@ class MatchTrader_Variation_Manager {
             } else {
                 natcasesort($options); // Sort case-insensitively
                 // Debug: var_dump $options after natcasesort
-                echo '<pre>Debug: $options after natcasesort: ';
-                var_dump($options);
-                echo '</pre>';
+                // echo '<pre>Debug: $options after natcasesort: ';
+                // var_dump($options);
+                // echo '</pre>';
             }
 
             echo '<strong><label>' . wc_attribute_label($attribute_name) . '</label></strong>';
