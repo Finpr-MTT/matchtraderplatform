@@ -119,12 +119,17 @@ foreach ($attributes as $attribute_name => $options) {
 
         // Extract sorted term slugs
         $options = wp_list_pluck($terms, 'slug'); // Use slugs to fetch term names later
+
+        // Debug: var_dump $options after wp_list_pluck
+        echo '<pre>Debug: $options after wp_list_pluck: ';
+        var_dump($options);
+        echo '</pre>';
     } else {
         // If it's not a taxonomy, just sort normally
         natcasesort($options); // Sort case-insensitively
 
-        // Debug: var_dump the sorted options
-        echo '<pre>';
+        // Debug: var_dump $options after natcasesort
+        echo '<pre>Debug: $options after natcasesort: ';
         var_dump($options);
         echo '</pre>';
     }
@@ -144,14 +149,23 @@ foreach ($attributes as $attribute_name => $options) {
             }
         }
 
+        // Debug: var_dump $term_name and $term_description
+        echo '<pre>Debug: $term_name for option ' . esc_html($option) . ': ';
+        var_dump($term_name);
+        echo '</pre>';
+
+        echo '<pre>Debug: $term_description for option ' . esc_html($option) . ': ';
+        var_dump($term_description);
+        echo '</pre>';
+
         $selected = (isset($selected_attributes['attribute_' . sanitize_title($attribute_name)]) && $selected_attributes['attribute_' . sanitize_title($attribute_name)] == $option) ? ' checked' : '';
         echo '<div class="matchtrader-radio-option">';
         echo '<input type="radio" name="' . esc_attr($attribute_name) . '" value="' . esc_attr($option) . '" class="matchtrader-switch"' . $selected . '>';
-        echo '<label class="matchtrader-radio-label">' . $term_name;
+        echo '<label class="matchtrader-radio-label">' . esc_html($term_name);
         
         // Add term description if it exists
         if (!empty($term_description)) {
-            echo '<span class="term-description">' . $term_description . '</span>';
+            echo '<span class="term-description">' . esc_html($term_description) . '</span>';
         }
         
         echo '</label>';
