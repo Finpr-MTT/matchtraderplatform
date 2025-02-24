@@ -1,50 +1,104 @@
-(function($) {
+(function ($) {
     'use strict';
+    $(document).ready(function () {
+        const countryField = $('#billing_country');
+        const stateFieldContainer = $('#billing_state_field');
+        const states = wc_country_states.states;
 
-    $(document).ready(function() {
-        $('#apply_coupon_button').click(function(e) {
-            e.preventDefault();
+        // Check session status via Ajax
+        $.ajax({
+            url: matchtrader_ajax.ajax_url,
+            type: 'POST',
+            data: {
+                action: 'check_matchtrader_session',
+                nonce: matchtrader_ajax.nonce
+            },
+            success: function(response) {
+                if (response.has_session) {
+                    // Make country field read-only if session exists
+                    if (response.country) {
+                        countryField.select2({
+                            disabled: true,
+                            minimumResultsForSearch: Infinity
+                        });
+                        countryField.addClass('matchtrader-readonly');
+                    }
+                    
+                    // Update state field
+                    updateStateField(response.state);
+                }
+            }
+        });
 
-            var coupon_code = $('#coupon_code_field').val();
-
-            if (!coupon_code) {
-                // Display error message using WooCommerce notices
-                $('.woocommerce-error, .woocommerce-message').remove();
-                $('form.checkout').prepend('<div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-updateOrderReview"><ul class="woocommerce-error" role="alert"><li>Please enter a coupon code.</li></ul></div>');
-                
-                // Scroll to the notice
-                $('html, body').animate({
-                    scrollTop: $('.woocommerce-NoticeGroup').offset().top - 100 // Adjust the offset as needed
-                }, 500);
-                return;
+        function updateStateField(prefilledState) {
+            const selectedCountry = countryField.val();
+            
+            const existingState = $('#billing_state');
+            if (existingState.length && existingState.hasClass('select2-hidden-accessible')) {
+                existingState.select2('destroy');
+            }
+            existingState.remove();
+            
+            if (stateFieldContainer.find('label[for="billing_state"]').length === 0) {
+                stateFieldContainer.append(
+                    $('<label>', {
+                        for: 'billing_state',
+                        text: 'State/Region',
+                        class: 'form-label',
+                    })
+                );
             }
 
-            $.ajax({
-                type: 'POST',
-                url: ajax_object.ajax_url,
-                data: {
-                    action: 'apply_coupon_action',
-                    coupon_code: coupon_code
-                },
-                success: function(response) {
-                    if (response.success) {
-                        $('body').trigger('update_checkout');
-                    } else {
-                        if (typeof response.data === 'string') {
-                            $('.woocommerce-error, .woocommerce-message').remove();
-                            $('form.checkout').prepend('<div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-updateOrderReview"><ul class="woocommerce-error" role="alert"><li>' + response.data + '</li></ul></div>');
-                            
-                            // Scroll to the notice
-                            $('html, body').animate({
-                                scrollTop: $('.woocommerce-NoticeGroup').offset().top - 100 // Adjust the offset as needed
-                            }, 500);
-                        } else {
-                            $('body').trigger('checkout_error', [response.data]);
-                        }
-                    }
-                }
-            });
-        });
-    });
+            if (states[selectedCountry] && Object.keys(states[selectedCountry]).length > 0) {
+                // Create select dropdown for states
+                const stateSelect = $('<select>', {
+                    id: 'billing_state',
+                    name: 'billing_state',
+                    class: 'state_select input-text',
+                    required: true
+                });
 
+                stateSelect.append($('<option>', { value: '', text: 'Select State/Region' }));
+                
+                $.each(states[selectedCountry], function (code, name) {
+                    const option = $('<option>', { value: code, text: name });
+                    if (code === prefilledState) {
+                        option.attr('selected', 'selected');
+                    }
+                    stateSelect.append(option);
+                });
+                stateFieldContainer.append(stateSelect);
+
+                // Make state field read-only if prefilled state exists
+                if (prefilledState) {
+                    stateSelect.select2({
+                        disabled: true,
+                        minimumResultsForSearch: Infinity
+                    });
+                    stateSelect.addClass('matchtrader-readonly');
+                } else {
+                    stateSelect.select2({
+                        minimumResultsForSearch: Infinity
+                    });
+                }
+            } else {
+                // Create text input for states
+                const stateInput = $('<input>', {
+                    type: 'text',
+                    id: 'billing_state',
+                    name: 'billing_state',
+                    class: 'input-text',
+                    required: true,
+                    placeholder: 'Enter State/Region',
+                    value: prefilledState
+                });
+
+                if (prefilledState) {
+                    stateInput.attr('readonly', 'readonly')
+                             .addClass('matchtrader-readonly');
+                }
+                stateFieldContainer.append(stateInput);
+            }
+        }
+    });
 })(jQuery);

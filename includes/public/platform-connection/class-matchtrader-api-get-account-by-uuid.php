@@ -25,6 +25,48 @@ class MatchTrader_Get_Account_By_UUID {
 
         // Hook into order update to save UUID
         add_action('woocommerce_checkout_update_order_meta', [$this, 'save_uuid_challenge_id_to_order_meta'], 10, 2);
+
+        // Add Ajax actions
+        add_action('wp_ajax_check_matchtrader_session', [$this, 'check_matchtrader_session']);
+        add_action('wp_ajax_nopriv_check_matchtrader_session', [$this, 'check_matchtrader_session']);
+        
+        // Add script to footer
+        add_action('wp_footer', [$this, 'add_session_check_script']);
+    }
+
+    public function check_matchtrader_session() {
+        $account_data = WC()->session->get('matchtrader_account_data');
+        $has_session = false;
+        $country = '';
+        $state = '';
+        
+        if ($account_data && isset($account_data['personalDetails'])) {
+            $has_session = true;
+            $country = !empty($account_data['addressDetails']['country']) ? 
+                sanitize_text_field($account_data['addressDetails']['country']) : '';
+            $state = !empty($account_data['addressDetails']['state']) ? 
+                sanitize_text_field($account_data['addressDetails']['state']) : '';
+        }
+        
+        wp_send_json([
+            'has_session' => $has_session,
+            'country' => $country,
+            'state' => $state
+        ]);
+    }
+
+    public function add_session_check_script() {
+        if (!is_checkout()) {
+            return;
+        }
+        ?>
+        <script type="text/javascript">
+            var matchtrader_ajax = <?php echo json_encode([
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'nonce' => wp_create_nonce('matchtrader_session_check')
+            ]); ?>;
+        </script>
+        <?php
     }
 
     /**
