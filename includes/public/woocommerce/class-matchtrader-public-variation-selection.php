@@ -53,15 +53,39 @@ class MatchTrader_Variation_Manager {
             // Get the default attributes for the product
             $default_attributes = $product->get_default_attributes();
 
-            // Format attributes correctly for WooCommerce
-            $formatted_attributes = [];
-            foreach ($default_attributes as $key => $value) {
-                $formatted_attributes['attribute_' . $key] = $value;
-            }
+            // If no default attributes are set, use the first available variation
+            if (empty($default_attributes)) {
+                $variations = $product->get_available_variations();
+                if (!empty($variations)) {
+                    $variation_id = $variations[0]['variation_id'];
+                    $formatted_attributes = $variations[0]['attributes'];
+                } else {
+                    // No variations found, cannot add to cart
+                    return;
+                }
+            } else {
+                // Format attributes correctly for WooCommerce
+                $formatted_attributes = [];
+                foreach ($default_attributes as $key => $value) {
+                    $formatted_attributes['attribute_' . $key] = $value;
+                }
 
-            // Use the product data store to find the matching variation
-            $data_store = WC_Data_Store::load('product');
-            $variation_id = $data_store->find_matching_product_variation($product, $formatted_attributes);
+                // Use the product data store to find the matching variation
+                $data_store = WC_Data_Store::load('product');
+                $variation_id = $data_store->find_matching_product_variation($product, $formatted_attributes);
+
+                // If no matching variation is found, use the first available variation
+                if (!$variation_id) {
+                    $variations = $product->get_available_variations();
+                    if (!empty($variations)) {
+                        $variation_id = $variations[0]['variation_id'];
+                        $formatted_attributes = $variations[0]['attributes'];
+                    } else {
+                        // No variations found, cannot add to cart
+                        return;
+                    }
+                }
+            }
 
             // If a matching variation is found, add it to the cart
             if ($variation_id) {
