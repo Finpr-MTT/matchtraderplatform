@@ -197,7 +197,7 @@ class MatchTrader_Public_WooCommerce {
                 'input_class' => ['input-text'],
                 'placeholder' => __('First Name', 'matchtraderplatform'),
                 'default' => $account_data['personalDetails']['firstname'] ?? '',
-                'custom_attributes' => get_custom_attributes('billing_first_name', $is_prefilled),
+                // 'custom_attributes' => get_custom_attributes('billing_first_name', $is_prefilled),
             ],
             'billing_last_name' => [
                 'label' => __('Last Name', 'matchtraderplatform'),
@@ -207,7 +207,7 @@ class MatchTrader_Public_WooCommerce {
                 'placeholder' => __('Last Name', 'matchtraderplatform'),
                 'clear' => true,
                 'default' => $account_data['personalDetails']['lastname'] ?? '',
-                'custom_attributes' => get_custom_attributes('billing_last_name', $is_prefilled),
+                // 'custom_attributes' => get_custom_attributes('billing_last_name', $is_prefilled),
             ],
             'billing_email' => [
                 'label' => __('Email', 'matchtraderplatform'),
@@ -226,7 +226,7 @@ class MatchTrader_Public_WooCommerce {
                 'placeholder' => __('Phone Number', 'matchtraderplatform'),
                 'clear' => true,
                 'default' => $account_data['contactDetails']['phoneNumber'] ?? '',
-                'custom_attributes' => get_custom_attributes('billing_phone', $is_prefilled),
+                // 'custom_attributes' => get_custom_attributes('billing_phone', $is_prefilled),
             ],
             'billing_address_1' => [
                 'label' => __('Address', 'matchtraderplatform'),
@@ -235,7 +235,7 @@ class MatchTrader_Public_WooCommerce {
                 'input_class' => ['input-text'],
                 'placeholder' => __('Address', 'matchtraderplatform'),
                 'default' => $account_data['addressDetails']['address'] ?? '',
-                'custom_attributes' => get_custom_attributes('billing_address_1', $is_prefilled),
+                // 'custom_attributes' => get_custom_attributes('billing_address_1', $is_prefilled),
             ],
             'billing_country' => [
                 'label' => __('Country', 'matchtraderplatform'),
@@ -245,7 +245,7 @@ class MatchTrader_Public_WooCommerce {
                 'input_class' => ['input-text'],
                 'options' => WC()->countries->get_countries(),
                 'default' => $country,
-                'custom_attributes' => get_custom_attributes('billing_country', $is_prefilled),
+                // 'custom_attributes' => get_custom_attributes('billing_country', $is_prefilled),
             ],
             'billing_state' => [
                 'label' => __('State/Region', 'matchtraderplatform'),
@@ -257,7 +257,7 @@ class MatchTrader_Public_WooCommerce {
                 'type' => $has_states ? 'select' : 'text',
                 'options' => $has_states ? ['' => __('Select State', 'matchtraderplatform')] + $states : [],
                 'default' => $state,
-                'custom_attributes' => get_custom_attributes('billing_state', $is_prefilled),
+                // 'custom_attributes' => get_custom_attributes('billing_state', $is_prefilled),
             ],
             
             'billing_city' => [
@@ -267,7 +267,7 @@ class MatchTrader_Public_WooCommerce {
                 'input_class' => ['input-text'],
                 'placeholder' => __('City', 'matchtraderplatform'),
                 'default' => $account_data['addressDetails']['city'] ?? '',
-                'custom_attributes' => get_custom_attributes('billing_city', $is_prefilled),
+                // 'custom_attributes' => get_custom_attributes('billing_city', $is_prefilled),
             ],
             'billing_postcode' => [
                 'label' => __('Postal Code', 'matchtraderplatform'),
@@ -277,7 +277,7 @@ class MatchTrader_Public_WooCommerce {
                 'placeholder' => __('Postal Code', 'matchtraderplatform'),
                 'clear' => true,
                 'default' => $account_data['addressDetails']['postCode'] ?? '',
-                'custom_attributes' => get_custom_attributes('billing_postcode', $is_prefilled),
+                // 'custom_attributes' => get_custom_attributes('billing_postcode', $is_prefilled),
             ],
         ];
 
