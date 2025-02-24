@@ -19,7 +19,7 @@ class MatchTrader_Variation_Manager {
         if (get_option('matchtrader_enable_checkout_selection', false)) {
             $this->default_product_id = get_option('matchtrader_default_product_cart', 89); // Default fallback to 1202
 
-            add_action('template_redirect', [$this, 'add_default_variation_to_cart'], 5);
+            add_action('template_redirect', [$this, 'add_default_variation_to_cart'], 99);
             add_filter('woocommerce_checkout_redirect_empty_cart', '__return_false');
 
             // Initialize variation switcher hooks
