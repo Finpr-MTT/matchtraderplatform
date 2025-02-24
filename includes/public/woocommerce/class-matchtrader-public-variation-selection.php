@@ -107,6 +107,7 @@ echo '<div id="matchtrader-variant-switcher">';
 foreach ($attributes as $attribute_name => $options) {
     // Check if the attribute is a taxonomy
     $taxonomy = wc_attribute_taxonomy_name($attribute_name);
+    var_dump($taxonomy);
     
     if (taxonomy_exists($taxonomy)) {
         // Get terms and sort them by name
