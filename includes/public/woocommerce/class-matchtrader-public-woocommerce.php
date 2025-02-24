@@ -39,8 +39,9 @@ class MatchTrader_Public_WooCommerce {
             add_action('wp_ajax_nopriv_apply_coupon_action', [$this, 'apply_coupon_action']);
         }
 
-        if (get_option('matchtrader_enable_mtt_checkout', 'default') === 'default') {remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10 );
+        if (get_option('matchtrader_enable_mtt_checkout', 'default') === 'default') {
             add_action('woocommerce_review_order_before_payment', [$this, 'add_coupon_form_before_payment']);
+            add_action('wp', [$this, 'matchtrader_remove_default_coupon_code_checkout']);
         }
 
         if (get_option('matchtrader_enable_mtt_checkout', 'default') === 'multi-step') {
@@ -270,6 +271,13 @@ class MatchTrader_Public_WooCommerce {
         ];
 
         return $fields;
+    }
+
+    /**
+     * Adjust WooCommerce Checkout Layout by Removing Default Sections
+     */
+    public function matchtrader_remove_default_coupon_code_checkout() {
+        remove_action('woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10);
     }
 
     /**
