@@ -19,7 +19,7 @@ class MatchTrader_Variation_Manager {
         if (get_option('matchtrader_enable_checkout_selection', false)) {
             $this->default_product_id = get_option('matchtrader_default_product_cart', 89); // Default fallback to 1202
 
-            //add_action('template_redirect', [$this, 'add_default_variation_to_cart'], 99);
+            add_action('template_redirect', [$this, 'add_default_variation_to_cart'], 99);
             add_filter('woocommerce_checkout_redirect_empty_cart', '__return_false');
 
             // Initialize variation switcher hooks
@@ -30,42 +30,47 @@ class MatchTrader_Variation_Manager {
     }
 
     public function add_default_variation_to_cart() {
-        if (!is_checkout()) {
-            return;
-        }
+    if (!is_checkout()) {
+        return;
+    }
 
-        // Get the current endpoint
-        $current_endpoint = WC()->query->get_current_endpoint();
+    // Get the current endpoint
+    $current_endpoint = WC()->query->get_current_endpoint();
 
-        // Exclude 'order-received' and 'order-pay' from triggering this function
-        if (in_array($current_endpoint, ['order-received', 'order-pay'])) {
-            return;
-        }
+    // Exclude 'order-received' and 'order-pay' from triggering this function
+    if (in_array($current_endpoint, ['order-received', 'order-pay'])) {
+        return;
+    }
 
-        if (WC()->cart->is_empty()) {
-            $product = wc_get_product($this->default_product_id);
+    // Check if the product was added via direct URL
+    $added_product_id = isset($_GET['add-to-cart']) ? absint($_GET['add-to-cart']) : 0;
 
-            if ($product && $product->is_type('variable')) {
-                $default_attributes = $product->get_default_attributes();
+    if ($added_product_id === $this->default_product_id && WC()->cart->is_empty()) {
+        $product = wc_get_product($this->default_product_id);
 
-                // Format attributes correctly for WooCommerce
-                $formatted_attributes = [];
-                foreach ($default_attributes as $key => $value) {
-                    $formatted_attributes['attribute_' . $key] = $value;
-                }
+        if ($product && $product->is_type('variable')) {
+            $default_attributes = $product->get_default_attributes();
 
-                // Use the product data store to find the matching variation
-                $data_store = WC_Data_Store::load('product');
-                $variation_id = $data_store->find_matching_product_variation($product, $formatted_attributes);
+            // Format attributes correctly for WooCommerce
+            $formatted_attributes = [];
+            foreach ($default_attributes as $key => $value) {
+                $formatted_attributes['attribute_' . $key] = $value;
+            }
 
-                if ($variation_id) {
-                    WC()->cart->add_to_cart($this->default_product_id, 1, $variation_id, $formatted_attributes);
-                    wp_safe_redirect(wc_get_checkout_url());
-                    exit;
-                }
+            // Use the product data store to find the matching variation
+            $data_store = WC_Data_Store::load('product');
+            $variation_id = $data_store->find_matching_product_variation($product, $formatted_attributes);
+
+            // If a default variation is found, add it to the cart
+            if ($variation_id) {
+                WC()->cart->add_to_cart($this->default_product_id, 1, $variation_id, $formatted_attributes);
+                wp_safe_redirect(wc_get_checkout_url());
+                exit;
             }
         }
     }
+}
+
 
     public function display_variant_selector() {
         if (WC()->cart->is_empty()) return;
