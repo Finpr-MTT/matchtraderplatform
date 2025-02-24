@@ -45,7 +45,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 		    <div class="col-sm-6 border px-4">
 		    	<?php do_action('woocommerce_checkout_before_customer_details'); ?>
 		    </div>
-		    <div class="col-sm-5">
+		    <div class="col-sm-5 border px-4">
 		    	<?php do_action('woocommerce_checkout_before_order_review'); ?>
 		    	<div class="border p-3 mt-4">
 		    		<?php do_action('matchtrader_checkout_after_order_review');?>
