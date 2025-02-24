@@ -40,7 +40,7 @@ class MatchTrader_Public_WooCommerce {
         }
 
         if (get_option('matchtrader_enable_mtt_checkout', 'default') === 'default') {
-            add_filter( 'woocommerce_checkout_fields' , 'priority_woocommerce_billing_email' );
+            add_filter( 'woocommerce_checkout_fields' , [$this, 'priority_woocommerce_billing_email'] );
             add_action('wp', [$this, 'matchtrader_remove_default_coupon_code_checkout']);
             add_action('woocommerce_review_order_before_payment', [$this, 'add_coupon_form_before_payment']);            
         }
