@@ -30,40 +30,24 @@ class MatchTrader_Variation_Manager {
     }
 
     public function add_default_variation_to_cart() {
-    // Check if we are on the checkout page
-    if (!is_checkout()) {
-        return;
-    }
+        if (!is_checkout()) {
+            return;
+        }
 
-    // Get the current endpoint
-    $current_endpoint = WC()->query->get_current_endpoint();
+        // Get the current endpoint
+        $current_endpoint = WC()->query->get_current_endpoint();
 
-    // Exclude 'order-received' and 'order-pay' from triggering this function
-    if (in_array($current_endpoint, ['order-received', 'order-pay'])) {
-        return;
-    }
+        // Exclude 'order-received' and 'order-pay' from triggering this function
+        if (in_array($current_endpoint, ['order-received', 'order-pay'])) {
+            return;
+        }
 
-    // Check if the cart is empty and if a product is being added via the URL
-    if (WC()->cart->is_empty() && isset($_GET['add-to-cart'])) {
-        $product_id = intval($_GET['add-to-cart']);
-        $product = wc_get_product($product_id);
+        if (WC()->cart->is_empty()) {
+            $product = wc_get_product($this->default_product_id);
 
-        // Check if the product is a variable product
-        if ($product && $product->is_type('variable')) {
-            // Get the default attributes for the product
-            $default_attributes = $product->get_default_attributes();
+            if ($product && $product->is_type('variable')) {
+                $default_attributes = $product->get_default_attributes();
 
-            // If no default attributes are set, use the first available variation
-            if (empty($default_attributes)) {
-                $variations = $product->get_available_variations();
-                if (!empty($variations)) {
-                    $variation_id = $variations[0]['variation_id'];
-                    $formatted_attributes = $variations[0]['attributes'];
-                } else {
-                    // No variations found, cannot add to cart
-                    return;
-                }
-            } else {
                 // Format attributes correctly for WooCommerce
                 $formatted_attributes = [];
                 foreach ($default_attributes as $key => $value) {
@@ -74,30 +58,14 @@ class MatchTrader_Variation_Manager {
                 $data_store = WC_Data_Store::load('product');
                 $variation_id = $data_store->find_matching_product_variation($product, $formatted_attributes);
 
-                // If no matching variation is found, use the first available variation
-                if (!$variation_id) {
-                    $variations = $product->get_available_variations();
-                    if (!empty($variations)) {
-                        $variation_id = $variations[0]['variation_id'];
-                        $formatted_attributes = $variations[0]['attributes'];
-                    } else {
-                        // No variations found, cannot add to cart
-                        return;
-                    }
+                if ($variation_id) {
+                    WC()->cart->add_to_cart($this->default_product_id, 1, $variation_id, $formatted_attributes);
+                    wp_safe_redirect(wc_get_checkout_url());
+                    exit;
                 }
-            }
-
-            // If a matching variation is found, add it to the cart
-            if ($variation_id) {
-                WC()->cart->add_to_cart($product_id, 1, $variation_id, $formatted_attributes);
-
-                // Redirect to the checkout page to prevent duplicate additions
-                wp_safe_redirect(wc_get_checkout_url());
-                exit;
             }
         }
     }
-}
 
     public function display_variant_selector() {
         if (WC()->cart->is_empty()) return;
