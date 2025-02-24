@@ -43,37 +43,33 @@ class MatchTrader_Variation_Manager {
         return;
     }
 
-    // Check if the cart is empty
-    if (WC()->cart->is_empty()) {
-        // Get the product ID from the URL parameter
-        $product_id = isset($_GET['add-to-cart']) ? absint($_GET['add-to-cart']) : 0;
+    // Check if the cart is empty and if a product is being added via the URL
+    if (WC()->cart->is_empty() && isset($_GET['add-to-cart'])) {
+        $product_id = intval($_GET['add-to-cart']);
+        $product = wc_get_product($product_id);
 
-        if ($product_id) {
-            $product = wc_get_product($product_id);
+        // Check if the product is a variable product
+        if ($product && $product->is_type('variable')) {
+            // Get the default attributes for the product
+            $default_attributes = $product->get_default_attributes();
 
-            // Check if the product is a variable product
-            if ($product && $product->is_type('variable')) {
-                // Get the default attributes for the product
-                $default_attributes = $product->get_default_attributes();
+            // Format attributes correctly for WooCommerce
+            $formatted_attributes = [];
+            foreach ($default_attributes as $key => $value) {
+                $formatted_attributes['attribute_' . $key] = $value;
+            }
 
-                // Format attributes correctly for WooCommerce
-                $formatted_attributes = [];
-                foreach ($default_attributes as $key => $value) {
-                    $formatted_attributes['attribute_' . sanitize_title($key)] = $value;
-                }
+            // Use the product data store to find the matching variation
+            $data_store = WC_Data_Store::load('product');
+            $variation_id = $data_store->find_matching_product_variation($product, $formatted_attributes);
 
-                // Use the product data store to find the matching variation
-                $data_store = WC_Data_Store::load('product');
-                $variation_id = $data_store->find_matching_product_variation($product, $formatted_attributes);
+            // If a matching variation is found, add it to the cart
+            if ($variation_id) {
+                WC()->cart->add_to_cart($product_id, 1, $variation_id, $formatted_attributes);
 
-                // If a matching variation is found, add it to the cart
-                if ($variation_id) {
-                    WC()->cart->add_to_cart($product_id, 1, $variation_id, $formatted_attributes);
-
-                    // Redirect to the checkout page to avoid duplicate additions
-                    wp_safe_redirect(wc_get_checkout_url());
-                    exit;
-                }
+                // Redirect to the checkout page to prevent duplicate additions
+                wp_safe_redirect(wc_get_checkout_url());
+                exit;
             }
         }
     }
