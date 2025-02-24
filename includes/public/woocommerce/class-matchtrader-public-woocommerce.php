@@ -40,8 +40,9 @@ class MatchTrader_Public_WooCommerce {
         }
 
         if (get_option('matchtrader_enable_mtt_checkout', 'default') === 'default') {
-            add_action('woocommerce_review_order_before_payment', [$this, 'add_coupon_form_before_payment']);
+            add_filter( 'woocommerce_checkout_fields' , 'priority_woocommerce_billing_email' );
             add_action('wp', [$this, 'matchtrader_remove_default_coupon_code_checkout']);
+            add_action('woocommerce_review_order_before_payment', [$this, 'add_coupon_form_before_payment']);            
         }
 
         if (get_option('matchtrader_enable_mtt_checkout', 'default') === 'multi-step') {
@@ -61,6 +62,16 @@ class MatchTrader_Public_WooCommerce {
             add_filter('woocommerce_add_to_cart_redirect', [$this, 'redirect_to_checkout']);
         }
 
+    }
+
+    /**
+     * Add Priority to email billing
+     * 
+     * @return string Checkout URL
+     */    
+    public function priority_woocommerce_billing_email( $fields ) {
+        $fields['billing']['billing_email']['priority'] = 5;
+        return $fields;
     }
 
     /**
