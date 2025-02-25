@@ -303,7 +303,7 @@ class MatchTrader_Public_WooCommerce {
         remove_action('woocommerce_checkout_order_review', 'woocommerce_order_review', 10);
 
         add_action('woocommerce_checkout_before_order_review', 'woocommerce_order_review', 10);
-        add_action('woocommerce_review_order_before_payment', 'woocommerce_order_review', 10);
+        //add_action('woocommerce_review_order_before_payment', 'woocommerce_order_review', 10);
         add_action('woocommerce_checkout_order_review', 'woocommerce_checkout_payment', 20);
     }
 
