@@ -88,3 +88,14 @@ add_action( 'woocommerce_before_checkout_billing_email_field', function() {
 add_action( 'woocommerce_after_checkout_billing_email_field', function() {
     echo '<hr>';
 });
+
+function filter_woocommerce_form_field_email( $field, $key, $args, $value ) {   
+    // Billing email
+    if ( $key === 'billing_email') {
+        // Replace existing html with new ones
+        $field = str_replace( '</span>', '</span><br><span>Please enter the correct email address so that you can receive our emails.</span>', $field );
+    }
+    
+    return $field;
+} 
+add_filter( 'woocommerce_form_field_email', 'filter_woocommerce_form_field_email', 10, 4 );
