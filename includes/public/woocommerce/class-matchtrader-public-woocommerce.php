@@ -47,7 +47,8 @@ class MatchTrader_Public_WooCommerce {
         }
 
         if (get_option('matchtrader_enable_mtt_checkout', 'default') === 'multi-step') {
-            add_filter('woocommerce_checkout_fields', [$this, 'restructure_checkout_fields']);
+            add_filter('woocommerce_checkout_fields', [$this, 'restructure_checkout_fields']);            
+            add_action('matchtrader_checkout_addons_order_review', [$this, 'checkout_addons_after_product_selection']);
             add_action('matchtrader_checkout_after_order_review', [$this, 'add_coupon_form_before_payment']);
             add_action('wp', [$this, 'matchtrader_remove_default_order_review_checkout']);
             add_action('matchtrader_checkout_display_price_order', [$this, 'matchtrader_customize_order_review']);
@@ -390,6 +391,23 @@ class MatchTrader_Public_WooCommerce {
                         ';
         }
         return $field;
+    }
+
+
+    public function checkout_addons_after_product_selection( $field, $key ){
+        echo '<div class="mtt-addons-container">
+               <h4 class="mtt-heading">Choose Addons</h4>
+               <div class="mtt-addons-wrap">
+                  <div class="field-group">
+                    <input type="checkbox" id="mtt-addon-1" class="mtt-addons-checkbox-input" name="mtt_addons[]" value="1" data-value="20.00">
+                    <label for="mtt-addon-1">7 day payouts vs 14 Days <span>(+15%)</span></label>
+                  </div>
+                  <div class="field-group">
+                    <input type="checkbox" id="mtt-addon-2" class="mtt-addons-checkbox-input" name="mtt_addons[]" value="1" data-value="20.00">
+                    <label for="mtt-addon-2">90% profit split vs 85% <span>(+15%)</span></label>
+                  </div>
+               </div>
+            </div>'
     }
 }
 
