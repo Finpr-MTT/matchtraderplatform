@@ -47,12 +47,10 @@
                     action: 'matchtrader_update_order_review'
                 },
                 beforeSend: function () {
-                    console.log('Updating order total...'); // Debug log
                     $('.matchtrader-order-total-value').fadeTo(300, 0.5);
                 },
                 success: function (response) {
-                    console.log('Order total response:', response);
-                    $('.matchtrader-order-total-value').html('<strong>' + response.data.order_total + '</strong>').fadeTo(300, 1);
+                    $('.matchtrader-order-total-value').html('<h2>' + response.data.order_total + '</h2>').fadeTo(300, 1);
                 },
                 error: function (xhr, status, error) {
                     console.error('AJAX error:', error);

@@ -41,37 +41,37 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 	<!-- Step 1: Account Selection -->
 	<div class="step-content active" data-step="1">
 		<div class="container">
-			<div class="row justify-content-md-center my-5">
-			    <div class="col-md-12 mtt-bg-card">
+			<div class="d-flex flex-row gap-3 my-5">
+			    <div class="col p-4 mtt-bg-card">
 			    	<?php do_action('woocommerce_checkout_before_customer_details'); ?>
 			    </div>
 			</div>
-			<div class="row justify-content-md-center my-5 g-3">
-			    <div class="col-md-6">
-			    	<div class="mtt-addons mtt-bg-card">
+			<div class="d-flex flex-row gap-3 my-5">
+			    <div class="col p-4 mtt-bg-card">
+			    	<div class="mtt-addons ">
 			    		<?php do_action('woocommerce_checkout_before_order_review'); ?>	
 			    	</div>    	
 			    </div>
-			    <div class="col-md-6">
-			    	<div class="mtt-order-review mtt-bg-card">
+			    <div class="col p-4 mtt-bg-card">
+			    	<div class="mtt-order-review">
 			    		<?php do_action('woocommerce_checkout_before_order_review'); ?>	
 			    	</div>    	
 			    </div>			    
 			</div>
-			<div class="row justify-content-md-center my-5 g-3 shadow-none p-4 mtt-bg-button rounded">
-				<div class="col-md-6 py-2">
+			<div class="d-flex flex-row gap-3 my-5 p-4 mtt-bg-button rounded">
+				<div class="col py-2">
 			    	<strong>Discount Code</strong>   	
 			    </div>
-			    <div class="col-md-6">
+			    <div class="col">
 			    	<?php do_action('matchtrader_checkout_after_order_review');?>    	
 			    </div>
 			</div>
-			<div class="row justify-content-md-center my-5">
-				<div class="col-md-12 text-center">
+			<div class="d-flex flex-row gap-3 my-5">
+				<div class="col text-center">
 			    	<?php do_action('matchtrader_checkout_display_price_order');?>    	
 			    </div>
 			</div>
-			<div class="row justify-content-md-center my-5">
+			<div class="d-flex flex-row gap-3 justify-content-md-center my-5">
 			    <div class="col-md-4">
 			    	<div class="mt-4">
 						<button type="button" class="w-100 btn btn-primary next-step">Next</button>
