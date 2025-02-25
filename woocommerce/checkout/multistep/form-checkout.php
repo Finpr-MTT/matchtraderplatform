@@ -41,38 +41,47 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 	<!-- Step 1: Account Selection -->
 	<div class="step-content active" data-step="1">
 		<div class="container">
-    <div class="row gap-4 mt-5 mb-4">
-        <div class="col-12 p-4 mtt-bg-card">
+    <!-- First Section -->
+    <div class="d-flex flex-column flex-md-row gap-4 mt-5 mb-4">
+        <div class="flex-grow-1 p-4 mtt-bg-card">
             <?php do_action('woocommerce_checkout_before_customer_details'); ?>
         </div>
     </div>
-    <div class="row mb-4">
-    <div class="col-md-6 col-12 p-4 mtt-bg-card mb-3 mb-md-0">
-        <div class="mtt-addons">
-            <?php do_action('woocommerce_checkout_before_order_review'); ?>
+
+    <!-- Second Section -->
+    <div class="d-flex flex-column flex-md-row gap-4 mb-4">
+        <div class="flex-md-grow-1 p-4 mtt-bg-card">
+            <div class="mtt-addons">
+                <?php do_action('woocommerce_checkout_before_order_review'); ?>
+            </div>
+        </div>
+        <div class="flex-md-grow-1 p-4 mtt-bg-card">
+            <div class="mtt-order-review">
+                <?php do_action('woocommerce_checkout_before_order_review'); ?>
+            </div>
         </div>
     </div>
-    <div class="col-md-6 col-12 p-4 mtt-bg-card">
-        <div class="mtt-order-review">
-            <?php do_action('woocommerce_checkout_before_order_review'); ?>
-        </div>
-    </div>
-</div>
-    <div class="row gap-4 mb-4 p-4 mtt-bg-button rounded">
-        <div class="col-md-6 col-12 py-2">
+
+    <!-- Third Section -->
+    <div class="d-flex flex-column flex-md-row gap-4 mb-4 p-4 mtt-bg-button rounded">
+        <div class="flex-md-grow-1 py-2">
             <strong>Discount Code</strong>
         </div>
-        <div class="col-md-6 col-12">
+        <div class="flex-md-grow-1">
             <?php do_action('matchtrader_checkout_after_order_review'); ?>
         </div>
     </div>
-    <div class="row gap-4 my-5">
-        <div class="col-12 text-center">
+
+    <!-- Fourth Section -->
+    <div class="d-flex flex-column flex-md-row gap-4 my-5">
+        <div class="text-center">
             <?php do_action('matchtrader_checkout_display_price_order'); ?>
         </div>
     </div>
-    <div class="row gap-4 justify-content-md-center my-5">
-        <div class="col-sm-4 col-12">
+
+    <!-- Fifth Section -->
+    <div class="d-flex flex-column flex-md-row gap-4 justify-content-md-center my-5">
+        <div class="col-sm-4">
             <div class="mt-4">
                 <button type="button" class="w-100 btn btn-primary next-step">Next</button>
             </div>
