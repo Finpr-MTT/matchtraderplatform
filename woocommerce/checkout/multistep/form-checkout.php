@@ -55,6 +55,11 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 			    </div>			    
 			</div>
 			<div class="row justify-content-md-center my-5">
+				<div class="col-md-12">
+			    	<?php do_action('matchtrader_checkout_after_order_review');?>    	
+			    </div>
+			</div>
+			<div class="row justify-content-md-center my-5">
 				<div class="col-md-12 text-center">
 			    	<?php do_action('matchtrader_checkout_display_price_order');?>    	
 			    </div>
