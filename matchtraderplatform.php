@@ -93,14 +93,7 @@ add_action( 'woocommerce_form_field_text','reigel_custom_heading', 10, 2 );
 function reigel_custom_heading( $field, $key ){
     // will only execute if the field is billing_company and we are on the checkout page...
     if ( is_checkout() && ( $key == 'billing_email') ) {
-        $field .= '<p class="form-row form-row-wide">Custom Heading</p>';
+        $field .= '<hr></hr><h3 class="form-row form-row-wide text-center">Custom Heading</p>';
     }
     return $field;
-}
-
-// Add field type to WooCommerce form field 
-add_filter( 'woocommerce_form_field_heading','sc_woocommerce_form_field_heading', 10, 4 );
-function sc_woocommerce_form_field_heading($field, $key, $args, $value) {
-    $output = '<h3 class="form-row form-row-wide">'.__( $args['label'], 'woocommerce' ).'</h3>';
-    echo $output;
 }
