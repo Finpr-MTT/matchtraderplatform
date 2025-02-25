@@ -42,15 +42,15 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 	<div class="step-content active" data-step="1">
 		<div class="container">
 			<div class="row justify-content-md-center my-5">
-			    <div class="col-md-12">
+			    <div class="col-md-12 mtt-bg-card">
 			    	<?php do_action('woocommerce_checkout_before_customer_details'); ?>
 			    </div>
 			</div>
 			<div class="row justify-content-md-center my-5 g-3">
-			    <div class="col-md-6">
+			    <div class="col-md-6 mtt-bg-card">
 			    	<?php do_action('woocommerce_checkout_before_order_review'); ?>	    	
 			    </div>
-			    <div class="col-md-6">
+			    <div class="col-md-6 mtt-bg-card">
 			    	<?php do_action('woocommerce_checkout_before_order_review'); ?>	    	
 			    </div>			    
 			</div>

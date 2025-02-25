@@ -22,6 +22,10 @@ input:-webkit-autofill:active {
     background-color: var(--e-global-color-1a039d5);
 }
 
+.mtt-bg-card{
+    background-color: var(--e-global-color-1a039d5);
+}
+
 /*form styles*/
 .woocommerce form#matchTraderCheckout .form-row .input-text, 
 .woocommerce-page form#matchTraderCheckout .form-row .input-text {
