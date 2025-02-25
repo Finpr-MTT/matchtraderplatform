@@ -312,11 +312,11 @@ class MatchTrader_Public_WooCommerce {
         }
         
         ?>
-        <div class="matchtrader-order-total">
-            <h3><?php esc_html_e('Order Total', 'matchtraderplatform'); ?></h3>
+        <div class="matchtrader-order-total">\
             <div class="matchtrader-order-total-value">
-                <?php wc_cart_totals_order_total_html(); ?>
+                <h2><?php wc_cart_totals_order_total_html(); ?></h2>
             </div>
+            <p>Everything looks good? Lets continue</p>
         </div>
         <?php
     }
