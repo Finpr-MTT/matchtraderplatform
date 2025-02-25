@@ -89,7 +89,11 @@ add_action( 'woocommerce_after_checkout_billing_email_field', function() {
     echo '<hr>';
 });
 
-add_filter('woocommerce_checkout_fields', function ($fields) {
-    $fields['billing']['billing_email']['after'] = '<hr>'; // Adds <hr> below email
-    return $fields;
-});
+add_action( 'woocommerce_form_field_text','reigel_custom_heading', 10, 2 );
+function reigel_custom_heading( $field, $key ){
+    // will only execute if the field is billing_company and we are on the checkout page...
+    if ( is_checkout() && ( $key == 'billing_email') ) {
+        $field .= '<p class="form-row form-row-wide">Custom Heading</p>';
+    }
+    return $field;
+}
