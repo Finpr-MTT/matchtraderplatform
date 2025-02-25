@@ -84,6 +84,8 @@ input:-webkit-autofill:active {
     color: var(--e-global-color-b94397c);
     display: inline-block;
     margin-bottom: 0.5rem;
+    cursor: pointer; /* Indicate clickable */
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 #matchTraderCheckout .step-content {

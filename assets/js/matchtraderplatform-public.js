@@ -37,6 +37,7 @@
             });
         }
 
+        // Handle next button click
         nextButtons.on('click', function() {
             if (currentStep < steps.length) {
                 currentStep++;
@@ -44,9 +45,21 @@
             }
         });
 
+        // Handle previous button click
         prevButtons.on('click', function() {
             if (currentStep > 1) {
                 currentStep--;
+                updateProgress();
+            }
+        });
+
+        // Handle step number click
+        steps.on('click', function() {
+            const stepNumber = parseInt($(this).attr('data-step'));
+
+            // Only allow navigation to steps that are before or equal to the current step
+            if (stepNumber <= currentStep) {
+                currentStep = stepNumber;
                 updateProgress();
             }
         });
