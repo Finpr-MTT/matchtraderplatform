@@ -43,19 +43,19 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 		<div class="container">
     <!-- First Section -->
     <div class="d-flex flex-column flex-md-row gap-4 mt-5 mb-4">
-        <div class="flex-grow-1 p-4 mtt-bg-card">
+        <div class="flex-grow-1 p-4 mtt-bg-card rounded-lg">
             <?php do_action('woocommerce_checkout_before_customer_details'); ?>
         </div>
     </div>
 
     <!-- Second Section -->
     <div class="d-flex flex-column flex-md-row gap-4 mb-4">
-        <div class="flex-md-grow-1 p-4 mtt-bg-card">
+        <div class="flex-md-grow-1 p-4 mtt-bg-card rounded-lg">
             <div class="mtt-addons">
                 <?php do_action('woocommerce_checkout_before_order_review'); ?>
             </div>
         </div>
-        <div class="flex-md-grow-1 p-4 mtt-bg-card">
+        <div class="flex-md-grow-1 p-4 mtt-bg-card rounded-lg">
             <div class="mtt-order-review">
                 <?php do_action('woocommerce_checkout_before_order_review'); ?>
             </div>

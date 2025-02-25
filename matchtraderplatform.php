@@ -94,8 +94,8 @@ function reigel_custom_heading( $field, $key ){
     // will only execute if the field is billing_company and we are on the checkout page...
     if ( is_checkout() && ( $key == 'billing_email') ) {
         $field .= '<div class="clearfix my-5">
-                    <hr></hr>
-                    <h3 class="form-row form-row-wide text-center">Custom Heading</h3>
+                    <hr class="mb-5"></hr>
+                    <h3 class="form-row form-row-wide">2. Billing Information</h3>
                     </div>
                     ';
     }
