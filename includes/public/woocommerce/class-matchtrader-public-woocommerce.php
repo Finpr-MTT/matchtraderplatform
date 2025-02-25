@@ -193,6 +193,15 @@ class MatchTrader_Public_WooCommerce {
 
         // Add customized billing fields with WooCommerce classes
         $fields['billing'] = [
+            'billing_email' => [
+                'label' => __('Email', 'matchtraderplatform'),
+                'required' => true,
+                'class' => ['form-row-wide'],
+                'input_class' => ['input-text'],
+                'placeholder' => __('Email', 'matchtraderplatform'),
+                'default' => $account_data['email'] ?? '',
+                'custom_attributes' => get_custom_attributes('billing_email', $is_prefilled),
+            ],
             'billing_first_name' => [
                 'label' => __('First Name', 'matchtraderplatform'),
                 'required' => true,
@@ -211,20 +220,11 @@ class MatchTrader_Public_WooCommerce {
                 'clear' => true,
                 'default' => $account_data['personalDetails']['lastname'] ?? '',
                 // 'custom_attributes' => get_custom_attributes('billing_last_name', $is_prefilled),
-            ],
-            'billing_email' => [
-                'label' => __('Email', 'matchtraderplatform'),
-                'required' => true,
-                'class' => ['form-row-first'],
-                'input_class' => ['input-text'],
-                'placeholder' => __('Email', 'matchtraderplatform'),
-                'default' => $account_data['email'] ?? '',
-                'custom_attributes' => get_custom_attributes('billing_email', $is_prefilled),
-            ],
+            ],            
             'billing_phone' => [
                 'label' => __('Phone Number', 'matchtraderplatform'),
                 'required' => true,
-                'class' => ['form-row-last'],
+                'class' => ['form-row-wide'],
                 'input_class' => ['input-text'],
                 'placeholder' => __('Phone Number', 'matchtraderplatform'),
                 'clear' => true,
@@ -244,7 +244,7 @@ class MatchTrader_Public_WooCommerce {
                 'label' => __('Country', 'matchtraderplatform'),
                 'required' => true,
                 'type' => 'select',
-                'class' => ['form-row-first', 'update_totals_on_change'],
+                'class' => ['form-row-wide', 'update_totals_on_change'],
                 'input_class' => ['input-text'],
                 'options' => WC()->countries->get_countries(),
                 'default' => $country,
@@ -253,7 +253,7 @@ class MatchTrader_Public_WooCommerce {
             'billing_state' => [
                 'label' => __('State/Region', 'matchtraderplatform'),
                 'required' => true,
-                'class' => ['form-row-last'],
+                'class' => ['form-row-wide'],
                 'input_class' => ['input-text'],
                 'placeholder' => __('State/Region', 'matchtraderplatform'),
                 'clear' => true,
@@ -266,7 +266,7 @@ class MatchTrader_Public_WooCommerce {
             'billing_city' => [
                 'label' => __('City', 'matchtraderplatform'),
                 'required' => true,
-                'class' => ['form-row-first'],
+                'class' => ['form-row-wide'],
                 'input_class' => ['input-text'],
                 'placeholder' => __('City', 'matchtraderplatform'),
                 'default' => $account_data['addressDetails']['city'] ?? '',
@@ -275,7 +275,7 @@ class MatchTrader_Public_WooCommerce {
             'billing_postcode' => [
                 'label' => __('Postal Code', 'matchtraderplatform'),
                 'required' => true,
-                'class' => ['form-row-last'],
+                'class' => ['form-row-wide'],
                 'input_class' => ['input-text'],
                 'placeholder' => __('Postal Code', 'matchtraderplatform'),
                 'clear' => true,
