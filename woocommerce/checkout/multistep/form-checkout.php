@@ -56,7 +56,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 			</div>
 			<div class="row justify-content-md-center my-5 g-3">
 				<div class="col-md-6">
-			    	<h3>Discount Code</h3>   	
+			    	<p><strong>Discount Code</strong></p>   	
 			    </div>
 			    <div class="col-md-6">
 			    	<?php do_action('matchtrader_checkout_after_order_review');?>    	
