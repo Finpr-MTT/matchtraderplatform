@@ -55,44 +55,9 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 			    </div>			    
 			</div>
 			<div class="row justify-content-md-center">
-				<div class="col-md-12">
+				<div class="col-md-12 text-center">
 			    	<?php do_action('matchtrader_checkout_display_price_order');?>    	
 			    </div>
-			</div>
-			<div class="d-flex justify-content-center my-4">
-		    	<div class="card text-white bg-dark p-3 shadow-sm w-80">
-		        	<div class="card-body">
-			            <?php
-			            // Get the last item in cart
-			            $cart_items = WC()->cart->get_cart();
-			            $last_item = end($cart_items);
-			            
-			            if ($last_item) {
-			                $_product = apply_filters('woocommerce_cart_item_product', $last_item['data'], $last_item, key($cart_items));
-			                $product_name = $_product->get_name();
-			                ?>
-			                <div class="d-flex flex-column justify-content-center align-items-center mb-3">
-			                    <div class="woocommerce-product-name text-center">
-			                        <strong><?php echo wp_kses_post($product_name); ?></strong>
-			                    </div>
-			                    <div class="woocommerce-product-price text-center">
-			                    	<h3>
-				                    	<strong>
-				                        <?php 
-				                        echo apply_filters(
-				                            'woocommerce_cart_item_subtotal',
-				                            WC()->cart->get_product_subtotal($_product, $last_item['quantity']),
-				                            $last_item,
-				                            key($cart_items)
-				                        ); 
-				                        ?>
-				                        </strong>
-			                    	</h3>
-			                    </div>
-			                </div>
-		            	<?php } ?>
-		           	</div>
-		        </div>
 			</div>
 			<div class="row justify-content-md-center">
 			    <div class="col-md-4">
