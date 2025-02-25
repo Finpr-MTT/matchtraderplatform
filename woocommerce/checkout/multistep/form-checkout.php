@@ -58,7 +58,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 			    	</div>    	
 			    </div>			    
 			</div>
-			<div class="d-flex flex-row gap-4 mb-4 mtt-bg-button rounded">
+			<div class="d-flex flex-row gap-4 mb-4 p-4 mtt-bg-button rounded">
 				<div class="col py-2">
 			    	<strong>Discount Code</strong>   	
 			    </div>
