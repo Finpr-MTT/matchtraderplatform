@@ -394,7 +394,7 @@ class MatchTrader_Public_WooCommerce {
     }
 
 
-    public function checkout_addons_after_product_selection( $field, $key ){
+    public function checkout_addons_after_product_selection(){
         echo '<div class="mtt-addons-container">
                <h4 class="mtt-heading">Choose Addons</h4>
                <div class="mtt-addons-wrap">
