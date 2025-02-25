@@ -60,7 +60,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 			    </div>
 			</div>
 			<div class="row justify-content-md-center">
-			    <div class="col-md-12">
+			    <div class="col-md-4">
 			    	<div class="mt-4">
 						<button type="button" class="w-100 btn btn-primary next-step">Next</button>
 					</div>	    	
