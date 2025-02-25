@@ -73,7 +73,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
     </div>
 
     <!-- Fourth Section -->
-    <div class="d-flex flex-column flex-md-row gap-4 my-5">
+    <div class="d-flex flex-column flex-md-row justify-content-md-center gap-4 my-5">
         <div class="text-center">
             <?php do_action('matchtrader_checkout_display_price_order'); ?>
         </div>
@@ -83,7 +83,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
     <div class="d-flex flex-column flex-md-row gap-4 justify-content-md-center my-5">
         <div class="col-sm-4">
             <div class="mt-4">
-                <button type="button" class="w-100 btn btn-primary next-step">Next</button>
+                <button type="button" class="p-3 w-100 btn btn-primary next-step">Next</button>
             </div>
         </div>
     </div>
