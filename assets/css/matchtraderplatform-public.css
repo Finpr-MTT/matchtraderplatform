@@ -21,10 +21,16 @@ input:-webkit-autofill:active {
 .mtt-bg-button{
     background-color: var(--e-global-color-1a039d5);
 }
+.mtt-bg-button-previous {
+    border: 1px solid var(--e-global-color-1aaab66);
+    background: var(--e-global-color-4cdfdf0);
+}
 
 .mtt-bg-card{
     background-color: var(--e-global-color-b94397c);
 }
+
+
 
 /*form styles*/
 .woocommerce form#matchTraderCheckout .form-row .input-text, 
