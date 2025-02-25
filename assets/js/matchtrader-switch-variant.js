@@ -52,7 +52,7 @@
                 },
                 success: function (response) {
                     console.log('Order total response:', response);
-                    $('.matchtrader-order-total-value').html(response.order_total).fadeTo(300, 1);
+                    $('.matchtrader-order-total-value').html('<strong>' + response.order_total + '</strong>').fadeTo(300, 1);
                 },
                 error: function (xhr, status, error) {
                     console.error('AJAX error:', error);
