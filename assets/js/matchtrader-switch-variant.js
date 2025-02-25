@@ -27,6 +27,7 @@
                         // Update cart fragments and checkout details
                         $(document.body).trigger('wc_fragment_refresh');
                         $(document.body).trigger('update_checkout');
+                        updateOrderTotal();
                     } else {
                         alert(response.data.message);
                     }
@@ -66,7 +67,6 @@
         // Event listener for radio button changes (update cart & order total)
         $('.matchtrader-radio-group input[type="radio"]').on('change', function () {
             updateCart();
-            updateOrderTotal();
         });
 
         // Event listener for the "Update Cart" button
