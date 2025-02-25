@@ -64,10 +64,10 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 
     <!-- Third Section -->
     <div class="d-flex flex-column flex-md-row gap-4 mb-4 p-4 mtt-bg-button rounded">
-        <div class="flex-md-grow-1 py-2">
+        <div class="flex-md-grow-1 col py-2">
             <strong>Discount Code</strong>
         </div>
-        <div class="flex-md-grow-1">
+        <div class="flex-md-grow-1 col">
             <?php do_action('matchtrader_checkout_after_order_review'); ?>
         </div>
     </div>
