@@ -42,25 +42,25 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 	<div class="step-content active" data-step="1">
 		<div class="container">
 			<div class="row justify-content-md-center">
-			    <div class="col-md-12 px-4">
+			    <div class="col-md-12">
 			    	<?php do_action('woocommerce_checkout_before_customer_details'); ?>
 			    </div>
 			</div>
 			<div class="row justify-content-md-center g-3">
-			    <div class="col-md-6 px-4">
+			    <div class="col-md-6">
 			    	<?php do_action('woocommerce_checkout_before_order_review'); ?>	    	
 			    </div>
-			    <div class="col-md-6 px-4">
+			    <div class="col-md-6">
 			    	<?php do_action('woocommerce_checkout_before_order_review'); ?>	    	
 			    </div>			    
 			</div>
 			<div class="row justify-content-md-center">
-				<div class="col-md-12 px-4">
+				<div class="col-md-12">
 			    	<?php do_action('matchtrader_checkout_after_order_review');?>    	
 			    </div>
 			</div>
 			<div class="row justify-content-md-center">
-			    <div class="col-md-12 px-4">
+			    <div class="col-md-12">
 			    	<div class="mt-4">
 						<button type="button" class="w-100 btn btn-primary next-step">Next</button>
 					</div>	    	
