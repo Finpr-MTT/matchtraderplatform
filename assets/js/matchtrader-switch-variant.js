@@ -55,10 +55,10 @@
                 },
                 success: function (response) {
                     console.log('Order total response:', response);
-                    if (response && response.success && response.order_total) {
-                        $('.matchtrader-order-total-value').html(response.order_total).fadeTo(300, 1);
+                    if (response && response.success && response.data && response.data.order_total) {
+                        $('.matchtrader-order-total-value').html(response.data.order_total).fadeTo(300, 1);
                     } else {
-                        console.error('Invalid response:', response);
+                        console.error('Invalid response format:', response);
                     }
                 },
                 error: function (xhr, status, error) {
@@ -66,6 +66,7 @@
                 }
             });
         }
+
 
         // Event listener for radio button changes (update cart & order total)
         $('.matchtrader-radio-group input[type="radio"]').on('change', function () {
