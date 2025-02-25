@@ -116,7 +116,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 			<div class="d-flex flex-column flex-md-row gap-4 mt-5 mb-4">
 				<div class="flex-grow-1 p-4 rounded">
 					<h4>Choose Payment Method</h4>
-					<?php do_action('woocommerce_checkout_payment'); ?>
+					<?php do_action('woocommerce_checkout_order_review'); ?>
 				</div>
 			</div>
 		</div>
