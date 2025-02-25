@@ -37,6 +37,7 @@ class MatchTrader_Public_WooCommerce {
             add_filter('woocommerce_locate_template', [$this, 'matchtrader_override_templates'], 10, 3);            
             add_action('wp_ajax_apply_coupon_action', [$this, 'apply_coupon_action']);
             add_action('wp_ajax_nopriv_apply_coupon_action', [$this, 'apply_coupon_action']);
+            add_action('matchtrader_checkout_display_price_order', [$this, 'matchtrader_customize_order_review']);
         }
 
         if (get_option('matchtrader_enable_mtt_checkout', 'default') === 'default') {
@@ -301,6 +302,21 @@ class MatchTrader_Public_WooCommerce {
         add_action('woocommerce_checkout_before_order_review', 'woocommerce_order_review', 10);
         add_action('woocommerce_review_order_before_payment', 'woocommerce_order_review', 10);
         add_action('woocommerce_checkout_order_review', 'woocommerce_checkout_payment', 20);
+    }
+
+    public function matchtrader_customize_order_review() {
+        if (!is_checkout()) {
+            return;
+        }
+        
+        ?>
+        <div class="matchtrader-order-total">
+            <h3><?php esc_html_e('Order Total', 'matchtraderplatform'); ?></h3>
+            <div class="matchtrader-order-total-value">
+                <?php wc_cart_totals_order_total_html(); ?>
+            </div>
+        </div>
+        <?php
     }
 
     /**
