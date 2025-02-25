@@ -52,8 +52,10 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 			    </div>
 			    <div class="col-md-6 border px-4">
 			    	<?php do_action('woocommerce_checkout_before_order_review'); ?>	    	
-			    </div>
-			    <div class="col-md-12 border px-4">
+			    </div>			    
+			</div>
+			<div class="row justify-content-md-center gap-3">
+				<div class="col-md-12 border px-4">
 			    	<div class="border p-3 mt-4">
 			    		<?php do_action('matchtrader_checkout_after_order_review');?>
 			    	</div>		    	
