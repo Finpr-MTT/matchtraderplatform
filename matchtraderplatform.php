@@ -23,7 +23,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('MATCHTRADERPLUGIN_VERSION', '1.0.518');
+define('MATCHTRADERPLUGIN_VERSION', '1.0.519');
 define('MATCHTRADERPLUGIN_PATH', plugin_dir_path(__FILE__));
 define('MATCHTRADERPLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -80,24 +80,3 @@ class MatchTraderPlatform {
 
 // Initialize the plugin
 new MatchTraderPlatform();
-
-add_action( 'woocommerce_before_checkout_billing_email_field', function() {
-    echo '<h3>Contact Information</h3>';
-});
-
-add_action( 'woocommerce_after_checkout_billing_email_field', function() {
-    echo '<hr>';
-});
-
-add_action( 'woocommerce_form_field_text','reigel_custom_heading', 10, 2 );
-function reigel_custom_heading( $field, $key ){
-    // will only execute if the field is billing_company and we are on the checkout page...
-    if ( is_checkout() && ( $key == 'billing_email') ) {
-        $field .= '<div class="clearfix my-5">
-                    <hr class="mb-5"></hr>
-                    <h4 class="form-row form-row-wide">2. Billing Information</h4>
-                    </div>
-                    ';
-    }
-    return $field;
-}

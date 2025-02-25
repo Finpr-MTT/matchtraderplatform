@@ -35,6 +35,7 @@ class MatchTrader_Public_WooCommerce {
 
         if ($checkout_mode !== 'none') { 
             add_filter('woocommerce_locate_template', [$this, 'matchtrader_override_templates'], 10, 3);            
+            add_action('woocommerce_form_field_text', [$this, 'checkout_field_heading_under_email', 10, 2]);            
             add_action('wp_ajax_apply_coupon_action', [$this, 'apply_coupon_action']);
             add_action('wp_ajax_nopriv_apply_coupon_action', [$this, 'apply_coupon_action']);            
         }
@@ -377,6 +378,18 @@ class MatchTrader_Public_WooCommerce {
 
         // Ensure the response has the correct structure
         wp_send_json_success(['order_total' => $order_total]);
+    }
+
+    public function checkout_field_heading_under_email( $field, $key ){
+        // will only execute if the field is billing_company and we are on the checkout page...
+        if ( is_checkout() && ( $key == 'billing_email') ) {
+            $field .= '<div class="clearfix my-5">
+                        <hr class="mb-5"></hr>
+                        <h4 class="form-row form-row-wide">2. Billing Information</h4>
+                        </div>
+                        ';
+        }
+        return $field;
     }
 }
 

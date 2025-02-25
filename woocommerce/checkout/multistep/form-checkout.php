@@ -40,7 +40,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 
 	<!-- Step 1: Account Selection -->
 	<div class="step-content active" data-step="1">
-		<div class="container">
+		<div class="container p-0">
 		    <!-- First Section -->
 		    <div class="d-flex flex-column flex-md-row gap-4 mt-5 mb-4">
 		        <div class="flex-grow-1 p-4 mtt-bg-card rounded">
@@ -95,7 +95,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 
 	<!-- Step 2: Billing Details -->
 	<div class="step-content" data-step="2">		
-		<div class="container">
+		<div class="container p-0">
 			<div class="d-flex flex-column flex-md-row gap-4 mt-5 mb-4">
 				<div class="flex-grow-1 p-4 mtt-bg-card rounded">
 					<div id="customer_details">
@@ -112,7 +112,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 
 	<!-- Step 3: Payment -->
 	<div class="step-content" data-step="3">
-		<div class="container">
+		<div class="container p-0">
 			<div class="row justify-content-md-center my-5">
 				<div class="col-md-12">
 					<?php do_action('woocommerce_checkout_payment'); ?>
