@@ -72,8 +72,8 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 	<!-- Step 2: Billing Details -->
 	<div class="step-content" data-step="2">		
 		<div class="container">
-			<div class="row justify-content-md-center">
-				<div class="col-md-12 p-4 border">
+			<div class="row justify-content-md-center my-5">
+				<div class="col-md-12">
 					<div id="customer_details">
 						<?php do_action( 'woocommerce_checkout_billing' ); ?>
 					</div>
@@ -89,8 +89,8 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 	<!-- Step 3: Payment -->
 	<div class="step-content" data-step="3">
 		<div class="container">
-			<div class="row justify-content-md-center">
-				<div class="col-md-12 p-4 border">
+			<div class="row justify-content-md-center my-5">
+				<div class="col-md-12">
 					<?php do_action('woocommerce_checkout_payment'); ?>
 					<?php do_action('woocommerce_checkout_order_review'); ?>
 
