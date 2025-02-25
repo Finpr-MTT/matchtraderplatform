@@ -2,7 +2,6 @@
     'use strict';
 
     jQuery(document).ready(function ($) {
-        // Function to update the cart
         function updateCart() {
             let selectedAttributes = {};
             $('.matchtrader-radio-group input[type="radio"]:checked').each(function () {
@@ -20,17 +19,19 @@
                     variation_attributes: selectedAttributes
                 },
                 beforeSend: function () {
+                    console.log('Updating cart...'); // Debug log
                     $('#matchtrader-update-cart').prop('disabled', true).text('Updating...');
                 },
                 success: function (response) {
                     if (response.success) {
-                        // Update cart fragments and checkout details
+                        console.log('Cart updated successfully. Refreshing order total...');
                         $(document.body).trigger('wc_fragment_refresh');
                         $(document.body).trigger('update_checkout');
 
                         // Refresh order total
                         updateOrderTotal();
                     } else {
+                        console.error('Cart update failed:', response);
                         alert(response.data.message);
                     }
                 },
@@ -40,8 +41,8 @@
             });
         }
 
-        // Function to update order total dynamically
         function updateOrderTotal() {
+            console.log('Sending AJAX request to update order total...');
             $.ajax({
                 type: 'POST',
                 url: wc_checkout_params.ajax_url, // WooCommerce AJAX URL
@@ -49,12 +50,19 @@
                     action: 'matchtrader_update_order_review'
                 },
                 beforeSend: function () {
-                    $('.matchtrader-order-total-value').fadeTo(300, 0.5); // Add fade effect
+                    console.log('Updating order total...'); // Debug log
+                    $('.matchtrader-order-total-value').fadeTo(300, 0.5);
                 },
                 success: function (response) {
-                    if (response && response.order_total) {
+                    console.log('Order total response:', response);
+                    if (response && response.success && response.order_total) {
                         $('.matchtrader-order-total-value').html(response.order_total).fadeTo(300, 1);
+                    } else {
+                        console.error('Invalid response:', response);
                     }
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX error:', error);
                 }
             });
         }

@@ -366,9 +366,18 @@ class MatchTrader_Public_WooCommerce {
     }
 
     public function matchtrader_ajax_update_order_review() {
+        if (!defined('DOING_AJAX') || !DOING_AJAX) {
+            wp_send_json_error(['message' => 'Invalid request']);
+            return;
+        }
+
+        // Start capturing output
         ob_start();
-        wc_cart_totals_order_total_html(); // Get order total
+        wc_cart_totals_order_total_html();
         $order_total = ob_get_clean();
+
+        // Log the response to debug
+        error_log('AJAX Order Total Response: ' . $order_total);
 
         wp_send_json_success(['order_total' => $order_total]);
     }
