@@ -48,9 +48,12 @@
                 data: {
                     action: 'matchtrader_update_order_review'
                 },
+                beforeSend: function () {
+                    $('.matchtrader-order-total-value').fadeTo(300, 0.5); // Add fade effect
+                },
                 success: function (response) {
                     if (response && response.order_total) {
-                        $('.matchtrader-order-total-value').html(response.order_total);
+                        $('.matchtrader-order-total-value').html(response.order_total).fadeTo(300, 1);
                     }
                 }
             });
