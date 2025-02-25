@@ -23,7 +23,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('MATCHTRADERPLUGIN_VERSION', '1.0.517');
+define('MATCHTRADERPLUGIN_VERSION', '1.0.518');
 define('MATCHTRADERPLUGIN_PATH', plugin_dir_path(__FILE__));
 define('MATCHTRADERPLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -95,7 +95,7 @@ function reigel_custom_heading( $field, $key ){
     if ( is_checkout() && ( $key == 'billing_email') ) {
         $field .= '<div class="clearfix my-5">
                     <hr class="mb-5"></hr>
-                    <h3 class="form-row form-row-wide">2. Billing Information</h3>
+                    <h4 class="form-row form-row-wide">2. Billing Information</h4>
                     </div>
                     ';
     }
