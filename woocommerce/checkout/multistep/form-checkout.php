@@ -97,13 +97,13 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 	<div class="step-content" data-step="2">		
 		<div class="container p-0">
 			<div class="d-flex flex-column flex-md-row gap-4 mt-5 mb-4">
-				<div class="flex-grow-1 p-4 mtt-bg-card rounded">
+				<div class="flex-grow-1 p-4 rounded">
 					<div id="customer_details">
 						<?php do_action( 'woocommerce_checkout_billing' ); ?>
 					</div>
 					<div class="d-flex justify-content-between my-5">
-						<button type="button" class="btn mtt-bg-button-previous w-25 prev-step">Back</button>
-						<button type="button" class="btn mtt-bg-button-next w-25 next-step">Next</button>
+						<button type="button" class="p-3 btn mtt-bg-button-previous w-25 prev-step">Back</button>
+						<button type="button" class="p-3 btn mtt-bg-button-next w-25 next-step">Next</button>
 					</div>
 				</div>
 			</div>
@@ -117,10 +117,6 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 				<div class="col-md-12">
 					<?php do_action('woocommerce_checkout_payment'); ?>
 					<?php do_action('woocommerce_checkout_order_review'); ?>
-
-					<div class="text-center mt-4">
-						<button type="button" class="btn btn-secondary w-100 prev-step">Back</button>
-					</div>
 				</div>
 			</div>
 		</div>
