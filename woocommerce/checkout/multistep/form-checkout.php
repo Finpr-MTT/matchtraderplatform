@@ -41,53 +41,56 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 	<!-- Step 1: Account Selection -->
 	<div class="step-content active" data-step="1">
 		<div class="container">
-    <!-- First Section -->
-    <div class="d-flex flex-column flex-md-row gap-4 mt-5 mb-4">
-        <div class="flex-grow-1 p-4 mtt-bg-card rounded">
-            <?php do_action('woocommerce_checkout_before_customer_details'); ?>
-        </div>
-    </div>
+		    <!-- First Section -->
+		    <div class="d-flex flex-column flex-md-row gap-4 mt-5 mb-4">
+		        <div class="flex-grow-1 p-4 mtt-bg-card rounded">
+		        	<h4>Account Information</h4>
+		            <?php do_action('woocommerce_checkout_before_customer_details'); ?>
+		        </div>
+		    </div>
 
-    <!-- Second Section -->
-    <div class="d-flex flex-column flex-md-row gap-4 mb-4">
-        <div class="flex-md-grow-1 p-4 mtt-bg-card rounded">
-            <div class="mtt-addons">
-                <?php do_action('woocommerce_checkout_before_order_review'); ?>
-            </div>
-        </div>
-        <div class="flex-md-grow-1 p-4 mtt-bg-card rounded">
-            <div class="mtt-order-review">
-                <?php do_action('woocommerce_checkout_before_order_review'); ?>
-            </div>
-        </div>
-    </div>
+		    <!-- Second Section -->
+		    <div class="d-flex flex-column flex-md-row gap-4 mb-4">
+		        <div class="flex-md-grow-1 p-4 mtt-bg-card rounded">
+		            <div class="mtt-addons">
+		            	<h4>Available Addons</h4>
+		                <?php do_action('woocommerce_checkout_before_order_review'); ?>
+		            </div>
+		        </div>
+		        <div class="flex-md-grow-1 p-4 mtt-bg-card rounded">
+		            <div class="mtt-order-review">
+		            	<h4>Order Details</h4>
+		                <?php do_action('woocommerce_checkout_before_order_review'); ?>
+		            </div>
+		        </div>
+		    </div>
 
-    <!-- Third Section -->
-    <div class="d-flex flex-column flex-md-row gap-4 mb-4 py-5 px-4 mtt-bg-button rounded">
-        <div class="flex-md-grow-1 col py-2">
-            <strong>Discount Code</strong>
-        </div>
-        <div class="flex-md-grow-1 col">
-            <?php do_action('matchtrader_checkout_after_order_review'); ?>
-        </div>
-    </div>
+		    <!-- Third Section -->
+		    <div class="d-flex flex-column flex-md-row gap-4 mb-4 py-5 px-4 mtt-bg-button rounded">
+		        <div class="flex-md-grow-1 col py-2">
+		            <strong>Discount Code</strong>
+		        </div>
+		        <div class="flex-md-grow-1 col">
+		            <?php do_action('matchtrader_checkout_after_order_review'); ?>
+		        </div>
+		    </div>
 
-    <!-- Fourth Section -->
-    <div class="d-flex flex-column flex-md-row justify-content-md-center gap-4 my-5">
-        <div class="text-center">
-            <?php do_action('matchtrader_checkout_display_price_order'); ?>
-        </div>
-    </div>
+		    <!-- Fourth Section -->
+		    <div class="d-flex flex-column flex-md-row justify-content-md-center gap-4 my-5">
+		        <div class="text-center">
+		            <?php do_action('matchtrader_checkout_display_price_order'); ?>
+		        </div>
+		    </div>
 
-    <!-- Fifth Section -->
-    <div class="d-flex flex-column flex-md-row gap-4 justify-content-md-center my-5">
-        <div class="col-sm-4">
-            <div class="mt-4">
-                <button type="button" class="p-3 w-100 btn mtt-bg-button-next next-step">Next</button>
-            </div>
-        </div>
-    </div>
-</div>
+		    <!-- Fifth Section -->
+		    <div class="d-flex flex-column flex-md-row gap-4 justify-content-md-center my-5">
+		        <div class="col-sm-4">
+		            <div class="mt-4">
+		                <button type="button" class="p-3 w-100 btn mtt-bg-button-next next-step">Next</button>
+		            </div>
+		        </div>
+		    </div>
+		</div>
 	</div>
 
 	<!-- Step 2: Billing Details -->
