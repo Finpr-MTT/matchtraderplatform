@@ -80,3 +80,11 @@ class MatchTraderPlatform {
 
 // Initialize the plugin
 new MatchTraderPlatform();
+
+add_action( 'woocommerce_before_checkout_billing_email_field', function() {
+    echo '<h3>Contact Information</h3>';
+});
+
+add_action( 'woocommerce_after_checkout_billing_email_field', function() {
+    echo '<hr>';
+});
