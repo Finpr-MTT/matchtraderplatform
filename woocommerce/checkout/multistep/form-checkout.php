@@ -46,18 +46,18 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
             <?php do_action('woocommerce_checkout_before_customer_details'); ?>
         </div>
     </div>
-    <div class="row gap-4 mb-4">
-        <div class="col-md-6 col-12 p-4 mtt-bg-card">
-            <div class="mtt-addons">
-                <?php do_action('woocommerce_checkout_before_order_review'); ?>
-            </div>
-        </div>
-        <div class="col-md-6 col-12 p-4 mtt-bg-card">
-            <div class="mtt-order-review">
-                <?php do_action('woocommerce_checkout_before_order_review'); ?>
-            </div>
+    <div class="row mb-4">
+    <div class="col-md-6 col-12 p-4 mtt-bg-card mb-3 mb-md-0">
+        <div class="mtt-addons">
+            <?php do_action('woocommerce_checkout_before_order_review'); ?>
         </div>
     </div>
+    <div class="col-md-6 col-12 p-4 mtt-bg-card">
+        <div class="mtt-order-review">
+            <?php do_action('woocommerce_checkout_before_order_review'); ?>
+        </div>
+    </div>
+</div>
     <div class="row gap-4 mb-4 p-4 mtt-bg-button rounded">
         <div class="col-md-6 col-12 py-2">
             <strong>Discount Code</strong>
