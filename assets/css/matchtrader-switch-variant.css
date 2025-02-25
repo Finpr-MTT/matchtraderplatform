@@ -25,12 +25,12 @@
 
 .matchtrader-radio-option label {
     padding: 10px 20px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--e-global-color-1aaab66);
     border-radius: 20px;
     cursor: pointer;
     transition: all 0.3s ease;
-    background: #f8f9fa;
-    color: #333;
+    background: var(--e-global-color-4cdfdf0);
+    color: var(--e-global-color-primary);
     text-align: center;
     display: flex;
     align-items: center;
@@ -38,7 +38,6 @@
 }
 
 .matchtrader-radio-option input[type="radio"]:checked + label {
-    background-color: #007bff;
+    background-color: var(--e-global-color-accent);
     color: white;
-    border-color: #007bff;
 }

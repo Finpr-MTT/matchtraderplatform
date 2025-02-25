@@ -41,19 +41,19 @@ input:-webkit-autofill:active {
     position: absolute;
     width: 100%;
     height: 2px;
-    background: #dee2e6; /* Default color for inactive progress bar */
+    background: var(--e-global-color-4cdfdf0); /* Default color for inactive progress bar */
     top: 20px;
     left: 50%;
     z-index: -1;
 }
 
 #matchTraderCheckout .step.active .step-number {
-    background: #0d6efd; /* Active step number color */
-    color: white;
+    background: var(--e-global-color-accent); /* Active step number color */
+    color: var(--e-global-color-primary);
 }
 
 #matchTraderCheckout .step.active.progress-active:not(:last-child)::before {
-    background: #0d6efd; /* Active progress bar color */
+    background: var(--e-global-color-accent); /* Active progress bar color */
 }
 
 #matchTraderCheckout .step-number {
@@ -61,7 +61,7 @@ input:-webkit-autofill:active {
     height: 40px;
     line-height: 40px;
     border-radius: 50%;
-    background: #dee2e6; /* Inactive step number color */
+    background: var(--e-global-color-4cdfdf0); /* Inactive step number color */
     display: inline-block;
     margin-bottom: 0.5rem;
 }
