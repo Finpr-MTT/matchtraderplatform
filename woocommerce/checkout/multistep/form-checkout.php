@@ -47,11 +47,15 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 			    </div>
 			</div>
 			<div class="row justify-content-md-center my-5 g-3">
-			    <div class="col-md-6 mtt-bg-card">
-			    	<?php do_action('woocommerce_checkout_before_order_review'); ?>	    	
+			    <div class="col-md-6">
+			    	<div class="mtt-addons mtt-bg-card">
+			    		<?php do_action('woocommerce_checkout_before_order_review'); ?>	
+			    	</div>    	
 			    </div>
-			    <div class="col-md-6 mtt-bg-card">
-			    	<?php do_action('woocommerce_checkout_before_order_review'); ?>	    	
+			    <div class="col-md-6">
+			    	<div class="mtt-order-review mtt-bg-card">
+			    		<?php do_action('woocommerce_checkout_before_order_review'); ?>	
+			    	</div>    	
 			    </div>			    
 			</div>
 			<div class="row justify-content-md-center my-5 g-3 shadow-none p-4 mtt-bg-button rounded">
