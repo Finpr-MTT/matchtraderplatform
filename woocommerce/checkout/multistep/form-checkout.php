@@ -41,12 +41,12 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 	<!-- Step 1: Account Selection -->
 	<div class="step-content active" data-step="1">
 		<div class="container">
-			<div class="d-flex flex-row gap-3 my-5">
+			<div class="d-flex flex-row gap-4 mt-5 mb-4">
 			    <div class="col p-4 mtt-bg-card">
 			    	<?php do_action('woocommerce_checkout_before_customer_details'); ?>
 			    </div>
 			</div>
-			<div class="d-flex flex-row gap-3 my-5">
+			<div class="d-flex flex-row gap-4 mb-4">
 			    <div class="col p-4 mtt-bg-card">
 			    	<div class="mtt-addons ">
 			    		<?php do_action('woocommerce_checkout_before_order_review'); ?>	
@@ -58,7 +58,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 			    	</div>    	
 			    </div>			    
 			</div>
-			<div class="d-flex flex-row gap-3 my-5 p-4 mtt-bg-button rounded">
+			<div class="d-flex flex-row gap-4 mb-4 mtt-bg-button rounded">
 				<div class="col py-2">
 			    	<strong>Discount Code</strong>   	
 			    </div>
@@ -66,12 +66,12 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 			    	<?php do_action('matchtrader_checkout_after_order_review');?>    	
 			    </div>
 			</div>
-			<div class="d-flex flex-row gap-3 my-5">
+			<div class="d-flex flex-row gap-4 my-5">
 				<div class="col text-center">
 			    	<?php do_action('matchtrader_checkout_display_price_order');?>    	
 			    </div>
 			</div>
-			<div class="d-flex flex-row gap-3 justify-content-md-center my-5">
+			<div class="d-flex flex-row gap-4 justify-content-md-center my-5">
 			    <div class="col-md-4">
 			    	<div class="mt-4">
 						<button type="button" class="w-100 btn btn-primary next-step">Next</button>
