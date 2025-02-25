@@ -360,7 +360,7 @@ class MatchTrader_Public_WooCommerce {
         echo '<div class="matchtrader-coupon-form"> 
             <div class="input-group">                
                 <input type="text" id="coupon_code_field" class="form-control" placeholder="Coupon Code" aria-label="Apply Coupon Code" aria-describedby="apply_coupon_button">
-                <button class="btn btn-success" type="button" id="apply_coupon_button">Apply Coupon</button>
+                <button class="btn py-3 border" type="button" id="apply_coupon_button">Apply Coupon</button>
             </div>        
         </div>';
     }
