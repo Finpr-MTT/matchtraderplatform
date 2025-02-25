@@ -356,8 +356,8 @@ class MatchTrader_Public_WooCommerce {
      */
     public function add_coupon_form_before_payment()
     {
-        echo '<div class="matchtrader-coupon-form p-1"> 
-            <div class="input-group mb-3">                
+        echo '<div class="matchtrader-coupon-form"> 
+            <div class="input-group">                
                 <input type="text" id="coupon_code_field" class="form-control" placeholder="Coupon Code" aria-label="Apply Coupon Code" aria-describedby="apply_coupon_button">
                 <button class="btn btn-success" type="button" id="apply_coupon_button">Apply Coupon</button>
             </div>        
