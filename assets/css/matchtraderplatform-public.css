@@ -43,8 +43,10 @@ input:-webkit-autofill:active {
     padding: 10px;
 }
 
-.woocommerce form#matchTraderCheckout .woocommerce-checkout-review-order-table tr{
-    border-bottom: 1px solid #FFFFFF7D;
+form#matchTraderCheckout .woocommerce-checkout-review-order-table tr th
+form#matchTraderCheckout .woocommerce-checkout-review-order-table tr td, 
+{
+    border-bottom: 1px solid #fff !important;
 }
 
 #matchTraderCheckout .step-progress {
