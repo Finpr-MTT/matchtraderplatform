@@ -193,10 +193,6 @@ class MatchTrader_Public_WooCommerce {
 
         // Add customized billing fields with WooCommerce classes
         $fields['billing'] = [
-            'billing_heading_name' => [
-                'type' => 'heading',
-                'label' => '<h3>AAA</h3>'
-            ],
             'billing_email' => [
                 'label' => __('Email', 'matchtraderplatform'),
                 'required' => true,

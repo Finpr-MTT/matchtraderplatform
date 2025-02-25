@@ -97,3 +97,10 @@ function reigel_custom_heading( $field, $key ){
     }
     return $field;
 }
+
+// Add field type to WooCommerce form field 
+add_filter( 'woocommerce_form_field_heading','sc_woocommerce_form_field_heading', 10, 4 );
+function sc_woocommerce_form_field_heading($field, $key, $args, $value) {
+    $output = '<h3 class="form-row form-row-wide">'.__( $args['label'], 'woocommerce' ).'</h3>';
+    echo $output;
+}
