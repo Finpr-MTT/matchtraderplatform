@@ -407,7 +407,7 @@ class MatchTrader_Public_WooCommerce {
                     <label for="mtt-addon-2">90% profit split vs 85% <span>(+15%)</span></label>
                   </div>
                </div>
-            </div>'
+            </div>';
     }
 }
 
