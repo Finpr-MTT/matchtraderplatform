@@ -60,7 +60,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 			    </div>
 			</div>
 			<div class="d-flex justify-content-center my-4">
-		    	<div class="card text-white bg-dark p-3 shadow-sm" style="width: 80%;">
+		    	<div class="card text-white bg-dark p-3 shadow-sm w-80" style="width: 80%;">
 		        	<div class="card-body">
 			            <?php
 			            // Get the last item in cart
