@@ -93,7 +93,11 @@ add_action( 'woocommerce_form_field_text','reigel_custom_heading', 10, 2 );
 function reigel_custom_heading( $field, $key ){
     // will only execute if the field is billing_company and we are on the checkout page...
     if ( is_checkout() && ( $key == 'billing_email') ) {
-        $field .= '<hr></hr><h3 class="form-row form-row-wide text-center">Custom Heading</p>';
+        $field .= '<div class="clearfix my-5">
+                    <hr></hr>
+                    <h3 class="form-row form-row-wide text-center">Custom Heading</h3>
+                    </div>
+                    ';
     }
     return $field;
 }
