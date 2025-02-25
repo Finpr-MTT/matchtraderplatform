@@ -371,18 +371,14 @@ class MatchTrader_Public_WooCommerce {
             return;
         }
 
-        // Capture WooCommerce order total output
+        // Capture the WooCommerce order total output
         ob_start();
         wc_cart_totals_order_total_html();
         $order_total = ob_get_clean();
 
-        // Debugging log
-        error_log('AJAX Order Total Response: ' . $order_total);
-
-        // Send response properly
-        wp_send_json_success(['data' => ['order_total' => $order_total]]);
+        // Ensure the response has the correct structure
+        wp_send_json_success(['order_total' => $order_total]);
     }
-
 }
 
 // Initialize the class instance

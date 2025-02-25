@@ -2,6 +2,7 @@
     'use strict';
 
     jQuery(document).ready(function ($) {
+        // Function to update the cart
         function updateCart() {
             let selectedAttributes = {};
             $('.matchtrader-radio-group input[type="radio"]:checked').each(function () {
@@ -19,19 +20,14 @@
                     variation_attributes: selectedAttributes
                 },
                 beforeSend: function () {
-                    console.log('Updating cart...'); // Debug log
                     $('#matchtrader-update-cart').prop('disabled', true).text('Updating...');
                 },
                 success: function (response) {
                     if (response.success) {
-                        console.log('Cart updated successfully. Refreshing order total...');
+                        // Update cart fragments and checkout details
                         $(document.body).trigger('wc_fragment_refresh');
                         $(document.body).trigger('update_checkout');
-
-                        // Refresh order total
-                        updateOrderTotal();
                     } else {
-                        console.error('Cart update failed:', response);
                         alert(response.data.message);
                     }
                 },
@@ -55,8 +51,8 @@
                 },
                 success: function (response) {
                     console.log('Order total response:', response);
-                    if (response && response.success && response.data && response.data.order_total) {
-                        $('.matchtrader-order-total-value').html(response.data.order_total).fadeTo(300, 1);
+                    if (response && response.success && response.order_total) {
+                        $('.matchtrader-order-total-value').html(response.order_total).fadeTo(300, 1);
                     } else {
                         console.error('Invalid response format:', response);
                     }
@@ -67,10 +63,10 @@
             });
         }
 
-
         // Event listener for radio button changes (update cart & order total)
         $('.matchtrader-radio-group input[type="radio"]').on('change', function () {
             updateCart();
+            updateOrderTotal();
         });
 
         // Event listener for the "Update Cart" button
