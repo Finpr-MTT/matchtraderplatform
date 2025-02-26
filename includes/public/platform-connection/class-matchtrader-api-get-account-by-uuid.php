@@ -49,7 +49,7 @@ class MatchTrader_Get_Account_By_UUID {
     
     if (!empty($uuid)) {
         // Fetch new account data
-        $account_data = get_account_by_uuid($uuid); // Ensure this function exists and retrieves API data
+        $account_data = $this->get_account_by_uuid($uuid);
 
         if ($account_data) {
             WC()->session->set('matchtrader_account_data', $account_data);
