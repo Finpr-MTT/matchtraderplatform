@@ -39,19 +39,43 @@
         // Function to validate required fields
         function validateBillingFields() {
             let isValid = true;
+
             $('.woocommerce-billing-fields .validate-required input, .woocommerce-billing-fields .validate-required select').each(function () {
                 let field = $(this);
+                let fieldWrapper = field.closest('.form-row');
+
+                // Check if field is empty
                 if (field.val().trim() === '') {
                     isValid = false;
                     field.addClass('input-error');
-                    field.closest('.form-row').addClass('woocommerce-invalid'); // Add WooCommerce error class
+                    fieldWrapper.addClass('woocommerce-invalid'); // Add WooCommerce error class
+                    if (!fieldWrapper.find('.error-message').length) {
+                        fieldWrapper.append('<span class="error-message">This field is required.</span>');
+                    }
                 } else {
                     field.removeClass('input-error');
-                    field.closest('.form-row').removeClass('woocommerce-invalid'); // Remove WooCommerce error class
+                    fieldWrapper.removeClass('woocommerce-invalid'); // Remove WooCommerce error class
+                    fieldWrapper.find('.error-message').remove();
+                }
+
+                // Additional email validation
+                if (field.attr('type') === 'email' && !isValidEmail(field.val())) {
+                    isValid = false;
+                    field.addClass('input-error');
+                    fieldWrapper.addClass('woocommerce-invalid');
+                    if (!fieldWrapper.find('.error-message').length) {
+                        fieldWrapper.append('<span class="error-message">Enter a valid email address.</span>');
+                    }
                 }
             });
 
             return isValid;
+        }
+
+        // Function to validate email format
+        function isValidEmail(email) {
+            let emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return emailPattern.test(email);
         }
 
         // Handle live validation on input change
@@ -63,7 +87,7 @@
         nextButtons.on('click', function () {
             if (currentStep === 2) { // Validate only on the Billing Details step
                 if (!validateBillingFields()) {
-                    alert('⚠ Please fill in all required billing fields before proceeding.');
+                    alert('Please fill in all required billing fields and enter a valid email before proceeding.');
                     return;
                 }
             }
@@ -96,7 +120,7 @@
         $('form.checkout').on('submit', function (e) {
             if (currentStep !== steps.length) {
                 e.preventDefault();
-                alert('⚠ Please complete all steps before submitting the form.');
+                alert('Please complete all steps before submitting the form.');
             }
         });
 
