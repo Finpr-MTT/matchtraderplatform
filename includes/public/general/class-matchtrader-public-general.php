@@ -27,7 +27,7 @@ class MatchTrader_Public_General {
      * Restrict Frontend Website Access if matchtrader_disable_frontend_route is enabled
      */
     public function restrict_frontend_website_access() {
-        if (is_admin()) {
+        if (is_admin() || is_front_page()) {
             return; // Allow wp-admin access
         }
 
