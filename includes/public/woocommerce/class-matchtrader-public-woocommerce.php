@@ -37,7 +37,12 @@ class MatchTrader_Public_WooCommerce {
             add_filter('woocommerce_locate_template', [$this, 'matchtrader_override_templates'], 10, 3);            
             add_action('woocommerce_form_field_text', [$this, 'checkout_field_heading_under_email'], 10, 2);            
             add_action('wp_ajax_apply_coupon_action', [$this, 'apply_coupon_action']);
-            add_action('wp_ajax_nopriv_apply_coupon_action', [$this, 'apply_coupon_action']);            
+            add_action('wp_ajax_nopriv_apply_coupon_action', [$this, 'apply_coupon_action']);
+
+            // Register AJAX action for logged-in and guest users
+            add_action('wp_ajax_update_selected_addons', [$this, 'matchtrader_update_selected_addons']);
+            add_action('wp_ajax_nopriv_update_selected_addons', [$this, 'matchtrader_update_selected_addons']);
+            add_action('woocommerce_cart_calculate_fees', [$this, 'matchtrader_addons_fee']);           
         }
 
         if (get_option('matchtrader_enable_mtt_checkout', 'default') === 'default') {
@@ -406,6 +411,35 @@ class MatchTrader_Public_WooCommerce {
                   </div>
             </div>';
     }
+
+    public function matchtrader_update_selected_addons() {
+        // Verify nonce for security
+        check_ajax_referer('matchtrader_nonce', 'nonce');
+
+        // Get selected add-ons from AJAX request
+        $addons = isset($_POST['addons']) ? array_map('sanitize_text_field', $_POST['addons']) : [];
+        $addons_percentage = isset($_POST['addons_percentage']) ? floatval($_POST['addons_percentage']) : 0;
+
+        // Store add-ons in WooCommerce session
+        WC()->session->set('mtt_selected_addons', $addons);
+        WC()->session->set('mtt_selected_addons_percentage', $addons_percentage);
+
+        wp_send_json_success();
+    }
+
+    public function matchtrader_addons_fee() {
+        if (is_admin() && !defined('DOING_AJAX')) {
+            return;
+        }
+
+        // Get add-ons fee from session
+        $addons_percentage = WC()->session->get('mtt_selected_addons_percentage', 0);
+        
+        if ($addons_percentage > 0) {
+            WC()->cart->add_fee(__('Add-ons Fee', 'matchtraderplatform'), $addons_percentage);
+        }
+    }
+
 }
 
 // Initialize the class instance
