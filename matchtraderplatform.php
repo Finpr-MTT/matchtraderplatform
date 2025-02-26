@@ -27,13 +27,6 @@ define('MATCHTRADERPLUGIN_VERSION', '1.0.529');
 define('MATCHTRADERPLUGIN_PATH', plugin_dir_path(__FILE__));
 define('MATCHTRADERPLUGIN_URL', plugin_dir_url(__FILE__));
 
-add_action('init', function () {
-    if (isset($_GET['uuid']) && !empty($_GET['uuid'])) {
-        WC()->session->set('matchtrader_uuid', sanitize_text_field($_GET['uuid']));
-    }
-});
-
-
 class MatchTraderPlatform {
 
     /**
