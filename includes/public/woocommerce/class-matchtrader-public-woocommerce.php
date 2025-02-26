@@ -61,7 +61,7 @@ class MatchTrader_Public_WooCommerce {
             add_action('wp_ajax_nopriv_matchtrader_update_order_review', [$this, 'matchtrader_ajax_update_order_review']);
             add_filter('woocommerce_order_button_html', '__return_empty_string');
             add_action('matchtrader_checkout_button_place_order', function () {
-                echo '<button type="submit" class="p-3 btn mtt-bg-button-next w-25" name="woocommerce_checkout_place_order" id="place_order" value="' . esc_attr__('Place Order', 'woocommerce') . '">' . esc_html__('Place Order', 'woocommerce') . '</button>';
+                echo '<button type="submit" class="p-3 btn mtt-bg-button-next w-50 w-md-25" name="woocommerce_checkout_place_order" id="place_order" value="' . esc_attr__('Place Order', 'woocommerce') . '">' . esc_html__('Place Order', 'woocommerce') . '</button>';
 });
 
         }
