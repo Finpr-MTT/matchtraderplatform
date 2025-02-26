@@ -39,7 +39,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 	</div>
 
 	<!-- Step 1: Account Selection -->
-	<div class="step-content active" data-step="1">
+	<div class="step-content mtt-product-selection active" data-step="1">
 		<div class="container p-0">
 		    <!-- First Section -->
 		    <div class="d-flex flex-column flex-md-row gap-4 mt-5 mb-4">
@@ -94,7 +94,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 	</div>
 
 	<!-- Step 2: Billing Details -->
-	<div class="step-content" data-step="2">		
+	<div class="step-content mtt-customer-details" data-step="2">		
 		<div class="container p-0">
 			<div class="d-flex flex-column flex-md-row gap-4 mt-5 mb-4">
 				<div class="flex-grow-1 p-4 rounded">
@@ -111,7 +111,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 	</div>
 
 	<!-- Step 3: Payment -->
-	<div class="step-content" data-step="3">
+	<div class="step-content mtt-choose-payment-method" data-step="3">
 		<div class="container p-0">
 			<div class="d-flex flex-column flex-md-row gap-4 mt-5 mb-4">
 				<div class="flex-grow-1 p-4 rounded">
