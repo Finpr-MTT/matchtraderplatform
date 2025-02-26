@@ -68,6 +68,25 @@
             }
         }
 
+        function checkOrderTotal() {
+            let orderTotal = $('.order-total .woocommerce-Price-amount').text().replace(/[^0-9.]/g, '');
+            orderTotal = parseFloat(orderTotal);
+
+            if (orderTotal === 0 || isNaN(orderTotal)) {
+                $('.mtt-choose-payment-method h4').hide();
+            } else {
+                $('.mtt-choose-payment-method h4').show();
+            }
+        }
+
+        // Run check when checkout updates
+        $(document.body).on('updated_checkout', function () {
+            checkOrderTotal();
+        });
+
+        // Run check on page load
+        checkOrderTotal();
+
         // Handle country change event
         countryField.on('change', function () {
             updateStateField(true); // Clear state only on manual country change
