@@ -6,6 +6,7 @@
         const stepContents = $('.step-content');
         const nextButtons = $('.next-step');
         const prevButtons = $('.prev-step');
+        const billingFields = $('.mtt-customer-details input, .mtt-customer-details select');
 
         let currentStep = 1;
 
@@ -13,14 +14,12 @@
             steps.each(function (index) {
                 const $step = $(this);
 
-                // Add/remove active class for step number
                 if (index + 1 <= currentStep) {
                     $step.addClass('active');
                 } else {
                     $step.removeClass('active');
                 }
 
-                // Add/remove progress-active class for progress bar
                 if (index + 1 < currentStep) {
                     $step.addClass('progress-active');
                 } else {
@@ -40,27 +39,29 @@
         // Function to validate required fields
         function validateBillingFields() {
             let isValid = true;
-            $('.mtt-customer-details input, .mtt-customer-details select').each(function () {
+            billingFields.each(function () {
                 let field = $(this);
                 if (field.prop('required') && field.val().trim() === '') {
                     isValid = false;
-                    field.addClass('input-error'); // Add error styling
+                    field.addClass('input-error');
                 } else {
-                    field.removeClass('input-error'); // Remove error styling if corrected
+                    field.removeClass('input-error');
                 }
             });
 
-            if (!isValid) {
-                alert('Please fill in all required billing fields before proceeding.');
-            }
-
             return isValid;
         }
+
+        // Handle live field validation
+        billingFields.on('input change', function () {
+            validateBillingFields();
+        });
 
         // Handle next button click with validation
         nextButtons.on('click', function () {
             if (currentStep === 2) { // Validate only on the Billing Details step
                 if (!validateBillingFields()) {
+                    alert('Please fill in all required billing fields before proceeding.');
                     return;
                 }
             }
@@ -83,7 +84,6 @@
         steps.on('click', function () {
             const stepNumber = parseInt($(this).attr('data-step'));
 
-            // Only allow navigation to steps that are before or equal to the current step
             if (stepNumber <= currentStep) {
                 currentStep = stepNumber;
                 updateProgress();
@@ -98,7 +98,6 @@
             }
         });
 
-        // Initialize progress
         updateProgress();
     });
 
