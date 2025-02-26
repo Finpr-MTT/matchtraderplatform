@@ -404,28 +404,36 @@ class MatchTrader_Public_WooCommerce {
     }
 
 
-    public function checkout_addons_after_product_selection(){
+    public function checkout_addons_after_product_selection() {
+        // Get stored add-ons from session (if any)
+        $selected_addons = WC()->session->get('mtt_selected_addons', []);
+
         echo '<div class="mtt-addons-container">
                   <div class="field-group">
-                    <input type="checkbox" id="mtt-addon-1" class="mtt-addons-checkbox-input" name="mtt_addons[]" value="1" data-value="20.00">
+                    <input type="checkbox" id="mtt-addon-1" class="mtt-addons-checkbox-input" name="mtt_addons[]" value="7-day" data-value="20.00" ' . 
+                        (isset($selected_addons['7-day']) ? 'checked' : '') . '>
                     <label for="mtt-addon-1">7 day payouts vs 14 Days <span>(+15%)</span></label>
                   </div>
                   <div class="field-group">
-                    <input type="checkbox" id="mtt-addon-2" class="mtt-addons-checkbox-input" name="mtt_addons[]" value="1" data-value="20.00">
+                    <input type="checkbox" id="mtt-addon-2" class="mtt-addons-checkbox-input" name="mtt_addons[]" value="90-profit" data-value="20.00" ' . 
+                        (isset($selected_addons['90-profit']) ? 'checked' : '') . '>
                     <label for="mtt-addon-2">90% profit split vs 85% <span>(+15%)</span></label>
                   </div>
             </div>';
     }
+
 
     public function matchtrader_update_selected_addons() {
         // Verify nonce for security
         check_ajax_referer('matchtrader_nonce', 'nonce');
 
         // Get selected add-ons from AJAX request
-        $addons = isset($_POST['addons']) ? $_POST['addons'] : []; // Associative array (name => price)
+        $addons = isset($_POST['addons']) ? array_map('sanitize_text_field', $_POST['addons']) : [];
+        $addons_percentage = isset($_POST['addons_percentage']) ? floatval($_POST['addons_percentage']) : 0;
 
         // Store add-ons in WooCommerce session
-        WC()->session->set('mtt_selected_addons', wc_clean($addons)); // Ensure data is clean
+        WC()->session->set('mtt_selected_addons', $addons);
+        WC()->session->set('mtt_selected_addons_percentage', $addons_percentage);
 
         wp_send_json_success();
     }
@@ -437,15 +445,12 @@ class MatchTrader_Public_WooCommerce {
 
         $addons = WC()->session->get('mtt_selected_addons', []);
 
-        if (!empty($addons) && is_array($addons)) {
+        if (!empty($addons)) {
             foreach ($addons as $addon_name => $addon_price) {
-                if (!empty($addon_price) && is_numeric($addon_price)) {
-                    WC()->cart->add_fee($addon_name, floatval($addon_price));
-                }
+                WC()->cart->add_fee($addon_name, floatval($addon_price));
             }
         }
     }
-
 
 }
 
