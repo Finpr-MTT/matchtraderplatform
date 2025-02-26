@@ -428,8 +428,6 @@ class MatchTrader_Public_WooCommerce {
         wp_send_json_success();
     }
 
-    // Apply add-ons fee to order total
-    add_action('woocommerce_cart_calculate_fees', [$this, 'matchtrader_addons_fee']);
     public function matchtrader_addons_fee() {
         if (is_admin() && !defined('DOING_AJAX')) {
             return;
