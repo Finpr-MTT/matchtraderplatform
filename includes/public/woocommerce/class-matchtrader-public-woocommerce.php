@@ -445,15 +445,32 @@ class MatchTrader_Public_WooCommerce {
         $addons = WC()->session->get('mtt_selected_addons', []);
 
         if (!empty($addons) && is_array($addons)) {
-            foreach ($addons as $addon_name => $addon_price) {
-                if (!empty($addon_price) && is_numeric($addon_price)) {
-                    WC()->cart->add_fee($addon_name, floatval($addon_price));
+            $cart = WC()->cart;
+            $coupon_discount = 0;
+
+            // Get applied coupons
+            if ($cart->has_discount()) {
+                foreach ($cart->get_applied_coupons() as $coupon_code) {
+                    $coupon = new WC_Coupon($coupon_code);
+                    if ($coupon->is_type('percent')) {
+                        $coupon_discount = $coupon->get_amount();
+                    }
                 }
+            }
+
+            // Apply add-ons fee considering the coupon discount
+            foreach ($addons as $addon_name => $addon_price) {
+                $final_price = floatval($addon_price);
+
+                if ($coupon_discount > 0) {
+                    $discount_amount = ($final_price * $coupon_discount) / 100;
+                    $final_price -= $discount_amount;
+                }
+
+                WC()->cart->add_fee($addon_name, $final_price);
             }
         }
     }
-
-
 }
 
 // Initialize the class instance
