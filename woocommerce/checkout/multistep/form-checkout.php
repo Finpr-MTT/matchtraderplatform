@@ -101,7 +101,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 					<div id="customer_details">
 						<?php do_action( 'woocommerce_checkout_billing' ); ?>
 					</div>
-					<div class="d-flex justify-content-between my-5">
+					<div class="d-flex justify-content-between my-5 gap-sm-3">
 						<button type="button" class="p-3 btn mtt-bg-button-previous w-25 prev-step">Back</button>
 						<button type="button" class="p-3 btn mtt-bg-button-next w-75 w-md-25 next-step">Next</button>
 					</div>
