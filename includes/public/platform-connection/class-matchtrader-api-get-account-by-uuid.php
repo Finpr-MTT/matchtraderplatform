@@ -94,6 +94,8 @@ class MatchTrader_Get_Account_By_UUID {
 
                 if (!empty($account_data['addressDetails']['country'])) {
                     $customer->set_billing_country(sanitize_text_field($account_data['addressDetails']['country']));
+                } else {
+                    $customer->set_billing_country('US'); // Default to United States if empty
                 }
 
                 if (!empty($account_data['addressDetails']['state'])) {
