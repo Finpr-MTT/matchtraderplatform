@@ -410,17 +410,18 @@ class MatchTrader_Public_WooCommerce {
 
         echo '<div class="mtt-addons-container">
                   <div class="field-group">
-                    <input type="checkbox" id="mtt-addon-1" class="mtt-addons-checkbox-input" name="mtt_addons[]" value="7-day" data-value="20.00" ' . 
-                        (isset($selected_addons['7-day']) ? 'checked' : '') . '>
+                    <input type="checkbox" id="mtt-addon-1" class="mtt-addons-checkbox-input" name="mtt_addons[]" value="7 day payouts vs 14 Days (+15%)" data-value="20.00" ' . 
+                        (isset($selected_addons["7 day payouts vs 14 Days (+15%)"]) ? 'checked' : '') . '>
                     <label for="mtt-addon-1">7 day payouts vs 14 Days <span>(+15%)</span></label>
                   </div>
                   <div class="field-group">
-                    <input type="checkbox" id="mtt-addon-2" class="mtt-addons-checkbox-input" name="mtt_addons[]" value="90-profit" data-value="20.00" ' . 
-                        (isset($selected_addons['90-profit']) ? 'checked' : '') . '>
+                    <input type="checkbox" id="mtt-addon-2" class="mtt-addons-checkbox-input" name="mtt_addons[]" value="90% profit split vs 85% (+15%)" data-value="20.00" ' . 
+                        (isset($selected_addons["90% profit split vs 85% (+15%)"]) ? 'checked' : '') . '>
                     <label for="mtt-addon-2">90% profit split vs 85% <span>(+15%)</span></label>
                   </div>
             </div>';
     }
+
 
 
     public function matchtrader_update_selected_addons() {
