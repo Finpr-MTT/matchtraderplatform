@@ -34,8 +34,6 @@ input:-webkit-autofill:active {
     background-color: var(--e-global-color-b94397c);
 }
 
-
-
 /*form styles*/
 .woocommerce form#matchTraderCheckout .form-row .input-text, 
 .woocommerce-page form#matchTraderCheckout .form-row .input-text {
@@ -100,4 +98,14 @@ form#matchTraderCheckout .woocommerce-checkout-review-order-table tr td
 
 #matchTraderCheckout .step-content.active {
     display: block;
+}
+
+@media screen and (max-width: 520px) {
+    #matchTraderCheckout .gap-sm-3{
+        gap: 1rem !important;
+    }
+
+    #matchTraderCheckout .w-sm-75{
+        width: 75% !important;
+    }
 }

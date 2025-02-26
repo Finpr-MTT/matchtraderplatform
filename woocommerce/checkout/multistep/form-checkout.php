@@ -101,9 +101,9 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 					<div id="customer_details">
 						<?php do_action( 'woocommerce_checkout_billing' ); ?>
 					</div>
-					<div class="d-flex justify-content-between my-5">
+					<div class="d-flex justify-content-between my-5 gap-sm-3">
 						<button type="button" class="p-3 btn mtt-bg-button-previous w-25 prev-step">Back</button>
-						<button type="button" class="p-3 btn mtt-bg-button-next w-25 next-step">Next</button>
+						<button type="button" class="p-3 btn mtt-bg-button-next w-25 w-sm-75 next-step">Next</button>
 					</div>
 				</div>
 			</div>
@@ -113,7 +113,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 	<!-- Step 3: Payment -->
 	<div class="step-content mtt-choose-payment-method" data-step="3">
 		<div class="container p-0">
-			<div class="d-flex flex-column flex-md-row gap-4 mt-5 mb-4">
+			<div class="d-flex flex-column flex-md-row gap-4 mt-5 mb-4 gap-sm-3">
 				<div class="flex-grow-1 p-4 rounded">
 					<h4 class="text-center">Choose Payment Method</h4>
 					<?php do_action('woocommerce_checkout_payment'); ?>
