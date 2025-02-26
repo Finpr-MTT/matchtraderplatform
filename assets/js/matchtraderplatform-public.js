@@ -6,7 +6,7 @@
         const stepContents = $('.step-content');
         const nextButtons = $('.next-step');
         const prevButtons = $('.prev-step');
-        const billingFields = $('.mtt-customer-details input, .mtt-customer-details select');
+        const billingFields = $('.woocommerce-billing-fields input, .woocommerce-billing-fields select');
 
         let currentStep = 1;
 
@@ -39,20 +39,22 @@
         // Function to validate required fields
         function validateBillingFields() {
             let isValid = true;
-            billingFields.each(function () {
+            $('.woocommerce-billing-fields .validate-required input, .woocommerce-billing-fields .validate-required select').each(function () {
                 let field = $(this);
-                if (field.prop('required') && field.val().trim() === '') {
+                if (field.val().trim() === '') {
                     isValid = false;
                     field.addClass('input-error');
+                    field.closest('.form-row').addClass('woocommerce-invalid'); // Add WooCommerce error class
                 } else {
                     field.removeClass('input-error');
+                    field.closest('.form-row').removeClass('woocommerce-invalid'); // Remove WooCommerce error class
                 }
             });
 
             return isValid;
         }
 
-        // Handle live field validation
+        // Handle live validation on input change
         billingFields.on('input change', function () {
             validateBillingFields();
         });
@@ -61,7 +63,7 @@
         nextButtons.on('click', function () {
             if (currentStep === 2) { // Validate only on the Billing Details step
                 if (!validateBillingFields()) {
-                    alert('Please fill in all required billing fields before proceeding.');
+                    alert('⚠ Please fill in all required billing fields before proceeding.');
                     return;
                 }
             }
@@ -94,7 +96,7 @@
         $('form.checkout').on('submit', function (e) {
             if (currentStep !== steps.length) {
                 e.preventDefault();
-                alert('Please complete all steps before submitting the form.');
+                alert('⚠ Please complete all steps before submitting the form.');
             }
         });
 
