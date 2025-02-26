@@ -44,38 +44,41 @@ class MatchTrader_Get_Account_By_UUID {
     /**
      * Handle the UUID parameter in URL and fetch account details.
      */
+    public function handle_uuid_param() {
+        if (!is_checkout()) {
+            return;
+        }
 
-public function handle_uuid_param() {
-    if (!WC()->session) {
-        return;
-    }
+        if (isset($_GET['uuid']) && !empty($_GET['uuid'])) {
+            $uuid = sanitize_text_field($_GET['uuid']);
 
-    // Store UUID when adding to cart
-    if (isset($_GET['add-to-cart']) && isset($_GET['uuid']) && !empty($_GET['uuid'])) {
-        WC()->session->set('matchtrader_temp_uuid', sanitize_text_field($_GET['uuid']));
-    }
-
-    // Process UUID only if on the checkout page
-    if (is_checkout()) {
-        $uuid = WC()->session->get('matchtrader_temp_uuid'); // Retrieve stored UUID
-
-        if (!empty($uuid)) {
-            // Remove the stored UUID after use
-            WC()->session->__unset('matchtrader_temp_uuid');
-
-            // Clear old session data
+            // Clear previous session data
             WC()->session->__unset('matchtrader_account_data');
 
-            // Fetch account data by UUID
+            // Clear WooCommerce customer fields
+            WC()->customer->set_billing_first_name('');
+            WC()->customer->set_billing_last_name('');
+            WC()->customer->set_billing_address_1('');
+            WC()->customer->set_billing_address_2('');
+            WC()->customer->set_billing_city('');
+            WC()->customer->set_billing_state('');
+            WC()->customer->set_billing_postcode('');
+            WC()->customer->set_billing_country('');
+            WC()->customer->set_billing_phone('');
+            WC()->customer->set_billing_email('');
+            WC()->customer->save();
+
+            // Fetch new account data
             $account_data = $this->get_account_by_uuid($uuid);
 
             if ($account_data) {
                 WC()->session->set('matchtrader_account_data', $account_data);
 
-                // Set WooCommerce billing details
+                // Set WooCommerce customer data (ensure country is set first)
                 if (!empty($account_data['addressDetails']['country'])) {
                     WC()->customer->set_billing_country(sanitize_text_field($account_data['addressDetails']['country']));
                 }
+
                 if (!empty($account_data['addressDetails']['state'])) {
                     WC()->customer->set_billing_state(sanitize_text_field($account_data['addressDetails']['state']));
                 }
@@ -83,10 +86,9 @@ public function handle_uuid_param() {
                 WC()->customer->save();
             }
         }
+
+
     }
-}
-
-
 
     /**
      * Fetch account details by UUID using Centralized API Helper.
