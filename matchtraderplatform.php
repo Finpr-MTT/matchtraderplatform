@@ -80,27 +80,3 @@ class MatchTraderPlatform {
 
 // Initialize the plugin
 new MatchTraderPlatform();
-
-add_action('init', function () {
-    if (!WC()->session) {
-        WC()->session = new WC_Session_Handler();
-        WC()->session->init();
-    }
-});
-
-
-add_action('woocommerce_before_checkout_form', function () {
-    $matchtrader_temp_uuid = WC()->session->get('matchtrader_uuid', []);
-    $matchtrader_account_data = WC()->session->get('matchtrader_account_data', []);
-
-    echo '<p><hr>matchtrader_temp_uuid</hr></p>';
-    echo '<pre>';
-    var_dump($matchtrader_temp_uuid);
-    echo '</pre>';
-
-    echo '<p><hr>matchtrader_account_data</hr></p>';
-
-    echo '<pre>';
-    var_dump($matchtrader_account_data);
-    echo '</pre>';
-});
