@@ -41,7 +41,9 @@ class MatchTrader_Public_WooCommerce {
 
             // Register AJAX action for logged-in and guest users
             add_action('wp_ajax_update_selected_addons', [$this, 'matchtrader_update_selected_addons']);
-            add_action('wp_ajax_nopriv_update_selected_addons', [$this, 'matchtrader_update_selected_addons']);
+            add_action('wp_ajax_nopriv_update_selected_addons', [$this, 'matchtrader_update_selected_addons']);            
+            // Display add-ons in order review
+            add_action('woocommerce_review_order_before_order_total', [$this, 'matchtrader_display_addons_in_order_review']);
             add_action('woocommerce_cart_calculate_fees', [$this, 'matchtrader_addons_fee']);           
         }
 
@@ -413,7 +415,6 @@ class MatchTrader_Public_WooCommerce {
     }
 
     public function matchtrader_update_selected_addons() {
-        // Verify nonce for security
         check_ajax_referer('matchtrader_nonce', 'nonce');
 
         // Get selected add-ons from AJAX request
@@ -427,16 +428,27 @@ class MatchTrader_Public_WooCommerce {
         wp_send_json_success();
     }
 
+    // Apply add-ons fee to order total
+    add_action('woocommerce_cart_calculate_fees', [$this, 'matchtrader_addons_fee']);
     public function matchtrader_addons_fee() {
         if (is_admin() && !defined('DOING_AJAX')) {
             return;
         }
 
-        // Get add-ons fee from session
         $addons_percentage = WC()->session->get('mtt_selected_addons_percentage', 0);
-        
         if ($addons_percentage > 0) {
             WC()->cart->add_fee(__('Add-ons Fee', 'matchtraderplatform'), $addons_percentage);
+        }
+    }
+
+    public function matchtrader_display_addons_in_order_review() {
+        $addons = WC()->session->get('mtt_selected_addons', []);
+        if (!empty($addons)) {
+            echo '<tr class="order-addons"><th>' . __('Selected Add-ons', 'matchtraderplatform') . '</th><td>';
+            foreach ($addons as $addon) {
+                echo '<p>' . esc_html($addon) . '</p>';
+            }
+            echo '</td></tr>';
         }
     }
 

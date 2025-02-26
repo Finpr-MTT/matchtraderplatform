@@ -2,17 +2,16 @@
     'use strict';
 
     $(document).ready(function () {
-        // Function to update selected addons
         function updateSelectedAddons() {
             var chosenAddons = [];
             var chosenAddonsPercentage = 0;
 
             $('input[type="checkbox"][name="mtt_addons[]"]:checked').each(function () {
-                chosenAddons.push($(this).val());
+                let addonName = $(this).next('label').text().trim(); // Get the label text
+                chosenAddons.push(addonName);
                 chosenAddonsPercentage += parseFloat($(this).data('value'));
             });
 
-            // AJAX request to update session with selected add-ons
             $.ajax({
                 type: 'POST',
                 url: mtt_addons_ajax.ajax_url,
@@ -24,15 +23,12 @@
                 },
                 success: function (response) {
                     if (response.success) {
-                        // Trigger an update in WooCommerce checkout totals
+                        // Refresh WooCommerce order review and checkout totals
                         $(document.body).trigger('update_checkout');
                     }
                 }
             });
         }
-
-        // Initialize selected addons on page load
-        updateSelectedAddons();
 
         // Event listener for checkbox changes
         $('input[type="checkbox"][name="mtt_addons[]"]').on('change', function () {
