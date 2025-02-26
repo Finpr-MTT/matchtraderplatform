@@ -210,7 +210,7 @@ class MatchTrader_Public_WooCommerce {
                 'type'  => 'email',
                 'required' => true,
                 'class' => ['form-row-wide'],
-                'input_class' => ['input-email'],
+                'input_class' => ['input-text'],
                 'placeholder' => __('Email', 'matchtraderplatform'),
                 'default' => $account_data['email'] ?? '',
                 'custom_attributes' => get_custom_attributes('billing_email', $is_prefilled),
