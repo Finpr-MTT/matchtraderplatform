@@ -207,7 +207,6 @@ class MatchTrader_Public_WooCommerce {
         $fields['billing'] = [
             'billing_email' => [
                 'label' => __('Email', 'matchtraderplatform'),
-                'type'  => 'email',
                 'required' => true,
                 'class' => ['form-row-wide'],
                 'input_class' => ['input-text'],
