@@ -80,3 +80,10 @@ class MatchTraderPlatform {
 
 // Initialize the plugin
 new MatchTraderPlatform();
+
+add_action('woocommerce_before_checkout_form', function () {
+    $addons = WC()->session->get('matchtrader_account_data', []);
+    echo '<pre>';
+    var_dump($addons);
+    echo '</pre>';
+});
