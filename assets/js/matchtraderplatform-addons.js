@@ -6,8 +6,8 @@
             var chosenAddons = {};
 
             $('input[type="checkbox"][name="mtt_addons[]"]:checked').each(function () {
-                let addonName = $(this).next('label').text().trim(); // Get add-on name
-                let addonPrice = parseFloat($(this).data('value')); // Get add-on price
+                let addonName = $(this).next('label').text().trim();
+                let addonPrice = parseFloat($(this).data('value'));
                 chosenAddons[addonName] = addonPrice;
             });
 
@@ -21,7 +21,29 @@
                 },
                 success: function (response) {
                     if (response.success) {
-                        $(document.body).trigger('update_checkout'); // Refresh checkout
+                        $(document.body).trigger('update_checkout');
+                    }
+                }
+            });
+        }
+
+        // Restore checked checkboxes on page load
+        function restoreCheckedAddons() {
+            $.ajax({
+                type: 'POST',
+                url: mtt_addons_ajax.ajax_url,
+                data: {
+                    action: 'get_selected_addons',
+                    nonce: mtt_addons_ajax.nonce
+                },
+                success: function (response) {
+                    if (response.success && response.addons) {
+                        $('input[type="checkbox"][name="mtt_addons[]"]').each(function () {
+                            let addonName = $(this).next('label').text().trim();
+                            if (response.addons.includes(addonName)) {
+                                $(this).prop('checked', true);
+                            }
+                        });
                     }
                 }
             });
@@ -31,6 +53,9 @@
         $('input[type="checkbox"][name="mtt_addons[]"]').on('change', function () {
             updateSelectedAddons();
         });
+
+        // Restore checkboxes on page load
+        restoreCheckedAddons();
     });
 
 })(jQuery);

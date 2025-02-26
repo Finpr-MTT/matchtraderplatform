@@ -428,12 +428,10 @@ class MatchTrader_Public_WooCommerce {
         check_ajax_referer('matchtrader_nonce', 'nonce');
 
         // Get selected add-ons from AJAX request
-        $addons = isset($_POST['addons']) ? array_map('sanitize_text_field', $_POST['addons']) : [];
-        $addons_percentage = isset($_POST['addons_percentage']) ? floatval($_POST['addons_percentage']) : 0;
+        $addons = isset($_POST['addons']) ? $_POST['addons'] : []; // Associative array (name => price)
 
         // Store add-ons in WooCommerce session
-        WC()->session->set('mtt_selected_addons', $addons);
-        WC()->session->set('mtt_selected_addons_percentage', $addons_percentage);
+        WC()->session->set('mtt_selected_addons', wc_clean($addons)); // Ensure data is clean
 
         wp_send_json_success();
     }
@@ -445,12 +443,15 @@ class MatchTrader_Public_WooCommerce {
 
         $addons = WC()->session->get('mtt_selected_addons', []);
 
-        if (!empty($addons)) {
+        if (!empty($addons) && is_array($addons)) {
             foreach ($addons as $addon_name => $addon_price) {
-                WC()->cart->add_fee($addon_name, floatval($addon_price));
+                if (!empty($addon_price) && is_numeric($addon_price)) {
+                    WC()->cart->add_fee($addon_name, floatval($addon_price));
+                }
             }
         }
     }
+
 
 }
 
