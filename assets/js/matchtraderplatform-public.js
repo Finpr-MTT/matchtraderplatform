@@ -59,7 +59,7 @@
                 }
 
                 // Additional email validation
-                if (field.attr('id') === 'billing_email' && !isValidEmail(field.val())) {
+                if (field.attr('type') === 'email' && !isValidEmail(field.val())) {
                     isValid = false;
                     field.addClass('input-error');
                     fieldWrapper.addClass('woocommerce-invalid');
@@ -74,7 +74,7 @@
 
         // Function to validate email format
         function isValidEmail(email) {
-            let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            let emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
             return emailPattern.test(email);
         }
 
@@ -87,7 +87,7 @@
         nextButtons.on('click', function () {
             if (currentStep === 2) { // Validate only on the Billing Details step
                 if (!validateBillingFields()) {
-                    alert('⚠ Please fill in all required billing fields and enter a valid email before proceeding.');
+                    alert('Please fill in all required billing fields and enter a valid email before proceeding.');
                     return;
                 }
             }
@@ -120,7 +120,7 @@
         $('form.checkout').on('submit', function (e) {
             if (currentStep !== steps.length) {
                 e.preventDefault();
-                alert('⚠ Please complete all steps before submitting the form.');
+                alert('Please complete all steps before submitting the form.');
             }
         });
 
