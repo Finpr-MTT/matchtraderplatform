@@ -103,7 +103,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 					</div>
 					<div class="d-flex justify-content-between my-5">
 						<button type="button" class="p-3 btn mtt-bg-button-previous w-25 prev-step">Back</button>
-						<button type="button" class="p-3 btn mtt-bg-button-next w-50 w-md-25 next-step">Next</button>
+						<button type="button" class="p-3 btn mtt-bg-button-next w-75 w-md-25 next-step">Next</button>
 					</div>
 				</div>
 			</div>
