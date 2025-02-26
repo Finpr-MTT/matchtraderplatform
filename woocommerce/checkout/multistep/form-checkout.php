@@ -66,7 +66,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 		    </div>
 
 		    <!-- Third Section -->
-		    <div class="d-flex flex-column flex-md-row gap-4 justify-content-md-center my-5">
+		    <div class="d-flex flex-column flex-md-row gap-4 justify-content-md-center">
 		        <div class="col-sm-4">
 		            <div class="mt-4">
 		                <?php do_action('matchtrader_display_available_coupon_in_checkout'); ?>
