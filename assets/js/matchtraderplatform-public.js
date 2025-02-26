@@ -1,7 +1,7 @@
-(function($) {
+(function ($) {
     'use strict';
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         const steps = $('.step');
         const stepContents = $('.step-content');
         const nextButtons = $('.next-step');
@@ -10,7 +10,7 @@
         let currentStep = 1;
 
         function updateProgress() {
-            steps.each(function(index) {
+            steps.each(function (index) {
                 const $step = $(this);
 
                 // Add/remove active class for step number
@@ -28,7 +28,7 @@
                 }
             });
 
-            stepContents.each(function() {
+            stepContents.each(function () {
                 if (parseInt($(this).attr('data-step')) === currentStep) {
                     $(this).addClass('active');
                 } else {
@@ -37,8 +37,34 @@
             });
         }
 
-        // Handle next button click
-        nextButtons.on('click', function() {
+        // Function to validate required fields
+        function validateBillingFields() {
+            let isValid = true;
+            $('.mtt-customer-details input, .mtt-customer-details select').each(function () {
+                let field = $(this);
+                if (field.prop('required') && field.val().trim() === '') {
+                    isValid = false;
+                    field.addClass('input-error'); // Add error styling
+                } else {
+                    field.removeClass('input-error'); // Remove error styling if corrected
+                }
+            });
+
+            if (!isValid) {
+                alert('Please fill in all required billing fields before proceeding.');
+            }
+
+            return isValid;
+        }
+
+        // Handle next button click with validation
+        nextButtons.on('click', function () {
+            if (currentStep === 2) { // Validate only on the Billing Details step
+                if (!validateBillingFields()) {
+                    return;
+                }
+            }
+
             if (currentStep < steps.length) {
                 currentStep++;
                 updateProgress();
@@ -46,7 +72,7 @@
         });
 
         // Handle previous button click
-        prevButtons.on('click', function() {
+        prevButtons.on('click', function () {
             if (currentStep > 1) {
                 currentStep--;
                 updateProgress();
@@ -54,7 +80,7 @@
         });
 
         // Handle step number click
-        steps.on('click', function() {
+        steps.on('click', function () {
             const stepNumber = parseInt($(this).attr('data-step'));
 
             // Only allow navigation to steps that are before or equal to the current step
@@ -65,7 +91,7 @@
         });
 
         // Handle WooCommerce form submission
-        $('form.checkout').on('submit', function(e) {
+        $('form.checkout').on('submit', function (e) {
             if (currentStep !== steps.length) {
                 e.preventDefault();
                 alert('Please complete all steps before submitting the form.');
@@ -75,4 +101,5 @@
         // Initialize progress
         updateProgress();
     });
+
 })(jQuery);
