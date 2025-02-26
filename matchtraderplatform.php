@@ -82,8 +82,17 @@ class MatchTraderPlatform {
 new MatchTraderPlatform();
 
 add_action('woocommerce_before_checkout_form', function () {
-    $addons = WC()->session->get('matchtrader_account_data', []);
+    $matchtrader_temp_uuid = WC()->session->get('matchtrader_temp_uuid', []);
+    $matchtrader_account_data = WC()->session->get('matchtrader_account_data', []);
+
+    echo '<p><hr>matchtrader_temp_uuid</hr></p>';
     echo '<pre>';
-    var_dump($addons);
+    var_dump($matchtrader_temp_uuid);
+    echo '</pre>';
+
+    echo '<p><hr>matchtrader_account_data</hr></p>';
+
+    echo '<pre>';
+    var_dump($matchtrader_account_data);
     echo '</pre>';
 });
