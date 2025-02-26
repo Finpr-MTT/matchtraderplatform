@@ -150,6 +150,8 @@ class MatchTrader_Create_Trading_Account {
 
             // RETRY ONLY FOR `500` SERVER ERRORS
             if (isset($response['status']) && $response['status'] == 500) {
+                // LOG FINAL ERROR AFTER MAX RETRIES
+                $order->add_order_note(__('Retry Connection '.$attempt.' MatchTrader Account Creation Failed: ' . $error_message, 'matchtraderplatform'));
                 sleep($retry_delay);
                 $retry_delay *= 2; // Double the delay (1s → 2s → 4s → 8s)
                 continue;
@@ -206,6 +208,7 @@ class MatchTrader_Create_Trading_Account {
 
             // RETRY ONLY FOR `500` SERVER ERRORS
             if (isset($response['status']) && $response['status'] == 500) {
+                $order->add_order_note(__('Retry Connection '.$attempt.' MatchTrader Trading Account Creation Failed: ' . $error_message, 'matchtraderplatform'));
                 sleep($retry_delay);
                 $retry_delay *= 2; // Double the delay (1s → 2s → 4s → 8s)
                 continue;
