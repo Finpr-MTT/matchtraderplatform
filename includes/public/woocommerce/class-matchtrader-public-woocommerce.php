@@ -396,8 +396,6 @@ class MatchTrader_Public_WooCommerce {
 
     public function checkout_addons_after_product_selection(){
         echo '<div class="mtt-addons-container">
-               <h4 class="mtt-heading">Choose Addons</h4>
-               <div class="mtt-addons-wrap">
                   <div class="field-group">
                     <input type="checkbox" id="mtt-addon-1" class="mtt-addons-checkbox-input" name="mtt_addons[]" value="1" data-value="20.00">
                     <label for="mtt-addon-1">7 day payouts vs 14 Days <span>(+15%)</span></label>
@@ -406,7 +404,6 @@ class MatchTrader_Public_WooCommerce {
                     <input type="checkbox" id="mtt-addon-2" class="mtt-addons-checkbox-input" name="mtt_addons[]" value="1" data-value="20.00">
                     <label for="mtt-addon-2">90% profit split vs 85% <span>(+15%)</span></label>
                   </div>
-               </div>
             </div>';
     }
 }
