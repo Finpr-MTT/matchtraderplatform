@@ -54,6 +54,11 @@ class MatchTrader_Public_General {
             return;
         }
 
+        // Allow Checkout Page
+        if (strpos($request_uri, '/thank-you/') === 0) {
+            return;
+        }
+
         // Allow admins to access all pages
         if (is_user_logged_in() && current_user_can('administrator')) {
             return;
