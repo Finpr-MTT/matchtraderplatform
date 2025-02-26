@@ -49,7 +49,7 @@ class MatchTrader_Get_Account_By_UUID {
         return;
     }
 
-    error_log('Before handling UUID parameter'); // Debugging statement
+    error_log('Query string: ' . print_r($_GET, true)); // Debugging statement
 
     if (isset($_GET['uuid']) && !empty($_GET['uuid'])) {
         $uuid = sanitize_text_field($_GET['uuid']);
@@ -94,8 +94,6 @@ class MatchTrader_Get_Account_By_UUID {
             WC()->customer->save();
         }
     }
-
-    error_log('After handling UUID parameter'); // Debugging statement
 }
 
     /**
