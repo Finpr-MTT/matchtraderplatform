@@ -19,11 +19,7 @@ class MatchTrader_Get_Account_By_UUID {
 
     public function __construct() {
         // Hook into WooCommerce Checkout process
-        add_action('init', function () {
-            if (isset($_GET['uuid']) && !empty($_GET['uuid'])) {
-                WC()->session->set('matchtrader_uuid', sanitize_text_field($_GET['uuid']));
-            }
-        });
+        add_action('init', [$this, 'handle_uuid_session']);
 
         add_action('woocommerce_checkout_init', [$this, 'handle_uuid_param'], 3);
         if (get_option('matchtrader_enable_mtt_checkout', 'default') === 'default') {add_filter('woocommerce_checkout_fields', [$this, 'prefill_checkout_fields']);
@@ -46,6 +42,40 @@ class MatchTrader_Get_Account_By_UUID {
 
         wp_send_json_success(['has_session' => $has_session]);
     }
+
+    /**
+     * Handle UUID session and reset fields if the UUID changes.
+     */
+    public function handle_uuid_session() {
+        if (isset($_GET['uuid']) && !empty($_GET['uuid'])) {
+            $new_uuid = sanitize_text_field($_GET['uuid']);
+            $stored_data = WC()->session->get('matchtrader_account_data', []);
+            $stored_uuid = $stored_data['uuid'] ?? '';
+
+            // If the new UUID is different from the stored UUID, reset session and fields
+            if ($new_uuid !== $stored_uuid) {
+                WC()->session->__unset('matchtrader_account_data');
+
+                // Clear WooCommerce customer fields
+                $customer = WC()->customer;
+                $customer->set_billing_first_name('');
+                $customer->set_billing_last_name('');
+                $customer->set_billing_address_1('');
+                $customer->set_billing_address_2('');
+                $customer->set_billing_city('');
+                $customer->set_billing_state('');
+                $customer->set_billing_postcode('');
+                $customer->set_billing_country('');
+                $customer->set_billing_phone('');
+                $customer->set_billing_email('');
+                $customer->save();
+
+                // Store the new UUID in session
+                WC()->session->set('matchtrader_uuid', $new_uuid);
+            }
+        }
+    }
+
 
     /**
      * Handle the UUID parameter in URL and fetch account details.
