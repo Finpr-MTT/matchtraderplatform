@@ -118,7 +118,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 					<h4 class="text-center">Choose Payment Method</h4>
 					<?php do_action('woocommerce_checkout_payment'); ?>
 					<?php do_action('woocommerce_checkout_order_review'); ?>
-					<div class="d-flex justify-content-between my-5">
+					<div class="d-flex justify-content-between my-5 gap-sm-3">
 					    <button type="button" class="p-3 btn mtt-bg-button-previous w-25 prev-step">Back</button>
 					    <?php do_action('matchtrader_checkout_button_place_order'); ?>
 					</div>
