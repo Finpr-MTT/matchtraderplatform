@@ -3,13 +3,12 @@
 
     $(document).ready(function () {
         function updateSelectedAddons() {
-            var chosenAddons = [];
-            var chosenAddonsPercentage = 0;
+            var chosenAddons = {};
 
             $('input[type="checkbox"][name="mtt_addons[]"]:checked').each(function () {
-                let addonName = $(this).next('label').text().trim(); // Get the label text
-                chosenAddons.push(addonName);
-                chosenAddonsPercentage += parseFloat($(this).data('value'));
+                let addonName = $(this).next('label').text().trim(); // Get add-on name
+                let addonPrice = parseFloat($(this).data('value')); // Get add-on price
+                chosenAddons[addonName] = addonPrice;
             });
 
             $.ajax({
@@ -18,13 +17,11 @@
                 data: {
                     action: 'update_selected_addons',
                     addons: chosenAddons,
-                    addons_percentage: chosenAddonsPercentage,
                     nonce: mtt_addons_ajax.nonce
                 },
                 success: function (response) {
                     if (response.success) {
-                        // Refresh WooCommerce order review and checkout totals
-                        $(document.body).trigger('update_checkout');
+                        $(document.body).trigger('update_checkout'); // Refresh checkout
                     }
                 }
             });
