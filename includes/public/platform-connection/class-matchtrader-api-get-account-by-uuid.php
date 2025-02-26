@@ -19,7 +19,7 @@ class MatchTrader_Get_Account_By_UUID {
 
     public function __construct() {
         // Hook into WooCommerce Checkout process
-        add_action('template_redirect', [$this, 'handle_uuid_param'], 1);
+        add_action('template_redirect', [$this, 'handle_uuid_param'], 3);
         if (get_option('matchtrader_enable_mtt_checkout', 'default') === 'default') {add_filter('woocommerce_checkout_fields', [$this, 'prefill_checkout_fields']);
         }        
 
@@ -45,56 +45,50 @@ class MatchTrader_Get_Account_By_UUID {
      * Handle the UUID parameter in URL and fetch account details.
      */
     public function handle_uuid_param() {
-    if (!is_checkout()) {
-        return;
-    }
-
-    error_log('Query string: ' . print_r($_GET, true)); // Debugging statement
-
-    if (isset($_GET['uuid']) && !empty($_GET['uuid'])) {
-        $uuid = sanitize_text_field($_GET['uuid']);
-
-        // Debugging: Check if session data exists before clearing
-        error_log('Session data before clearing: ' . print_r(WC()->session->get('matchtrader_account_data'), true));
-
-        // Clear previous session data
-        WC()->session->__unset('matchtrader_account_data');
-
-        // Clear WooCommerce customer fields
-        WC()->customer->set_billing_first_name('');
-        WC()->customer->set_billing_last_name('');
-        WC()->customer->set_billing_address_1('');
-        WC()->customer->set_billing_address_2('');
-        WC()->customer->set_billing_city('');
-        WC()->customer->set_billing_state('');
-        WC()->customer->set_billing_postcode('');
-        WC()->customer->set_billing_country('');
-        WC()->customer->set_billing_phone('');
-        WC()->customer->set_billing_email('');
-        WC()->customer->save();
-
-        // Fetch new account data
-        $account_data = $this->get_account_by_uuid($uuid);
-
-        if ($account_data) {
-            WC()->session->set('matchtrader_account_data', $account_data);
-
-            // Debugging: Check if session data is set correctly
-            error_log('Session data after setting: ' . print_r(WC()->session->get('matchtrader_account_data'), true));
-
-            // Set WooCommerce customer data (ensure country is set first)
-            if (!empty($account_data['addressDetails']['country'])) {
-                WC()->customer->set_billing_country(sanitize_text_field($account_data['addressDetails']['country']));
-            }
-
-            if (!empty($account_data['addressDetails']['state'])) {
-                WC()->customer->set_billing_state(sanitize_text_field($account_data['addressDetails']['state']));
-            }
-
-            WC()->customer->save();
+        if (!is_checkout()) {
+            return;
         }
+
+        if (isset($_GET['uuid']) && !empty($_GET['uuid'])) {
+            $uuid = sanitize_text_field($_GET['uuid']);
+
+            // Clear previous session data
+            WC()->session->__unset('matchtrader_account_data');
+
+            // Clear WooCommerce customer fields
+            WC()->customer->set_billing_first_name('');
+            WC()->customer->set_billing_last_name('');
+            WC()->customer->set_billing_address_1('');
+            WC()->customer->set_billing_address_2('');
+            WC()->customer->set_billing_city('');
+            WC()->customer->set_billing_state('');
+            WC()->customer->set_billing_postcode('');
+            WC()->customer->set_billing_country('');
+            WC()->customer->set_billing_phone('');
+            WC()->customer->set_billing_email('');
+            WC()->customer->save();
+
+            // Fetch new account data
+            $account_data = $this->get_account_by_uuid($uuid);
+
+            if ($account_data) {
+                WC()->session->set('matchtrader_account_data', $account_data);
+
+                // Set WooCommerce customer data (ensure country is set first)
+                if (!empty($account_data['addressDetails']['country'])) {
+                    WC()->customer->set_billing_country(sanitize_text_field($account_data['addressDetails']['country']));
+                }
+
+                if (!empty($account_data['addressDetails']['state'])) {
+                    WC()->customer->set_billing_state(sanitize_text_field($account_data['addressDetails']['state']));
+                }
+
+                WC()->customer->save();
+            }
+        }
+
+
     }
-}
 
     /**
      * Fetch account details by UUID using Centralized API Helper.
