@@ -27,6 +27,13 @@ define('MATCHTRADERPLUGIN_VERSION', '1.0.529');
 define('MATCHTRADERPLUGIN_PATH', plugin_dir_path(__FILE__));
 define('MATCHTRADERPLUGIN_URL', plugin_dir_url(__FILE__));
 
+add_action('init', function () {
+    if (isset($_GET['uuid']) && !empty($_GET['uuid'])) {
+        WC()->session->set('matchtrader_uuid', sanitize_text_field($_GET['uuid']));
+    }
+});
+
+
 class MatchTraderPlatform {
 
     /**
@@ -90,7 +97,7 @@ add_action('init', function () {
 
 
 add_action('woocommerce_before_checkout_form', function () {
-    $matchtrader_temp_uuid = WC()->session->get('matchtrader_temp_uuid', []);
+    $matchtrader_temp_uuid = WC()->session->get('matchtrader_uuid', []);
     $matchtrader_account_data = WC()->session->get('matchtrader_account_data', []);
 
     echo '<p><hr>matchtrader_temp_uuid</hr></p>';
@@ -104,66 +111,3 @@ add_action('woocommerce_before_checkout_form', function () {
     var_dump($matchtrader_account_data);
     echo '</pre>';
 });
-
-
-add_action('init', function () {
-    if (isset($_GET['uuid']) && !empty($_GET['uuid'])) {
-        WC()->session->set('matchtrader_uuid', sanitize_text_field($_GET['uuid']));
-    }
-});
-
-add_action('woocommerce_checkout_init', function () {
-    $uuid = WC()->session->get('matchtrader_uuid');
-    
-    if (!empty($uuid)) {
-        // Fetch new account data
-        $account_data = get_account_by_uuid($uuid); // Ensure this function exists and retrieves API data
-
-        if ($account_data) {
-            WC()->session->set('matchtrader_account_data', $account_data);
-
-            // Set WooCommerce customer data
-            $customer = WC()->customer;
-
-            if (!empty($account_data['addressDetails']['country'])) {
-                $customer->set_billing_country(sanitize_text_field($account_data['addressDetails']['country']));
-            }
-
-            if (!empty($account_data['addressDetails']['state'])) {
-                $customer->set_billing_state(sanitize_text_field($account_data['addressDetails']['state']));
-            }
-
-            if (!empty($account_data['personalDetails']['firstname'])) {
-                $customer->set_billing_first_name(sanitize_text_field($account_data['personalDetails']['firstname']));
-            }
-
-            if (!empty($account_data['personalDetails']['lastname'])) {
-                $customer->set_billing_last_name(sanitize_text_field($account_data['personalDetails']['lastname']));
-            }
-
-            if (!empty($account_data['email'])) {
-                $customer->set_billing_email(sanitize_email($account_data['email']));
-            }
-
-            if (!empty($account_data['addressDetails']['address'])) {
-                $customer->set_billing_address_1(sanitize_text_field($account_data['addressDetails']['address']));
-            }
-
-            if (!empty($account_data['addressDetails']['city'])) {
-                $customer->set_billing_city(sanitize_text_field($account_data['addressDetails']['city']));
-            }
-
-            if (!empty($account_data['addressDetails']['postCode'])) {
-                $customer->set_billing_postcode(sanitize_text_field($account_data['addressDetails']['postCode']));
-            }
-
-            if (!empty($account_data['contactDetails']['phoneNumber'])) {
-                $customer->set_billing_phone(sanitize_text_field($account_data['contactDetails']['phoneNumber']));
-            }
-
-            // Save customer data
-            $customer->save();
-        }
-    }
-});
-

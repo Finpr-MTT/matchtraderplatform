@@ -19,7 +19,7 @@ class MatchTrader_Get_Account_By_UUID {
 
     public function __construct() {
         // Hook into WooCommerce Checkout process
-        add_action('template_redirect', [$this, 'handle_uuid_param'], 3);
+        add_action('woocommerce_checkout_init', [$this, 'handle_uuid_param'], 3);
         if (get_option('matchtrader_enable_mtt_checkout', 'default') === 'default') {add_filter('woocommerce_checkout_fields', [$this, 'prefill_checkout_fields']);
         }        
 
@@ -45,49 +45,58 @@ class MatchTrader_Get_Account_By_UUID {
      * Handle the UUID parameter in URL and fetch account details.
      */
     public function handle_uuid_param() {
-        if (!is_checkout()) {
-            return;
-        }
+        $uuid = WC()->session->get('matchtrader_uuid');
+    
+    if (!empty($uuid)) {
+        // Fetch new account data
+        $account_data = get_account_by_uuid($uuid); // Ensure this function exists and retrieves API data
 
-        if (isset($_GET['uuid']) && !empty($_GET['uuid'])) {
-            $uuid = sanitize_text_field($_GET['uuid']);
+        if ($account_data) {
+            WC()->session->set('matchtrader_account_data', $account_data);
 
-            // Clear previous session data
-            WC()->session->__unset('matchtrader_account_data');
+            // Set WooCommerce customer data
+            $customer = WC()->customer;
 
-            // Clear WooCommerce customer fields
-            WC()->customer->set_billing_first_name('');
-            WC()->customer->set_billing_last_name('');
-            WC()->customer->set_billing_address_1('');
-            WC()->customer->set_billing_address_2('');
-            WC()->customer->set_billing_city('');
-            WC()->customer->set_billing_state('');
-            WC()->customer->set_billing_postcode('');
-            WC()->customer->set_billing_country('');
-            WC()->customer->set_billing_phone('');
-            WC()->customer->set_billing_email('');
-            WC()->customer->save();
-
-            // Fetch new account data
-            $account_data = $this->get_account_by_uuid($uuid);
-
-            if ($account_data) {
-                WC()->session->set('matchtrader_account_data', $account_data);
-
-                // Set WooCommerce customer data (ensure country is set first)
-                if (!empty($account_data['addressDetails']['country'])) {
-                    WC()->customer->set_billing_country(sanitize_text_field($account_data['addressDetails']['country']));
-                }
-
-                if (!empty($account_data['addressDetails']['state'])) {
-                    WC()->customer->set_billing_state(sanitize_text_field($account_data['addressDetails']['state']));
-                }
-
-                WC()->customer->save();
+            if (!empty($account_data['addressDetails']['country'])) {
+                $customer->set_billing_country(sanitize_text_field($account_data['addressDetails']['country']));
             }
+
+            if (!empty($account_data['addressDetails']['state'])) {
+                $customer->set_billing_state(sanitize_text_field($account_data['addressDetails']['state']));
+            }
+
+            if (!empty($account_data['personalDetails']['firstname'])) {
+                $customer->set_billing_first_name(sanitize_text_field($account_data['personalDetails']['firstname']));
+            }
+
+            if (!empty($account_data['personalDetails']['lastname'])) {
+                $customer->set_billing_last_name(sanitize_text_field($account_data['personalDetails']['lastname']));
+            }
+
+            if (!empty($account_data['email'])) {
+                $customer->set_billing_email(sanitize_email($account_data['email']));
+            }
+
+            if (!empty($account_data['addressDetails']['address'])) {
+                $customer->set_billing_address_1(sanitize_text_field($account_data['addressDetails']['address']));
+            }
+
+            if (!empty($account_data['addressDetails']['city'])) {
+                $customer->set_billing_city(sanitize_text_field($account_data['addressDetails']['city']));
+            }
+
+            if (!empty($account_data['addressDetails']['postCode'])) {
+                $customer->set_billing_postcode(sanitize_text_field($account_data['addressDetails']['postCode']));
+            }
+
+            if (!empty($account_data['contactDetails']['phoneNumber'])) {
+                $customer->set_billing_phone(sanitize_text_field($account_data['contactDetails']['phoneNumber']));
+            }
+
+            // Save customer data
+            $customer->save();
         }
-
-
+    }
     }
 
     /**
