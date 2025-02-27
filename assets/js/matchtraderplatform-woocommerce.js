@@ -68,7 +68,7 @@
             }
         }
 
-         function checkOrderTotal() {
+        function checkOrderTotal() {
             let orderTotal = $('.order-total .woocommerce-Price-amount').text().replace(/[^0-9.]/g, '');
             orderTotal = parseFloat(orderTotal);
 
