@@ -409,7 +409,7 @@ class MatchTrader_Public_WooCommerce {
         // Get stored add-ons from session (if any)
         $selected_addons = WC()->session->get('mtt_selected_addons', []);
 
-        echo '<div class="mtt-addons-container">
+        echo '<div class="mtt-addons-container pt-3">
                   <div class="field-group">
                     <input type="checkbox" id="mtt-addon-1" class="mtt-addons-checkbox-input" name="mtt_addons[]" value="7 day payouts vs 14 Days (+15%)" data-value="20.00" ' . 
                         (isset($selected_addons["7 day payouts vs 14 Days (+15%)"]) ? 'checked' : '') . '>
