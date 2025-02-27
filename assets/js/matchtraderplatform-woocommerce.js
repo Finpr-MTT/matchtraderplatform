@@ -79,6 +79,10 @@
             }
         }
 
+        $(document.body).on('updated_wc_div updated_cart_totals wc_fragments_refreshed', function() {
+            checkOrderTotal();
+        });
+
         // Run check when checkout updates
         $(document.body).on('wc_fragment_refresh', function () {
             checkOrderTotal();
