@@ -79,6 +79,13 @@
             }
         }
 
+        // Hook into WooCommerce AJAX order review update
+        $(document).ajaxComplete(function(event, xhr, settings) {
+            if (settings.url.includes('?wc-ajax=update_order_review')) {
+                checkOrderTotal();
+            }
+        });
+
         // Run check when WooCommerce updates checkout/cart
         $(document.body).on('updated_wc_div updated_cart_totals wc_fragments_refreshed updated_checkout', function() {
             checkOrderTotal();
