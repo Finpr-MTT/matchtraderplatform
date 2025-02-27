@@ -68,7 +68,7 @@
             }
         }
 
-        function checkOrderTotal() {
+         function checkOrderTotal() {
             let orderTotal = $('.order-total .woocommerce-Price-amount').text().replace(/[^0-9.]/g, '');
             orderTotal = parseFloat(orderTotal);
 
@@ -79,26 +79,17 @@
             }
         }
 
-        $(document.body).on('updated_wc_div updated_cart_totals wc_fragments_refreshed', function() {
-            checkOrderTotal();
-        });
-
-        // Run check when checkout updates
-        $(document.body).on('wc_fragment_refresh', function () {
-            checkOrderTotal();
-        });
-
-        // Run check when checkout updates
-        $(document.body).on('updated_checkout', function () {
+        // Run check when WooCommerce updates checkout/cart
+        $(document.body).on('updated_wc_div updated_cart_totals wc_fragments_refreshed updated_checkout', function() {
             checkOrderTotal();
         });
 
         // Run check on page load
         checkOrderTotal();
 
-        // Handle country change event
-        countryField.on('change', function () {
-            updateStateField(true); // Clear state only on manual country change
+        // Handle country change event (state field update)
+        $('#billing_country').on('change', function () {
+            updateStateField(true);
         });
 
         // Initialize the state field (keep prefilled data if available)
