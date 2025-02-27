@@ -174,7 +174,7 @@ class MatchTrader_Create_Trading_Account {
      * @param int $order_id
      */
     private function create_trading_account($challenge_id, $uuid, $name, $order_id) {
-        $endpoint = "v1/prop/accounts?instantlyActive=false&phaseStep=1";
+        $endpoint = "v1/prop/accounts?instantlyActive=true&phaseStep=1";
         $max_retries = 5;
         $retry_delay = 2; // Initial delay (1 second)
 
