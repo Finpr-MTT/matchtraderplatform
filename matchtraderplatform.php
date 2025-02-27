@@ -25,7 +25,7 @@ if (!defined('ABSPATH')) {
 add_filter("wt_smart_coupon_url_coupon_message", "__return_false");
 
 // Define plugin constants
-define('MATCHTRADERPLUGIN_VERSION', '1.0.536');
+define('MATCHTRADERPLUGIN_VERSION', '1.0.537');
 define('MATCHTRADERPLUGIN_PATH', plugin_dir_path(__FILE__));
 define('MATCHTRADERPLUGIN_URL', plugin_dir_url(__FILE__));
 
