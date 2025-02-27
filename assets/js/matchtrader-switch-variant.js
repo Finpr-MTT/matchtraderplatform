@@ -58,6 +58,22 @@
             });
         }
 
+        // Run check when checkout updates
+        $(document.body).on('updated_checkout', function () {
+            updateOrderTotal();
+        });
+
+
+        // Trigger the function when the cart is updated
+        $(document.body).on('updated_cart_totals', function() {
+            updateOrderTotal();
+        });
+
+        // Optional: Trigger the function when a coupon is applied or removed
+        $(document.body).on('applied_coupon removed_coupon', function() {
+            updateOrderTotal();
+        });
+
         // Event listener for radio button changes (update cart & order total)
         $('.matchtrader-radio-group input[type="radio"]').on('change', function () {
             updateCart();
