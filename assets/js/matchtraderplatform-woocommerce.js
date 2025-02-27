@@ -79,12 +79,13 @@
             }
         }
 
-        // Trigger the function when the checkout is updated (e.g., coupon applied or removed)
-        // Trigger the function on page load
-        checkOrderTotal();
+        // Run check when checkout updates
+        $(document.body).on('updated_checkout', function () {
+            checkOrderTotal();
+        });
 
-        // Trigger the function when the order review is updated
-        $(document.body).on('updated_checkout updated_wc_div', function() {
+        // Trigger the function when the cart is updated
+        $(document.body).on('updated_cart_totals', function() {
             checkOrderTotal();
         });
 
@@ -93,19 +94,12 @@
             checkOrderTotal();
         });
 
-        // Listen for the AJAX update_order_review event
-        $(document).ajaxComplete(function(event, xhr, settings) {
-            if (settings.data && settings.data.includes('wc-ajax=update_order_review')) {
-                checkOrderTotal();
-            }
-        });
-
         // Run check on page load
         checkOrderTotal();
 
-        // Handle country change event (state field update)
-        $('#billing_country').on('change', function () {
-            updateStateField(true);
+        // Handle country change event
+        countryField.on('change', function () {
+            updateStateField(true); // Clear state only on manual country change
         });
 
         // Initialize the state field (keep prefilled data if available)
