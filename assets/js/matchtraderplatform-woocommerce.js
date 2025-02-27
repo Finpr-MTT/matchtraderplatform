@@ -13,7 +13,7 @@
             const selectedCountry = countryField.val();
             const currentState = clearState ? '' : prefilledState; // Keep prefilled state if not clearing
 
-            // ❌ Remove existing state field before adding a new one
+            // Remove existing state field before adding a new one
             $('#billing_state').remove();
 
             // Add label for State/Region (if not already added)
@@ -78,6 +78,11 @@
                 $('.mtt-choose-payment-method h4').show();
             }
         }
+
+        // Run check when checkout updates
+        $(document.body).on('wc_fragment_refresh', function () {
+            checkOrderTotal();
+        });
 
         // Run check when checkout updates
         $(document.body).on('updated_checkout', function () {
