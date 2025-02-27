@@ -39,7 +39,6 @@
         }
 
         function updateOrderTotal() {
-            console.log('Sending AJAX request to update order total...');
             $.ajax({
                 type: 'POST',
                 url: wc_checkout_params.ajax_url, // WooCommerce AJAX URL
