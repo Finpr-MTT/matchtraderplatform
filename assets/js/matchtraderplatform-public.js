@@ -87,7 +87,6 @@
         nextButtons.on('click', function () {
             if (currentStep === 2) { // Validate only on the Billing Details step
                 if (!validateBillingFields()) {
-                    alert('Please fill in all required billing fields and enter a valid email before proceeding.');
                     return;
                 }
             }
