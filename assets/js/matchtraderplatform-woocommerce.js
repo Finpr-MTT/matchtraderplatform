@@ -80,13 +80,24 @@
         }
 
         // Trigger the function when the checkout is updated (e.g., coupon applied or removed)
-        $(document.body).on('updated_checkout', function() {
+        // Trigger the function on page load
+        checkOrderTotal();
+
+        // Trigger the function when the order review is updated
+        $(document.body).on('updated_checkout updated_wc_div', function() {
             checkOrderTotal();
         });
 
-        // Optional: Trigger the function specifically when a coupon is applied or removed
+        // Optional: Trigger the function when a coupon is applied or removed
         $(document.body).on('applied_coupon removed_coupon', function() {
             checkOrderTotal();
+        });
+
+        // Listen for the AJAX update_order_review event
+        $(document).ajaxComplete(function(event, xhr, settings) {
+            if (settings.data && settings.data.includes('wc-ajax=update_order_review')) {
+                checkOrderTotal();
+            }
         });
 
         // Run check on page load
