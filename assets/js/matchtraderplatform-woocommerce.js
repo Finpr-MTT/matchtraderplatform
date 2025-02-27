@@ -84,16 +84,6 @@
             checkOrderTotal();
         });
 
-        // Trigger the function when the cart is updated
-        $(document.body).on('updated_cart_totals', function() {
-            checkOrderTotal();
-        });
-
-        // Optional: Trigger the function when a coupon is applied or removed
-        $(document.body).on('applied_coupon removed_coupon', function() {
-            checkOrderTotal();
-        });
-
         // Run check on page load
         checkOrderTotal();
 
