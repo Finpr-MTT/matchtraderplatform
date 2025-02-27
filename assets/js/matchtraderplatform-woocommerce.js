@@ -79,13 +79,13 @@
             }
         }
 
-        // Trigger on coupon application
-        $(document).on('applied_coupon removed_coupon', function() {
+        // Trigger the function when the checkout is updated (e.g., coupon applied or removed)
+        $(document.body).on('updated_checkout', function() {
             checkOrderTotal();
         });
 
-        // Run check when WooCommerce updates checkout/cart
-        $(document.body).on('updated_wc_div updated_cart_totals wc_fragments_refreshed updated_checkout', function() {
+        // Optional: Trigger the function specifically when a coupon is applied or removed
+        $(document.body).on('applied_coupon removed_coupon', function() {
             checkOrderTotal();
         });
 
