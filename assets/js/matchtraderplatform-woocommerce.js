@@ -79,11 +79,9 @@
             }
         }
 
-        // Hook into WooCommerce AJAX order review update
-        $(document).ajaxComplete(function(event, xhr, settings) {
-            if (settings.url.includes('?wc-ajax=update_order_review')) {
-                checkOrderTotal();
-            }
+        // Trigger on coupon application
+        $(document).on('applied_coupon removed_coupon', function() {
+            checkOrderTotal();
         });
 
         // Run check when WooCommerce updates checkout/cart
