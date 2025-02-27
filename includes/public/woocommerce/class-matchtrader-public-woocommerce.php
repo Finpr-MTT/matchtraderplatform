@@ -410,12 +410,12 @@ class MatchTrader_Public_WooCommerce {
         $selected_addons = WC()->session->get('mtt_selected_addons', []);
 
         echo '<div class="mtt-addons-container pt-3">
-                  <div class="field-group">
+                  <div class="field-group py-2">
                     <input type="checkbox" id="mtt-addon-1" class="mtt-addons-checkbox-input" name="mtt_addons[]" value="7 day payouts vs 14 Days (+15%)" data-value="20.00" ' . 
                         (isset($selected_addons["7 day payouts vs 14 Days (+15%)"]) ? 'checked' : '') . '>
                     <label for="mtt-addon-1">7 day payouts vs 14 Days <span>(+15%)</span></label>
                   </div>
-                  <div class="field-group">
+                  <div class="field-group py-2">
                     <input type="checkbox" id="mtt-addon-2" class="mtt-addons-checkbox-input" name="mtt_addons[]" value="90% profit split vs 85% (+15%)" data-value="20.00" ' . 
                         (isset($selected_addons["90% profit split vs 85% (+15%)"]) ? 'checked' : '') . '>
                     <label for="mtt-addon-2">90% profit split vs 85% <span>(+15%)</span></label>
